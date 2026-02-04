@@ -33,7 +33,7 @@ app.use('/api/auth', require('./backend/routes/auth'));
 app.use('/api/students', require('./backend/routes/students'));
 
 // Subject Routes
-app.use('/api/subjects', require('./backend/routes/subjects'));
+app.use('/api/subjects', require('../routes/subjects'));
 
 // Quiz Routes
 app.use('/api/quizzes', require('./backend/routes/quizzes'));
