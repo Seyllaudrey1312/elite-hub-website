@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Hub - Learn. Practice. Excel.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-blue-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold text-yellow-400">Elite Hub</a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-btn" class="text-white hover:text-yellow-400 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Desktop menu -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="index.html" class="hover:text-yellow-400 transition">Home</a>
+                    <a href="pages/subjects.html" class="hover:text-yellow-400 transition">Subjects</a>
+                    <a href="pages/resources.html" class="hover:text-yellow-400 transition">Study Resources</a>
+                    <a href="pages/quizzes.html" class="hover:text-yellow-400 transition">Quizzes</a>
+                    <a href="pages/announcements.html" class="hover:text-yellow-400 transition">Announcements</a>
+                    <a href="pages/contact.html" class="hover:text-yellow-400 transition">Contact</a>
+                    <a href="pages/login.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Login</a>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+                <a href="pages/subjects.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Subjects</a>
+                <a href="pages/resources.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Study Resources</a>
+                <a href="pages/quizzes.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Quizzes</a>
+                <a href="pages/announcements.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Announcements</a>
+                <a href="pages/contact.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Contact</a>
+                <a href="pages/login.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300 rounded">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl font-bold mb-4">Welcome to Elite Hub</h1>
+            <p class="text-xl text-gray-100 mb-8">Learn. Practice. Excel.</p>
+            <p class="text-lg text-gray-200 max-w-2xl mx-auto">Your comprehensive platform for academic success. Access study materials, practice quizzes, and stay updated with the latest announcements.</p>
+        </div>
+    </section>
+
+    <!-- Quick Access Cards -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Quick Access</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1: Study Materials -->
+                <a href="pages/resources.html" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition hover:translate-y-1">
+                    <div class="text-4xl mb-4">📚</div>
+                    <h3 class="text-xl font-bold text-blue-900 mb-2">Study Materials</h3>
+                    <p class="text-gray-600">Access notes, handouts, and revision guides</p>
+                </a>
+
+                <!-- Card 2: Quizzes -->
+                <a href="pages/quizzes.html" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition hover:translate-y-1">
+                    <div class="text-4xl mb-4">✏️</div>
+                    <h3 class="text-xl font-bold text-blue-900 mb-2">Quizzes</h3>
+                    <p class="text-gray-600">Practice with topic-based quizzes</p>
+                </a>
+
+                <!-- Card 3: Announcements -->
+                <a href="pages/announcements.html" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition hover:translate-y-1">
+                    <div class="text-4xl mb-4">📢</div>
+                    <h3 class="text-xl font-bold text-blue-900 mb-2">Announcements</h3>
+                    <p class="text-gray-600">Stay updated with latest news</p>
+                </a>
+
+                <!-- Card 4: Contact Tutor -->
+                <a href="pages/contact.html" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition hover:translate-y-1">
+                    <div class="text-4xl mb-4">💬</div>
+                    <h3 class="text-xl font-bold text-blue-900 mb-2">Contact Tutor</h3>
+                    <p class="text-gray-600">Get help from your tutor</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Elite Hub -->
+    <section class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold mb-8 text-gray-800">About Elite Hub</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">Our Mission</h3>
+                    <p class="text-gray-700 text-lg">To empower Form 1-4 students with accessible, quality study materials and personalized support, fostering academic excellence and a love for learning.</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">Our Vision</h3>
+                    <p class="text-gray-700 text-lg">To create an inclusive learning community where every student can access world-class educational resources and achieve their full academic potential.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Updates Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold mb-8 text-gray-800">Latest Updates</h2>
+            <div class="space-y-6">
+                <!-- Announcement 1 -->
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-yellow-400">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-900 mb-2">Form 4 Final Exam Schedule Released</h3>
+                            <p class="text-gray-700 mb-2">The final examination schedule for Form 4 students has been released. Check the announcements page for detailed dates.</p>
+                            <span class="text-sm text-gray-500">Posted on February 4, 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Announcement 2 -->
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-900 mb-2">New Physics Notes Available</h3>
+                            <p class="text-gray-700 mb-2">Comprehensive notes on Electricity and Magnetism have been uploaded to the Study Resources section.</p>
+                            <span class="text-sm text-gray-500">Posted on February 2, 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Announcement 3 -->
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-900 mb-2">Tutor Office Hours Extended</h3>
+                            <p class="text-gray-700 mb-2">Starting this week, tutor office hours have been extended to help more students. Contact us for appointment details.</p>
+                            <span class="text-sm text-gray-500">Posted on February 1, 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="pages/announcements.html" class="inline-block mt-6 bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">View All Announcements</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Elite Hub</h3>
+                    <p class="text-gray-300">Supporting your academic journey with quality education resources.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                    <p class="text-gray-300">Email: seyllaudrey6@gmail.com</p>
+                    <p class="text-gray-300">WhatsApp: +254 792619341</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="pages/resources.html" class="hover:text-yellow-400">Resources</a></li>
+                        <li><a href="pages/quizzes.html" class="hover:text-yellow-400">Quizzes</a></li>
+                        <li><a href="pages/contact.html" class="hover:text-yellow-400">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-blue-800 my-6">
+            <p class="text-center text-gray-400">&copy; 2026 Elite Hub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

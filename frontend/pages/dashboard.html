@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-blue-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="../index.html" class="text-2xl font-bold text-yellow-400">Elite Hub</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm">Welcome, John!</span>
+                    <button onclick="logout()" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <h1 class="text-4xl font-bold text-blue-900 mb-8">Student Dashboard</h1>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <!-- Stats Cards -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-gray-600 text-sm font-bold mb-2">ENROLLED SUBJECTS</h3>
+                <p class="text-4xl font-bold text-blue-900">8</p>
+                <p class="text-gray-500 text-sm mt-2">Active courses</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-gray-600 text-sm font-bold mb-2">QUIZ AVERAGE</h3>
+                <p class="text-4xl font-bold text-green-600">78%</p>
+                <p class="text-gray-500 text-sm mt-2">From 24 completed</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-gray-600 text-sm font-bold mb-2">PENDING ASSIGNMENTS</h3>
+                <p class="text-4xl font-bold text-orange-600">3</p>
+                <p class="text-gray-500 text-sm mt-2">Due this month</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-gray-600 text-sm font-bold mb-2">STUDY STREAK</h3>
+                <p class="text-4xl font-bold text-purple-600">12</p>
+                <p class="text-gray-500 text-sm mt-2">Days in a row</p>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Recent Quiz Results -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-6">Recent Quiz Results</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h3 class="font-bold text-blue-900">Algebra Basics Quiz</h3>
+                                <p class="text-sm text-gray-600">Completed on Feb 2, 2026</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-green-600">85%</p>
+                                <p class="text-sm text-gray-600">17 out of 20</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h3 class="font-bold text-blue-900">Motion & Forces Quiz</h3>
+                                <p class="text-sm text-gray-600">Completed on Feb 1, 2026</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-yellow-600">72%</p>
+                                <p class="text-sm text-gray-600">11 out of 15</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h3 class="font-bold text-blue-900">Atomic Structure Quiz</h3>
+                                <p class="text-sm text-gray-600">Completed on Jan 30, 2026</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-green-600">91%</p>
+                                <p class="text-sm text-gray-600">11 out of 12</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="../pages/quizzes.html" class="mt-4 inline-block text-blue-900 font-bold hover:underline">View all quiz results →</a>
+                </div>
+
+                <!-- My Subjects -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-6">My Enrolled Subjects</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <a href="#" class="p-4 bg-blue-50 rounded-lg text-center hover:bg-blue-100 transition">
+                            <p class="font-bold text-blue-900">📐 Mathematics</p>
+                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
+                        </a>
+
+                        <a href="#" class="p-4 bg-yellow-50 rounded-lg text-center hover:bg-yellow-100 transition">
+                            <p class="font-bold text-blue-900">⚡ Physics</p>
+                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
+                        </a>
+
+                        <a href="#" class="p-4 bg-green-50 rounded-lg text-center hover:bg-green-100 transition">
+                            <p class="font-bold text-blue-900">🧪 Chemistry</p>
+                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
+                        </a>
+
+                        <a href="#" class="p-4 bg-red-50 rounded-lg text-center hover:bg-red-100 transition">
+                            <p class="font-bold text-blue-900">🔬 Biology</p>
+                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
+                        </a>
+
+                        <a href="#" class="p-4 bg-purple-50 rounded-lg text-center hover:bg-purple-100 transition">
+                            <p class="font-bold text-blue-900">📖 English</p>
+                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
+                        </a>
+
+                        <a href="#" class="p-4 bg-orange-50 rounded-lg text-center hover:bg-orange-100 transition">
+                            <p class="font-bold text-blue-900">🗣️ Kiswahili</p>
+                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
+                        </a>
+
+                        <a href="#" class="p-4 bg-indigo-50 rounded-lg text-center hover:bg-indigo-100 transition">
+                            <p class="font-bold text-blue-900">📚 History</p>
+                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
+                        </a>
+
+                        <a href="#" class="p-4 bg-teal-50 rounded-lg text-center hover:bg-teal-100 transition">
+                            <p class="font-bold text-blue-900">🌍 Geography</p>
+                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <div class="space-y-8">
+                <!-- Pending Assignments -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-blue-900 mb-4">📋 Pending Assignments</h2>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-red-50 border-l-4 border-red-500 rounded">
+                            <p class="font-bold text-sm text-blue-900">Math Problem Set</p>
+                            <p class="text-xs text-gray-600">Due: Feb 10</p>
+                        </div>
+
+                        <div class="p-3 bg-orange-50 border-l-4 border-orange-500 rounded">
+                            <p class="font-bold text-sm text-blue-900">Physics Report</p>
+                            <p class="text-xs text-gray-600">Due: Feb 12</p>
+                        </div>
+
+                        <div class="p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
+                            <p class="font-bold text-sm text-blue-900">Essay - Renaissance</p>
+                            <p class="text-xs text-gray-600">Due: Feb 15</p>
+                        </div>
+                    </div>
+                    <a href="../pages/quizzes.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>
+                </div>
+
+                <!-- Recent Announcements -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-blue-900 mb-4">📢 Recent Announcements</h2>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-yellow-50 rounded">
+                            <p class="font-bold text-sm text-blue-900">Form 4 Exam Schedule</p>
+                            <p class="text-xs text-gray-600">Feb 4</p>
+                        </div>
+
+                        <div class="p-3 bg-green-50 rounded">
+                            <p class="font-bold text-sm text-blue-900">New Physics Notes</p>
+                            <p class="text-xs text-gray-600">Feb 2</p>
+                        </div>
+
+                        <div class="p-3 bg-blue-50 rounded">
+                            <p class="font-bold text-sm text-blue-900">Office Hours Extended</p>
+                            <p class="text-xs text-gray-600">Feb 1</p>
+                        </div>
+                    </div>
+                    <a href="../pages/announcements.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-blue-900 mb-4">⚡ Quick Actions</h2>
+                    <div class="space-y-2">
+                        <a href="../pages/quizzes.html" class="block w-full p-2 bg-blue-900 text-white text-center rounded hover:bg-blue-800 transition text-sm font-bold">Take a Quiz</a>
+                        <a href="../pages/resources.html" class="block w-full p-2 bg-green-600 text-white text-center rounded hover:bg-green-700 transition text-sm font-bold">View Resources</a>
+                        <a href="../pages/contact.html" class="block w-full p-2 bg-orange-500 text-white text-center rounded hover:bg-orange-600 transition text-sm font-bold">Contact Tutor</a>
+                    </div>
+                </div>
+
+                <!-- Profile Card -->
+                <div class="bg-gradient-to-br from-blue-900 to-green-700 rounded-lg shadow-lg p-6 text-white">
+                    <h3 class="text-lg font-bold mb-2">👤 Profile</h3>
+                    <div class="space-y-1 text-sm">
+                        <p><strong>Name:</strong> John Doe</p>
+                        <p><strong>Form:</strong> Form 2</p>
+                        <p><strong>Status:</strong> Active</p>
+                        <p><strong>Joined:</strong> Jan 2026</p>
+                    </div>
+                    <a href="#" class="mt-4 inline-block text-yellow-400 hover:underline text-sm font-bold">Edit Profile →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Elite Hub</h3>
+                    <p class="text-gray-300">Supporting your academic journey with quality education resources.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                    <p class="text-gray-300">Email: tutor@elitehub.com</p>
+                    <p class="text-gray-300">WhatsApp: +1 (555) 123-4567</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="../pages/resources.html" class="hover:text-yellow-400">Resources</a></li>
+                        <li><a href="../pages/quizzes.html" class="hover:text-yellow-400">Quizzes</a></li>
+                        <li><a href="../pages/contact.html" class="hover:text-yellow-400">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-blue-800 my-6">
+            <p class="text-center text-gray-400">&copy; 2026 Elite Hub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

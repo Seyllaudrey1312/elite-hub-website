@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="bg-gradient-to-br from-blue-900 to-green-700">
+    <!-- Login Container -->
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="w-full max-w-md">
+            <!-- Logo -->
+            <div class="text-center mb-8">
+                <h1 class="text-5xl font-bold text-yellow-400 mb-2">Elite Hub</h1>
+                <p class="text-white text-lg">Admin Panel</p>
+            </div>
+
+            <!-- Login Card -->
+            <div class="bg-white rounded-lg shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-blue-900 mb-2 text-center">Tutor/Admin Login</h2>
+                <p class="text-gray-600 text-center mb-8">Access the admin dashboard</p>
+
+                <form>
+                    <!-- Email Input -->
+                    <div class="mb-6">
+                        <label for="email" class="block text-gray-700 font-bold mb-2">Email Address</label>
+                        <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="admin@elitehub.com">
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="mb-6">
+                        <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
+                        <input type="password" id="password" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="Enter your password">
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-blue-900">
+                            <span class="ml-2 text-gray-600">Remember me</span>
+                        </label>
+                        <a href="#" class="text-blue-900 hover:underline text-sm">Forgot password?</a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition mb-4">Login to Admin Panel</button>
+                </form>
+
+                <!-- Student Login Link -->
+                <hr class="my-6 border-gray-300">
+                <p class="text-center text-gray-600 mb-4">Are you a student?</p>
+                <a href="login.html" class="block w-full text-center bg-gray-100 text-blue-900 font-bold py-2 rounded-lg hover:bg-gray-200 transition">Student Login</a>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="mt-8 text-center text-white">
+                <p class="text-sm">🔒 This is a secure admin area</p>
+                <p class="text-xs mt-2">Unauthorized access is prohibited</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

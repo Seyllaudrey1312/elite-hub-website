@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Resources - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-blue-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="../index.html" class="text-2xl font-bold text-yellow-400">Elite Hub</a>
+                </div>
+                
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-btn" class="text-white hover:text-yellow-400 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="../index.html" class="hover:text-yellow-400 transition">Home</a>
+                    <a href="subjects.html" class="hover:text-yellow-400 transition">Subjects</a>
+                    <a href="resources.html" class="text-yellow-400">Study Resources</a>
+                    <a href="quizzes.html" class="hover:text-yellow-400 transition">Quizzes</a>
+                    <a href="announcements.html" class="hover:text-yellow-400 transition">Announcements</a>
+                    <a href="contact.html" class="hover:text-yellow-400 transition">Contact</a>
+                    <a href="login.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Login</a>
+                </div>
+            </div>
+
+            <div id="mobile-menu" class="hidden md:hidden pb-3 space-y-1">
+                <a href="../index.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Home</a>
+                <a href="subjects.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Subjects</a>
+                <a href="resources.html" class="block px-3 py-2 bg-blue-800 rounded">Study Resources</a>
+                <a href="quizzes.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Quizzes</a>
+                <a href="announcements.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Announcements</a>
+                <a href="contact.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Contact</a>
+                <a href="login.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold">Study Resources</h1>
+            <p class="text-lg text-gray-100 mt-2">Access all your learning materials in one place</p>
+        </div>
+    </section>
+
+    <!-- Search and Filter -->
+    <section class="py-8 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" placeholder="Search resources..." class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                <select class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    <option>All Subjects</option>
+                    <option>Mathematics</option>
+                    <option>Physics</option>
+                    <option>Chemistry</option>
+                    <option>Biology</option>
+                </select>
+                <select class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    <option>All Forms</option>
+                    <option>Form 1</option>
+                    <option>Form 2</option>
+                    <option>Form 3</option>
+                    <option>Form 4</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resource Categories -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Notes & Handouts -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-blue-900 mb-6">📝 Notes & Handouts</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Resource Card -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Algebra Fundamentals</h3>
+                            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Form 1</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Comprehensive guide to algebra basics including equations and expressions.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Mathematics</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download PDF</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Forces and Motion</h3>
+                            <span class="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full">Form 2</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Detailed notes on Newton's laws and motion concepts.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Physics</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download PDF</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Organic Chemistry</h3>
+                            <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Form 3</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Complete guide to organic compounds and reactions.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Chemistry</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Past Papers -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-blue-900 mb-6">📋 Past Papers</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Mathematics 2025</h3>
+                            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Form 4</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Full past paper with solutions.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Mathematics</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Physics 2025</h3>
+                            <span class="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full">Form 4</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Full past paper with solutions.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Physics</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Chemistry 2025</h3>
+                            <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Form 4</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Full past paper with solutions.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Chemistry</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Worked Examples -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-blue-900 mb-6">✏️ Worked Examples</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Quadratic Equations</h3>
+                            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Form 2</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Step-by-step solutions to common quadratic problems.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Mathematics</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">View</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Electricity Circuits</h3>
+                            <span class="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full">Form 3</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Detailed circuit analysis and calculations.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Physics</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">View</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Chemical Reactions</h3>
+                            <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Form 3</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Balancing and solving chemistry equations.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Chemistry</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revision Guides -->
+            <div>
+                <h2 class="text-3xl font-bold text-blue-900 mb-6">🎓 Revision Guides</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Final Exam Revision</h3>
+                            <span class="bg-red-100 text-red-800 text-sm px-3 py-1 rounded-full">All Forms</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Comprehensive revision guide for final exams.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Multi-subject</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Mid-term Review</h3>
+                            <span class="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full">All Forms</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Review materials for mid-term assessments.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Multi-subject</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-lg font-bold text-blue-900">Topics Summary</h3>
+                            <span class="bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded-full">Quick Ref</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Quick reference summaries of key topics.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Multi-subject</span>
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Elite Hub</h3>
+                    <p class="text-gray-300">Supporting your academic journey with quality education resources.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                    <p class="text-gray-300">Email: seyllaudrey6@gmail.com</p>
+                    <p class="text-gray-300">WhatsApp: +254 792619341</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="resources.html" class="hover:text-yellow-400">Resources</a></li>
+                        <li><a href="quizzes.html" class="hover:text-yellow-400">Quizzes</a></li>
+                        <li><a href="contact.html" class="hover:text-yellow-400">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-blue-800 my-6">
+            <p class="text-center text-gray-400">&copy; 2026 Elite Hub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
