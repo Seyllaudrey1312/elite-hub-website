@@ -201,6 +201,39 @@ window.addEventListener('load', function() {
     }
 });
 
+const bcrypt = require("bcrypt");
+const User = require("./models/User");
+
+app.post("/register", async (req, res) => {
+  const { fullName, password, role } = req.body;
+
+  if (!fullName || !password || !role) {
+    return res.status(400).json({ message: "All fields required" });
+  }
+
+  // count users by role
+  const count = await User.countDocuments({ role });
+
+  const eliteCode = generateEliteCode(role, fullName, count);
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = new User({
+    fullName,
+    role,
+    eliteCode,
+    password: hashedPassword
+  });
+
+  await user.save();
+
+  res.json({
+    message: "Registration successful!",
+    code: eliteCode
+  });
+});
+
+
 // Console message for developers
 console.log('%c Welcome to Elite Hub Student Platform', 'font-size: 18px; color: #003d82; font-weight: bold;');
 console.log('%c Version 1.0.0 | Build Date: February 2026', 'font-size: 12px; color: #666;');
