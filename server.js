@@ -27,25 +27,25 @@ app.get('/api', (req, res) => {
 });
 
 // Auth Routes
-app.use('/api/auth', require('./backend/routes/auth'));
+app.use('/api/auth', require('auth'));
 
 // Student Routes
-app.use('/api/students', require('./backend/routes/students'));
+app.use('/api/students', require('students'));
 
 // Subject Routes
-app.use('/api/subjects', require('./routes/subjects'));
+app.use('/api/subjects', require('subjects'));
 
 // Quiz Routes
-app.use('/api/quizzes', require('./backend/routes/quizzes'));
+app.use('/api/quizzes', require('quizzes'));
 
 // Assignment Routes
-app.use('/api/assignments', require('./backend/routes/assignments'));
+app.use('/api/assignments', require('assignments'));
 
 // Resource Routes
-app.use('/api/resources', require('./backend/routes/resources'));
+app.use('/api/resources', require('resources'));
 
 // Announcement Routes
-app.use('/api/announcements', require('./backend/routes/announcements'));
+app.use('/api/announcements', require('announcements'));
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

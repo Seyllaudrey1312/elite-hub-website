@@ -1,7 +1,7 @@
 // routes/announcements.js - Announcement Routes
 const express = require('express');
 const router = express.Router();
-const Announcement = require('../models/Announcement');
+const Announcement = require('Announcement');
 
 // Get all announcements
 router.get('/', async (req, res) => {

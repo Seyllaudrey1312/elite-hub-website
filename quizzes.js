@@ -1,7 +1,7 @@
 // routes/quizzes.js - Quiz Routes
 const express = require('express');
 const router = express.Router();
-const Quiz = require('../models/Quiz');
+const Quiz = require('Quiz');
 
 // Get all quizzes
 router.get('/', async (req, res) => {

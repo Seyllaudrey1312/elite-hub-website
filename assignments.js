@@ -1,7 +1,7 @@
 // routes/assignments.js - Assignment Routes
 const express = require('express');
 const router = express.Router();
-const Assignment = require('../models/Assignment');
+const Assignment = require('Assignment');
 
 // Get all assignments
 router.get('/', async (req, res) => {

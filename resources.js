@@ -1,7 +1,7 @@
 // routes/resources.js - Resource Routes
 const express = require('express');
 const router = express.Router();
-const Resource = require('../models/Resource');
+const Resource = require('Resource');
 
 // Get all resources
 router.get('/', async (req, res) => {

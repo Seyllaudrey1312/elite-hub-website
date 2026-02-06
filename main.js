@@ -66,7 +66,7 @@ function startQuiz() {
 // Logout Function
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        window.location.href = '../pages/login.html';
+        window.location.href = 'login.html';
     }
 }
 
@@ -202,7 +202,7 @@ window.addEventListener('load', function() {
 });
 
 const bcrypt = require("bcrypt");
-const User = require("./models/User");
+const User = require("User");
 
 app.post("/register", async (req, res) => {
   const { fullName, password, role } = req.body;

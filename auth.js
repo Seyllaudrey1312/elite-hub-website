@@ -1,7 +1,7 @@
 // routes/auth.js - Authentication Routes
 const express = require('express');
 const router = express.Router();
-const Student = require('../models/Student');
+const Student = require('Student');
 const jwt = require('jsonwebtoken');
 
 // Register
