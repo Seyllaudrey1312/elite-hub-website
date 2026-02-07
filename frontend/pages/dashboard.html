@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard - Elite Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="icon" type="image/png" href="Favicon.png">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
@@ -18,8 +18,9 @@
                 </div>
                 
                 <div class="flex items-center space-x-4">
-                    <span class="text-sm">Welcome, John!</span>
-                    <button onclick="logout()" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Logout</button>
+                    <span class="text-sm" id="welcomeText">Welcome!</span>
+                    <a href="profile-edit.html" class="text-sm text-yellow-400 hover:text-yellow-300">Edit Profile</a>
+                    <button onclick="logoutHandler()" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Logout</button>
                 </div>
             </div>
         </div>
@@ -247,6 +248,103 @@
         </div>
     </footer>
 
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
+    <script>
+        // Load dashboard data on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication
+            if (!isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load and display student info
+            const student = getStoredStudent();
+            if (student) {
+                document.getElementById('welcomeText').textContent = `Welcome, ${student.name}!`;
+                
+                // Update profile card
+                document.querySelector('[contains(text(), "Name:")]')?.parentElement?.textContent ||
+                    updateProfileInfo(student);
+            }
+
+            // Load announcements
+            try {
+                const announcements = await getAllAnnouncements();
+                if (announcements.length > 0) {
+                    updateAnnouncementsDisplay(announcements.slice(0, 3));
+                }
+            } catch (error) {
+                console.error('Error loading announcements:', error);
+            }
+
+            // Load assignments
+            try {
+                const assignments = await getAllAssignments();
+                if (assignments.length > 0) {
+                    updateAssignmentsDisplay(assignments.slice(0, 3));
+                }
+            } catch (error) {
+                console.error('Error loading assignments:', error);
+            }
+        });
+
+        function updateProfileInfo(student) {
+            const profileCard = document.querySelector('.from-blue-900.to-green-700');
+            if (profileCard) {
+                profileCard.innerHTML = `
+                    <h3 class="text-lg font-bold mb-2">👤 Profile</h3>
+                    <div class="space-y-1 text-sm">
+                        <p><strong>Name:</strong> ${student.name}</p>
+                        <p><strong>Form:</strong> Form ${student.form}</p>
+                        <p><strong>Email:</strong> ${student.email}</p>
+                        <p><strong>Status:</strong> Active</p>
+                    </div>
+                    <a href="profile-edit.html" class="mt-4 inline-block text-yellow-400 hover:underline text-sm font-bold">Edit Profile →</a>
+                `;
+            }
+        }
+
+        function updateAnnouncementsDisplay(announcements) {
+            const announcementsContainer = document.querySelectorAll('.bg-white.rounded-lg.shadow-lg.p-6')[3];
+            if (announcementsContainer) {
+                let html = '<h2 class="text-xl font-bold text-blue-900 mb-4">📢 Recent Announcements</h2><div class="space-y-3">';
+                announcements.forEach(ann => {
+                    const categoryColor = {
+                        'important': 'red', 'resource': 'green', 'event': 'yellow',
+                        'update': 'blue', 'notice': 'orange'
+                    }[ann.category] || 'gray';
+                    html += `
+                        <div class="p-3 bg-${categoryColor}-50 rounded">
+                            <p class="font-bold text-sm text-blue-900">${ann.title}</p>
+                            <p class="text-xs text-gray-600">${new Date(ann.createdAt).toLocaleDateString()}</p>
+                        </div>
+                    `;
+                });
+                html += '</div><a href="./announcements.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>';
+                announcementsContainer.innerHTML = html;
+            }
+        }
+
+        function updateAssignmentsDisplay(assignments) {
+            const assignmentsContainer = document.querySelectorAll('.bg-white.rounded-lg.shadow-lg.p-6')[2];
+            if (assignmentsContainer) {
+                let html = '<h2 class="text-xl font-bold text-blue-900 mb-4">📋 Pending Assignments</h2><div class="space-y-3">';
+                assignments.forEach(ass => {
+                    const daysLeft = Math.ceil((new Date(ass.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
+                    const isUrgent = daysLeft < 3;
+                    html += `
+                        <div class="p-3 bg-${isUrgent ? 'red' : 'orange'}-50 border-l-4 border-${isUrgent ? 'red' : 'orange'}-500 rounded">
+                            <p class="font-bold text-sm text-blue-900">${ass.title}</p>
+                            <p class="text-xs text-gray-600">Due: ${new Date(ass.dueDate).toLocaleDateString()}</p>
+                        </div>
+                    `;
+                });
+                html += '</div><a href="./quizzes.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>';
+                assignmentsContainer.innerHTML = html;
+            }
+        }
+    </script>
 </body>
 </html>

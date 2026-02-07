@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-blue-900 text-white p-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <h1 class="text-2xl font-bold">Elite Hub</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="dashboard.html" class="hover:text-yellow-400">Dashboard</a>
+                <button onclick="logout()" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-2xl mx-auto py-8 px-4">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-4xl font-bold text-blue-900 mb-2">Edit Profile</h2>
+            <p class="text-gray-600">Update your personal information and preferences</p>
+        </div>
+
+        <!-- Profile Form -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <form id="profileForm">
+                <!-- Profile Picture -->
+                <div class="mb-8">
+                    <label class="block text-gray-700 font-bold mb-4">Profile Picture</label>
+                    <div class="flex items-center space-x-4">
+                        <div id="profileImageContainer" class="w-20 h-20 bg-blue-900 rounded-full flex items-center justify-center text-white text-2xl">
+                            <span id="initials">JD</span>
+                        </div>
+                        <input type="file" id="profileImage" accept="image/*" class="border border-gray-300 rounded px-4 py-2">
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="mb-6">
+                    <label for="fullName" class="block text-gray-700 font-bold mb-2">Full Name</label>
+                    <input type="text" id="fullName" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="Your full name">
+                </div>
+
+                <!-- Email -->
+                <div class="mb-6">
+                    <label for="email" class="block text-gray-700 font-bold mb-2">Email Address (Read-only)</label>
+                    <input type="email" id="email" name="email" disabled class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600" placeholder="student@school.com">
+                </div>
+
+                <!-- Form/Class -->
+                <div class="mb-6">
+                    <label for="form" class="block text-gray-700 font-bold mb-2">Form/Class</label>
+                    <select id="form" name="form" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200">
+                        <option value="">Select your form</option>
+                        <option value="1">Form 1</option>
+                        <option value="2">Form 2</option>
+                        <option value="3">Form 3</option>
+                        <option value="4">Form 4</option>
+                    </select>
+                </div>
+
+                <!-- Bio -->
+                <div class="mb-6">
+                    <label for="bio" class="block text-gray-700 font-bold mb-2">Bio</label>
+                    <textarea id="bio" name="bio" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="Tell us about yourself"></textarea>
+                </div>
+
+                <!-- Enrolled Subjects -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-bold mb-2">Enrolled Subjects</label>
+                    <div id="subjectsContainer" class="space-y-2"></div>
+                </div>
+
+                <!-- Password Change Section -->
+                <div class="border-t border-gray-300 pt-8 mt-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-6">Change Password</h3>
+
+                    <!-- Current Password -->
+                    <div class="mb-6">
+                        <label for="currentPassword" class="block text-gray-700 font-bold mb-2">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="Enter your current password">
+                    </div>
+
+                    <!-- New Password -->
+                    <div class="mb-6">
+                        <label for="newPassword" class="block text-gray-700 font-bold mb-2">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="Enter your new password">
+                    </div>
+
+                    <!-- Confirm New Password -->
+                    <div class="mb-6">
+                        <label for="confirmNewPassword" class="block text-gray-700 font-bold mb-2">Confirm New Password</label>
+                        <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="Confirm your new password">
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex space-x-4 mt-8">
+                    <button type="submit" class="bg-blue-900 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-800 transition">Save Changes</button>
+                    <a href="dashboard.html" class="bg-gray-300 text-gray-900 font-bold py-3 px-8 rounded-lg hover:bg-gray-400 transition">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Load current user data
+        async function loadUserProfile() {
+            try {
+                if (!isAuthenticated()) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const student = getStoredStudent();
+                if (student) {
+                    document.getElementById('fullName').value = student.name || '';
+                    document.getElementById('email').value = student.email || '';
+                    document.getElementById('form').value = student.form || '';
+                    
+                    // Update initials
+                    const names = student.name.split(' ');
+                    const initials = names.map(n => n[0]).join('').toUpperCase();
+                    document.getElementById('initials').textContent = initials || 'JD';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showNotification('Failed to load profile', 'error');
+            }
+        }
+
+        // Load subjects
+        async function loadSubjects() {
+            try {
+                const subjects = await getAllSubjects();
+                const container = document.getElementById('subjectsContainer');
+                container.innerHTML = '';
+                
+                subjects.forEach(subject => {
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center';
+                    label.innerHTML = `
+                        <input type="checkbox" class="subject-checkbox" value="${subject._id}" class="w-4 h-4 text-blue-900">
+                        <span class="ml-2 text-gray-700">${subject.name}</span>
+                    `;
+                    container.appendChild(label);
+                });
+            } catch (error) {
+                console.error('Error loading subjects:', error);
+                showNotification('Failed to load subjects', 'error');
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const student = getStoredStudent();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            // Validate password change
+            if (newPassword || confirmNewPassword) {
+                if (newPassword !== confirmNewPassword) {
+                    showNotification('Passwords do not match', 'error');
+                    return;
+                }
+                if (newPassword.length < 6) {
+                    showNotification('Password must be at least 6 characters', 'error');
+                    return;
+                }
+            }
+
+            const updates = {
+                name: document.getElementById('fullName').value,
+                form: document.getElementById('form').value
+            };
+
+            try {
+                await updateStudentProfile(student.id, updates);
+                showNotification('Profile updated successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            } catch (error) {
+                showNotification(error.message || 'Failed to update profile', 'error');
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+            loadSubjects();
+        });
+    </script>
+</body>
+</html>

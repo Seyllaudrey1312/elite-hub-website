@@ -1,5 +1,7 @@
 // Elite Hub - Main JavaScript File
 
+// ==================== INITIALIZATION ====================
+
 // Mobile Menu Toggle
 const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -10,9 +12,79 @@ if (mobileMenuBtn) {
     });
 }
 
+// Initialize on DOM Ready
+document.addEventListener('DOMContentLoaded', function() {
+    initializeAuthentication();
+    initializeLoginForm();
+    activateNavLink();
+    const theme = getUserPreference('theme') || 'light';
+    if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+    }
+});
+
+// ==================== AUTHENTICATION ====================
+
+// Initialize authentication state
+function initializeAuthentication() {
+    const token = localStorage.getItem('authToken');
+    const student = localStorage.getItem('student');
+    
+    if (token && student) {
+        // User is logged in
+        const loginBtn = document.getElementById('loginBtn');
+        if (loginBtn) {
+            loginBtn.textContent = 'Logout';
+            loginBtn.onclick = () => logoutHandler();
+        }
+    }
+}
+
+// Check if user is authenticated
+function isAuthenticated() {
+    return localStorage.getItem('authToken') !== null;
+}
+
+// Get stored student info
+function getStoredStudent() {
+    const student = localStorage.getItem('student');
+    return student ? JSON.parse(student) : null;
+}
+
+// Logout handler
+function logoutHandler() {
+    if (confirm('Are you sure you want to logout?')) {
+        logoutStudent();
+    }
+}
+
+// Login Form Handler
+function initializeLoginForm() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const result = await loginStudent(email, password);
+                showNotification('Login successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            } catch (error) {
+                showNotification(error.message || 'Login failed', 'error');
+            }
+        });
+    }
+}
+
+// ==================== UI FUNCTIONS ====================
+
 // Tab Switching for Quizzes Page
 function switchTab(tabName) {
-    // Hide all sections
     const quizzesSection = document.getElementById('quizzes-section');
     const assignmentsSection = document.getElementById('assignments-section');
     
@@ -57,73 +129,141 @@ function toggleSubject(element) {
     }
 }
 
-// Start Quiz Function
-// Wait until DOM is fully loaded
+// Notifications/Toast Messages
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 shadow-lg animate-slideInUp ${
+        type === 'success' ? 'bg-green-500' :
+        type === 'error' ? 'bg-red-500' :
+        type === 'warning' ? 'bg-yellow-500' :
+        'bg-blue-500'
+    }`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-    const startQuizBtn = document.getElementById("startQuizBtn");
-
-    if (startQuizBtn) {
-        startQuizBtn.addEventListener("click", async () => {
-            // Show loading message
-            alert("Quiz is starting...");
-            // Fetch quiz data from backend
-            try {
-                const res = await fetch("http://localhost:5000/api/quizzes");
-                const quizzes = await res.json();
-
-                // Redirect to quiz page (replace this url with actual quiz page)
-                window.location.href = "quiz-page.html";
-            } catch (err) {
-                console.error("Failed to load quizzes:", err);
-                alert("Failed to load quiizes.Try again later.");
-            }
-        });
-    }
-});
-
-
-
-// Logout Function
+// Logout Function (legacy support)
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        window.location.href = 'login.html';
+        logoutStudent();
     }
 }
 
-// Form Submission Handler
-document.addEventListener('DOMContentLoaded', function() {
-    // Contact Form
-    const contactForm = document.querySelector('form');
-    if (contactForm && contactForm.parentElement.classList.contains('bg-white')) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // Show success message
-            alert(`Thank you for your message, ${data.name}! We'll get back to you soon.`);
-            
-            // Reset form
-            this.reset();
-        });
-    }
-});
+// ==================== SEARCH FUNCTIONALITY ====================
 
-// Search Functionality (Study Resources Page)
+// Initialize search
 document.addEventListener('DOMContentLoaded', function() {
     const searchInputs = document.querySelectorAll('input[placeholder*="Search"]');
     
     searchInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            // In a real app, this would filter the resources
-            console.log('Searching for:', searchTerm);
-        });
+        input.addEventListener('input', debounce(async function() {
+            const searchTerm = this.value.trim();
+            if (searchTerm.length > 2) {
+                await performSearch(searchTerm);
+            }
+        }, 300));
     });
 });
+
+// Debounce function for search
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Perform search across all resources
+async function performSearch(query) {
+    try {
+        const results = await searchResources(query);
+        displaySearchResults(results);
+    } catch (error) {
+        console.error('Search error:', error);
+        showNotification('Search failed. Please try again.', 'error');
+    }
+}
+
+// Display search results
+function displaySearchResults(results) {
+    // Create or update search results container
+    let resultsContainer = document.getElementById('searchResults');
+    
+    if (!resultsContainer) {
+        resultsContainer = document.createElement('div');
+        resultsContainer.id = 'searchResults';
+        resultsContainer.className = 'fixed top-24 left-4 right-4 bg-white rounded-lg shadow-xl z-40 max-h-96 overflow-y-auto';
+        document.body.appendChild(resultsContainer);
+    }
+    
+    let html = '<div class="p-4">';
+    
+    if (results.subjects.length) {
+        html += '<div class="mb-4"><h3 class="font-bold text-blue-900 mb-2">Subjects</h3>';
+        results.subjects.forEach(s => {
+            html += `<a href="#" class="block p-2 hover:bg-gray-100 rounded">${s.name}</a>`;
+        });
+        html += '</div>';
+    }
+    
+    if (results.quizzes.length) {
+        html += '<div class="mb-4"><h3 class="font-bold text-blue-900 mb-2">Quizzes</h3>';
+        results.quizzes.forEach(q => {
+            html += `<a href="#" class="block p-2 hover:bg-gray-100 rounded">${q.title || 'Untitled Quiz'}</a>`;
+        });
+        html += '</div>';
+    }
+    
+    if (results.resources.length) {
+        html += '<div class="mb-4"><h3 class="font-bold text-blue-900 mb-2">Resources</h3>';
+        results.resources.forEach(r => {
+            html += `<a href="#" class="block p-2 hover:bg-gray-100 rounded">${r.title || 'Untitled Resource'}</a>`;
+        });
+        html += '</div>';
+    }
+    
+    if (results.announcements.length) {
+        html += '<div class="mb-4"><h3 class="font-bold text-blue-900 mb-2">Announcements</h3>';
+        results.announcements.forEach(a => {
+            html += `<a href="#" class="block p-2 hover:bg-gray-100 rounded">${a.title || 'Untitled Announcement'}</a>`;
+        });
+        html += '</div>';
+    }
+    
+    if (!results.subjects.length && !results.quizzes.length && !results.resources.length && !results.announcements.length) {
+        html += '<p class="text-gray-500 text-center py-4">No results found</p>';
+    }
+    
+    html += '</div>';
+    resultsContainer.innerHTML = html;
+    resultsContainer.style.display = 'block';
+}
+
+// Close search results on escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const resultsContainer = document.getElementById('searchResults');
+        if (resultsContainer) {
+            resultsContainer.style.display = 'none';
+        }
+    }
+});
+
+// ==================== UTILITIES ====================
 
 // Smooth Scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -142,38 +282,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Active Navigation Link
 function activateNavLink() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinks = document.querySelectorAll('nav a');
+    const navLinks = document.querySelectorAll('nav a, .nav-link');
     
     navLinks.forEach(link => {
         const href = link.getAttribute('href');
         if (href === currentPage || (currentPage === '' && href === 'index.html')) {
-            link.classList.add('text-yellow-400');
+            link.classList.add('text-yellow-400', 'font-bold');
         }
     });
 }
 
-// Call on page load
-window.addEventListener('load', activateNavLink);
-
-// Notifications/Toast Messages
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 ${
-        type === 'success' ? 'bg-green-500' :
-        type === 'error' ? 'bg-red-500' :
-        type === 'warning' ? 'bg-yellow-500' :
-        'bg-blue-500'
-    }`;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
-
-// Quiz Progress Bar (if needed)
+// Quiz Progress Bar
 function updateProgressBar(current, total) {
     const percentage = (current / total) * 100;
     const progressBar = document.querySelector('.progress-bar');
@@ -181,6 +300,8 @@ function updateProgressBar(current, total) {
         progressBar.style.width = percentage + '%';
     }
 }
+
+// ==================== LOCAL STORAGE ====================
 
 // Local Storage for Student Preferences
 function saveUserPreference(key, value) {
@@ -214,47 +335,9 @@ function toggleTheme() {
     }
 }
 
-// Initialize theme on page load
-window.addEventListener('load', function() {
-    const theme = getUserPreference('theme') || 'light';
-    if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-    }
-});
-
-const bcrypt = require("bcrypt");
-const User = require("User");
-
-app.post("/register", async (req, res) => {
-  const { fullName, password, role } = req.body;
-
-  if (!fullName || !password || !role) {
-    return res.status(400).json({ message: "All fields required" });
-  }
-
-  // count users by role
-  const count = await User.countDocuments({ role });
-
-  const eliteCode = generateEliteCode(role, fullName, count);
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = new User({
-    fullName,
-    role,
-    eliteCode,
-    password: hashedPassword
-  });
-
-  await user.save();
-
-  res.json({
-    message: "Registration successful!",
-    code: eliteCode
-  });
-});
-
+// ==================== CONSOLE ====================
 
 // Console message for developers
 console.log('%c Welcome to Elite Hub Student Platform', 'font-size: 18px; color: #003d82; font-weight: bold;');
 console.log('%c Version 1.0.0 | Build Date: February 2026', 'font-size: 12px; color: #666;');
+
