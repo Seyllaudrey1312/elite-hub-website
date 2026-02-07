@@ -69,10 +69,10 @@
                     </div>
                     <div class="p-6">
                         <div class="space-y-2 form-list hidden">
-                            <a href="#" class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 1</a>
-                            <a href="#" class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 2</a>
-                            <a href="#" class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 3</a>
-                            <a href="#" class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 4</a>
+                            <a href="../assets/docs/maths/Maths-Form-1-Notes-Updated-Teacher.co_.ke_.pdf" download class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 1</a>
+                            <a href="../assets/docs/maths/Maths-Form-2-Notes-Updated-Teacher.co_.ke_.pdf" download class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 2</a>
+                            <a href="../assets/docs/maths/Maths-Form-3-Notes-Teacher.co_.ke_.pdf" download class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 3</a>
+                            <a href="../assets/docs/maths/Math-Form-4-Notes-Teacher.co_.ke_.pdf" download class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 4</a>
                         </div>
                         <p class="text-gray-600 form-prompt">Click to expand</p>
                     </div>
@@ -333,19 +333,40 @@
                     subjects.forEach(subject => {
                         const colors = ['blue', 'yellow', 'green', 'red', 'purple', 'orange', 'indigo', 'teal'];
                         const color = colors[Math.floor(Math.random() * colors.length)];
-                        
+
+                        // For Mathematics, use specific notes files if available in assets/docs/maths/
+                        const mathFiles = {
+                            1: 'Maths-Form-1-Notes-Updated-Teacher.co_.ke_.pdf',
+                            2: 'Maths-Form-2-Notes-Updated-Teacher.co_.ke_.pdf',
+                            3: 'Maths-Form-3-Notes-Teacher.co_.ke_.pdf',
+                            4: 'Math-Form-4-Notes-Teacher.co_.ke_.pdf'
+                        };
+
                         const subjectCard = document.createElement('div');
                         subjectCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition cursor-pointer';
                         subjectCard.onclick = function() { toggleSubject(this); };
+
+                        // Build forms links; if subject is Mathematics, link to actual PDF files (download)
+                        let formsHtml = '';
+                        if (subject.name && subject.name.toLowerCase().includes('math')) {
+                            [1,2,3,4].forEach(f => {
+                                const fileName = mathFiles[f];
+                                const href = fileName ? `../assets/docs/maths/${fileName}` : '#';
+                                formsHtml += `<a href="${href}" download class="block px-4 py-2 bg-${color}-50 text-${color}-900 rounded hover:bg-${color}-100 transition">Form ${f}</a>`;
+                            });
+                        } else {
+                            [1,2,3,4].forEach(f => {
+                                formsHtml += `<a href="#" class="block px-4 py-2 bg-${color}-50 text-${color}-900 rounded hover:bg-${color}-100 transition">Form ${f}</a>`;
+                            });
+                        }
+
                         subjectCard.innerHTML = `
                             <div class="bg-${color}-500 text-white p-6">
                                 <h3 class="text-2xl font-bold">${subject.name}</h3>
                             </div>
                             <div class="p-6">
                                 <div class="space-y-2 form-list hidden">
-                                    ${[1,2,3,4].map(form => `
-                                        <a href="#" class="block px-4 py-2 bg-${color}-50 text-${color}-900 rounded hover:bg-${color}-100 transition">Form ${form}</a>
-                                    `).join('')}
+                                    ${formsHtml}
                                 </div>
                                 <p class="text-gray-600 form-prompt">Click to expand</p>
                             </div>
