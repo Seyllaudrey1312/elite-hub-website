@@ -1,7 +1,20 @@
 // routes/quizzes.js - Quiz Routes
 const express = require('express');
 const router = express.Router();
-const Quiz = require('Quiz');
+const Quiz = require('../models/Quiz');
+const auth = require("../middleware/auth")
+
+
+// Get all quizzes (protected)
+
+router.get("/" , auth, async (req, res) => {
+    try {
+        const assignments = await quizzes.find();
+        res.json(quizzes);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error"})
+    }
+});
 
 // Get all quizzes
 router.get('/', async (req, res) => {

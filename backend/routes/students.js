@@ -1,7 +1,20 @@
 // routes/students.js - Student Routes
 const express = require('express');
 const router = express.Router();
-const Student = require('Student');
+const Student = require('../models/Student');
+const auth = require("../middleware/auth");
+
+
+// Get all students (protected)
+
+router.get("/" , auth, async (req, res) => {
+    try {
+        const assignments = await Student.find();
+        res.json(students);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error"})
+    }
+});
 
 // Get all students
 router.get('/', async (req, res) => {

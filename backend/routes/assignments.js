@@ -1,7 +1,22 @@
 // routes/assignments.js - Assignment Routes
 const express = require('express');
 const router = express.Router();
-const Assignment = require('Assignment');
+const Assignment = require('../models/Assignment');
+const auth = require("../middleware/auth")
+
+
+// Get all assignments (protected)
+
+router.get("/" , auth, async (req, res) => {
+    try {
+        const assignments = await Assignment.find();
+        res.json(assignments);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error"})
+    }
+});
+
+module.exports = router;
 
 // Get all assignments
 router.get('/', async (req, res) => {

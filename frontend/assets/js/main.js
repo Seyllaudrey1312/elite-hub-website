@@ -58,10 +58,31 @@ function toggleSubject(element) {
 }
 
 // Start Quiz Function
-function startQuiz() {
-    alert('Quiz starting... (Feature to be implemented)');
-    // In a real application, this would redirect to a quiz page
-}
+// Wait until DOM is fully loaded
+
+document.addEventListener("DOMContentLoaded", () => {
+    const startQuizBtn = document.getElementById("startQuizBtn");
+
+    if (startQuizBtn) {
+        startQuizBtn.addEventListener("click", async () => {
+            // Show loading message
+            alert("Quiz is starting...");
+            // Fetch quiz data from backend
+            try {
+                const res = await fetch("http://localhost:5000/api/quizzes");
+                const quizzes = await res.json();
+
+                // Redirect to quiz page (replace this url with actual quiz page)
+                window.location.href = "quiz-page.html";
+            } catch (err) {
+                console.error("Failed to load quizzes:", err);
+                alert("Failed to load quiizes.Try again later.");
+            }
+        });
+    }
+});
+
+
 
 // Logout Function
 function logout() {

@@ -1,7 +1,20 @@
 // routes/announcements.js - Announcement Routes
 const express = require('express');
 const router = express.Router();
-const Announcement = require('Announcement');
+const Announcement = require('../models/Announcement');
+const auth = require("../middleware/auth")
+
+// Get all Announcements (protected)
+
+router.get("/" , auth, async (req, res) => {
+    try {
+        const assignments = await Announcement.find();
+        res.json(announcements);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error"})
+    }
+});
+
 
 // Get all announcements
 router.get('/', async (req, res) => {
