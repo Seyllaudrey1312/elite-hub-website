@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-blue-900 text-white flex flex-col">
+            <div class="p-6 border-b border-blue-800">
+                <h1 class="text-2xl font-bold">Elite Hub Admin</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="admin-dashboard.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📊 Dashboard</a>
+                <a href="admin-quiz-builder.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📝 Create Quiz</a>
+                <a href="admin-quiz-results.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📈 Quiz Results</a>
+                <a href="admin-resources.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📚 Resources</a>
+                <a href="admin-students.html" class="block px-4 py-2 rounded-lg bg-blue-700">👥 Students</a>
+                <a href="admin-announcements.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📢 Announcements</a>
+            </nav>
+            <div class="p-4 border-t border-blue-800">
+                <button onclick="adminLogout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
+                    🚪 Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Student Management</h2>
+                    <p class="text-gray-600">View and manage all enrolled students</p>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Search by Name or Email</label>
+                            <input type="text" id="search-input" placeholder="Type to search..."
+                                onkeyup="filterStudents()"
+                                class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Filter by Form</label>
+                            <select id="form-filter" onchange="filterStudents()"
+                                class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                                <option value="">All Forms</option>
+                                <option value="1">Form 1</option>
+                                <option value="2">Form 2</option>
+                                <option value="3">Form 3</option>
+                                <option value="4">Form 4</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Filter by Status</label>
+                            <select id="status-filter" onchange="filterStudents()"
+                                class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="grid grid-cols-4 gap-4 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600 mb-2">Total Students</p>
+                        <p class="text-3xl font-bold text-blue-600" id="total-students">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600 mb-2">Active Students</p>
+                        <p class="text-3xl font-bold text-green-600" id="active-students">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600 mb-2">Avg. Completion Rate</p>
+                        <p class="text-3xl font-bold text-purple-600" id="avg-completion">0%</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600 mb-2">Avg. Quiz Score</p>
+                        <p class="text-3xl font-bold text-orange-600" id="avg-score">0%</p>
+                    </div>
+                </div>
+
+                <!-- Students Table -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-800">Students List</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-100 border-b border-gray-200">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Name</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Email</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Form</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Subjects</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Quizzes Taken</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Avg. Score</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Status</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-tbody">
+                                <!-- Students will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="bg-white rounded-lg shadow p-12 text-center hidden">
+                    <p class="text-gray-600 text-lg">No students found</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div id="detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="px-6 py-4 border-b border-gray-200 sticky top-0 bg-white">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-gray-800">Student Details</h3>
+                    <button onclick="closeDetailModal()" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+            </div>
+            <div id="detail-content" class="px-6 py-4">
+                <!-- Details will be inserted here -->
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-right">
+                <button onclick="closeDetailModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg font-medium">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        // State
+        let allStudents = [];
+        let filteredStudents = [];
+
+        // Initialize
+        async function init() {
+            try {
+                // Check admin auth
+                checkAdminAuth();
+
+                // Load students
+                await loadStudents();
+            } catch (error) {
+                console.error('Error initializing:', error);
+                showNotification('Failed to load students', 'error');
+            }
+        }
+
+        async function loadStudents() {
+            try {
+                // Fetch all students (would need to create this endpoint)
+                // For now, showing mock data structure
+                const response = await fetch('/api/students', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to load students');
+
+                allStudents = await response.json();
+                filteredStudents = [...allStudents];
+
+                updateStats();
+                displayStudents();
+            } catch (error) {
+                console.error('Error loading students:', error);
+                // Show mock data for demo
+                showNotification('Using demo data (backend endpoint not yet created)', 'info');
+                allStudents = generateMockStudents();
+                filteredStudents = [...allStudents];
+                updateStats();
+                displayStudents();
+            }
+        }
+
+        function generateMockStudents() {
+            return [
+                {
+                    _id: '1',
+                    name: 'Alice Johnson',
+                    email: 'alice@example.com',
+                    form: '3',
+                    subjects: ['Mathematics', 'Physics', 'Chemistry'],
+                    quizResults: [
+                        { percentage: 85 },
+                        { percentage: 90 },
+                        { percentage: 78 }
+                    ],
+                    status: 'active'
+                },
+                {
+                    _id: '2',
+                    name: 'Bob Smith',
+                    email: 'bob@example.com',
+                    form: '4',
+                    subjects: ['Biology', 'Chemistry'],
+                    quizResults: [
+                        { percentage: 72 },
+                        { percentage: 81 }
+                    ],
+                    status: 'active'
+                },
+                {
+                    _id: '3',
+                    name: 'Carol White',
+                    email: 'carol@example.com',
+                    form: '2',
+                    subjects: ['English', 'History'],
+                    quizResults: [
+                        { percentage: 92 },
+                        { percentage: 88 },
+                        { percentage: 95 }
+                    ],
+                    status: 'active'
+                }
+            ];
+        }
+
+        function updateStats() {
+            const totalStudents = allStudents.length;
+            const activeStudents = allStudents.filter(s => s.status === 'active').length;
+
+            let totalCompletionRate = 0;
+            let completionCount = 0;
+            let totalAvgScore = 0;
+            let scoreCount = 0;
+
+            allStudents.forEach(student => {
+                if (student.quizResults && student.quizResults.length > 0) {
+                    completionCount++;
+                    const avgScore = student.quizResults.reduce((sum, r) => sum + r.percentage, 0) / student.quizResults.length;
+                    totalAvgScore += avgScore;
+                    scoreCount++;
+                    // Completion rate = completed quizzes / available quizzes (mock: 70% baseline)
+                    totalCompletionRate += Math.min(student.quizResults.length * 20, 100);
+                }
+            });
+
+            document.getElementById('total-students').textContent = totalStudents;
+            document.getElementById('active-students').textContent = activeStudents;
+            document.getElementById('avg-completion').textContent = 
+                completionCount > 0 ? Math.round(totalCompletionRate / completionCount) : 0;
+            document.getElementById('avg-score').textContent = 
+                scoreCount > 0 ? Math.round(totalAvgScore / scoreCount) : 0;
+        }
+
+        function displayStudents() {
+            const tbody = document.getElementById('students-tbody');
+            const emptyState = document.getElementById('empty-state');
+
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            tbody.innerHTML = '';
+
+            filteredStudents.forEach(student => {
+                const quizzesTaken = student.quizResults ? student.quizResults.length : 0;
+                const avgScore = quizzesTaken > 0 ?
+                    Math.round(student.quizResults.reduce((sum, r) => sum + r.percentage, 0) / quizzesTaken) : 0;
+                const statusColor = student.status === 'active' ? 'text-green-600' : 'text-red-600';
+                const statusText = student.status === 'active' ? '✅ Active' : '⚫ Inactive';
+
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200 hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="px-6 py-4 font-medium text-gray-800">${student.name}</td>
+                    <td class="px-6 py-4 text-gray-700">${student.email}</td>
+                    <td class="px-6 py-4 text-gray-700">Form ${student.form}</td>
+                    <td class="px-6 py-4 text-gray-700">${student.subjects.join(', ')}</td>
+                    <td class="px-6 py-4 font-bold text-gray-800">${quizzesTaken}</td>
+                    <td class="px-6 py-4 font-bold text-blue-600">${avgScore}%</td>
+                    <td class="px-6 py-4 ${statusColor} font-bold">${statusText}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="viewStudentDetail('${student._id}')" class="text-blue-600 hover:text-blue-800 font-medium">
+                            View
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterStudents() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const formFilter = document.getElementById('form-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+
+            filteredStudents = allStudents.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm) ||
+                    student.email.toLowerCase().includes(searchTerm);
+                const matchesForm = !formFilter || student.form === formFilter;
+                const matchesStatus = !statusFilter || student.status === statusFilter;
+
+                return matchesSearch && matchesForm && matchesStatus;
+            });
+
+            displayStudents();
+        }
+
+        function viewStudentDetail(studentId) {
+            const student = allStudents.find(s => s._id === studentId);
+            if (!student) return;
+
+            const quizzesTaken = student.quizResults ? student.quizResults.length : 0;
+            const avgScore = quizzesTaken > 0 ?
+                Math.round(student.quizResults.reduce((sum, r) => sum + r.percentage, 0) / quizzesTaken) : 0;
+
+            let html = `
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Name</p>
+                        <p class="text-lg font-bold text-gray-800">${student.name}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Email</p>
+                        <p class="text-lg text-gray-800">${student.email}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Form</p>
+                        <p class="text-lg text-gray-800">Form ${student.form}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Subjects</p>
+                        <p class="text-lg text-gray-800">${student.subjects.join(', ')}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Quizzes Taken</p>
+                        <p class="text-lg font-bold text-gray-800">${quizzesTaken}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Average Score</p>
+                        <p class="text-lg font-bold text-blue-600">${avgScore}%</p>
+                    </div>
+                    ${student.quizResults && student.quizResults.length > 0 ? `
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">Recent Quiz Scores</p>
+                            <div class="space-y-1">
+                                ${student.quizResults.slice(-3).map(r => `
+                                    <p class="text-sm text-gray-700">• ${r.percentage}%</p>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            document.getElementById('detail-content').innerHTML = html;
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
+        function checkAdminAuth() {
+            const isAdmin = localStorage.getItem('isAdmin');
+            if (!isAdmin) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        function adminLogout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('isAdmin');
+            window.location.href = 'admin-login.html';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

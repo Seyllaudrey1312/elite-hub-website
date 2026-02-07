@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Portal - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-600 to-blue-900 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">Elite Hub</h1>
+            <p class="text-blue-100">Parent Portal - Monitor Your Child's Progress</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="bg-white rounded-lg shadow-2xl overflow-hidden">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200">
+                <button id="login-tab" onclick="switchTab('login')" class="flex-1 py-4 px-4 text-center font-bold text-blue-600 border-b-2 border-blue-600 bg-blue-50">
+                    Login
+                </button>
+                <button id="register-tab" onclick="switchTab('register')" class="flex-1 py-4 px-4 text-center font-bold text-gray-600 hover:text-blue-600">
+                    Register
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="p-8 space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="login-email" placeholder="your@email.com"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                </div>
+
+                <button onclick="parentLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">
+                    Login to Portal
+                </button>
+
+                <div class="text-center text-sm text-gray-600">
+                    <p>Don't have an account? <a href="#" onclick="switchTab('register')" class="text-blue-600 hover:underline font-bold">Register here</a></p>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="hidden p-8 space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+                    <input type="text" id="register-name" placeholder="John Doe"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="register-email" placeholder="your@email.com"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
+                    <input type="tel" id="register-phone" placeholder="+1 (555) 123-4567"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+                    <input type="password" id="register-password" placeholder="••••••••"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Confirm Password</label>
+                    <input type="password" id="register-confirm-password" placeholder="••••••••"
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                </div>
+
+                <button onclick="parentRegister()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition">
+                    Create Account
+                </button>
+
+                <div class="text-center text-sm text-gray-600">
+                    <p>Already have an account? <a href="#" onclick="switchTab('login')" class="text-blue-600 hover:underline font-bold">Login here</a></p>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="bg-blue-50 px-8 py-4 border-t border-gray-200">
+                <p class="text-xs text-gray-600 text-center">
+                    🔒 Your data is secure. After registration, link your child's account to monitor their academic progress, quiz scores, and attendance.
+                </p>
+            </div>
+        </div>
+
+        <!-- Back to Student Portal -->
+        <div class="text-center mt-6">
+            <a href="login.html" class="text-blue-100 hover:text-white transition underline">
+                ← Back to Student Login
+            </a>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        function switchTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('login-form').classList.remove('hidden');
+                document.getElementById('register-form').classList.add('hidden');
+                document.getElementById('login-tab').classList.add('border-b-2', 'border-blue-600', 'bg-blue-50');
+                document.getElementById('login-tab').classList.remove('text-gray-600');
+                document.getElementById('login-tab').classList.add('text-blue-600', 'font-bold');
+                document.getElementById('register-tab').classList.remove('border-b-2', 'border-blue-600', 'bg-blue-50');
+                document.getElementById('register-tab').classList.add('text-gray-600');
+            } else {
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('register-form').classList.remove('hidden');
+                document.getElementById('register-tab').classList.add('border-b-2', 'border-blue-600', 'bg-blue-50');
+                document.getElementById('register-tab').classList.remove('text-gray-600');
+                document.getElementById('register-tab').classList.add('text-blue-600', 'font-bold');
+                document.getElementById('login-tab').classList.remove('border-b-2', 'border-blue-600', 'bg-blue-50');
+                document.getElementById('login-tab').classList.add('text-gray-600');
+            }
+        }
+
+        async function parentLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/parents/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showNotification(data.error || 'Login failed', 'error');
+                    return;
+                }
+
+                // Store parent data
+                localStorage.setItem('parentToken', data.token);
+                localStorage.setItem('parent', JSON.stringify(data.parent));
+                localStorage.setItem('isParent', 'true');
+
+                showNotification('Login successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'parent-dashboard.html';
+                }, 1500);
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('An error occurred. Please try again.', 'error');
+            }
+        }
+
+        async function parentRegister() {
+            const name = document.getElementById('register-name').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const phone = document.getElementById('register-phone').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            if (!name || !email || !password) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/parents/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, confirmPassword, phone })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showNotification(data.error || 'Registration failed', 'error');
+                    return;
+                }
+
+                // Store parent data
+                localStorage.setItem('parentToken', data.token);
+                localStorage.setItem('parent', JSON.stringify(data.parent));
+                localStorage.setItem('isParent', 'true');
+
+                showNotification('Account created successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'parent-dashboard.html';
+                }, 1500);
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('An error occurred. Please try again.', 'error');
+            }
+        }
+
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('parentToken')) {
+                window.location.href = 'parent-dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

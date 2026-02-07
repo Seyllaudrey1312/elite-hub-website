@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Resources - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Navigation -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-900 text-white overflow-y-auto">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
+                <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
+            </div>
+
+            <nav class="mt-8">
+                <a href="admin-dashboard.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📊 Dashboard
+                </a>
+                <a href="admin-resources.html" class="block px-6 py-3 bg-blue-800 border-l-4 border-yellow-400 text-white hover:bg-blue-700 transition">
+                    📄 Manage Resources
+                </a>
+                <a href="admin-quiz-builder.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    ❓ Create Quizzes
+                </a>
+                <a href="admin-quiz-results.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📈 Quiz Results
+                </a>
+                <a href="admin-students.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    👥 Students
+                </a>
+                <a href="admin-announcements.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📢 Announcements
+                </a>
+                <a href="admin-subjects.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📚 Subjects
+                </a>
+                <hr class="my-4 border-blue-700">
+                <a href="#" onclick="adminLogout()" class="block px-6 py-3 text-gray-300 hover:bg-red-600 transition">
+                    🔓 Logout
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Top Navigation -->
+            <div class="bg-white shadow">
+                <div class="px-8 py-4 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-800">📄 Manage Resources</h2>
+                    <button onclick="document.getElementById('uploadModal').classList.remove('hidden')" class="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-bold">
+                        ➕ Upload New Resource
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-8">
+                <!-- Upload Form Modal -->
+                <div id="uploadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">📤 Upload Resource</h2>
+                        <form id="uploadForm">
+                            <!-- Title -->
+                            <div class="mb-6">
+                                <label for="resourceTitle" class="block text-gray-700 font-bold mb-2">Resource Title</label>
+                                <input type="text" id="resourceTitle" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-6">
+                                <label for="resourceDesc" class="block text-gray-700 font-bold mb-2">Description</label>
+                                <textarea id="resourceDesc" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+
+                            <!-- Subject -->
+                            <div class="mb-6">
+                                <label for="resourceSubject" class="block text-gray-700 font-bold mb-2">Subject</label>
+                                <select id="resourceSubject" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Select subject</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="Physics">Physics</option>
+                                    <option value="Chemistry">Chemistry</option>
+                                    <option value="Biology">Biology</option>
+                                    <option value="English">English</option>
+                                    <option value="Kiswahili">Kiswahili</option>
+                                    <option value="History">History</option>
+                                    <option value="Geography">Geography</option>
+                                </select>
+                            </div>
+
+                            <!-- Resource Type -->
+                            <div class="mb-6">
+                                <label for="resourceType" class="block text-gray-700 font-bold mb-2">Resource Type</label>
+                                <select id="resourceType" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Select type</option>
+                                    <option value="notes">Notes/Handout</option>
+                                    <option value="past-paper">Past Paper</option>
+                                    <option value="worked-example">Worked Example</option>
+                                    <option value="revision-guide">Revision Guide</option>
+                                    <option value="video">Video</option>
+                                </select>
+                            </div>
+
+                            <!-- Forms -->
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-bold mb-2">Applicable Forms</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center"><input type="checkbox" value="1" class="form-checkbox"> Form 1</label>
+                                    <label class="flex items-center"><input type="checkbox" value="2" class="form-checkbox"> Form 2</label>
+                                    <label class="flex items-center"><input type="checkbox" value="3" class="form-checkbox"> Form 3</label>
+                                    <label class="flex items-center"><input type="checkbox" value="4" class="form-checkbox"> Form 4</label>
+                                </div>
+                            </div>
+
+                            <!-- File Upload -->
+                            <div class="mb-6">
+                                <label for="resourceFile" class="block text-gray-700 font-bold mb-2">Upload File (PDF/Video URL)</label>
+                                <input type="file" id="resourceFile" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex space-x-4">
+                                <button type="submit" class="flex-1 bg-blue-900 text-white font-bold py-2 rounded-lg hover:bg-blue-800 transition">Upload</button>
+                                <button type="button" onclick="document.getElementById('uploadModal').classList.add('hidden')" class="flex-1 bg-gray-300 text-gray-800 font-bold py-2 rounded-lg hover:bg-gray-400 transition">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Resources Table -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <table class="w-full text-sm text-left text-gray-700">
+                        <thead class="bg-gray-50 border-b-2 border-gray-200">
+                            <tr>
+                                <th class="px-6 py-3 font-bold">Title</th>
+                                <th class="px-6 py-3 font-bold">Subject</th>
+                                <th class="px-6 py-3 font-bold">Type</th>
+                                <th class="px-6 py-3 font-bold">Forms</th>
+                                <th class="px-6 py-3 font-bold">Downloads</th>
+                                <th class="px-6 py-3 font-bold">Uploaded</th>
+                                <th class="px-6 py-3 font-bold">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resourcesTableBody">
+                            <tr class="border-b hover:bg-gray-50">
+                                <td colspan="7" class="px-6 py-3 text-center text-gray-500">Loading resources...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Check admin auth
+        function checkAdminAuth() {
+            if (!localStorage.getItem('isAdmin') || !localStorage.getItem('adminToken')) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        // Load resources
+        async function loadResources() {
+            try {
+                const resources = await getAllResources();
+                const tbody = document.getElementById('resourcesTableBody');
+                tbody.innerHTML = '';
+
+                if (!resources || resources.length === 0) {
+                    tbody.innerHTML = '<tr class="border-b"><td colspan="7" class="px-6 py-3 text-center text-gray-500">No resources uploaded yet</td></tr>';
+                    return;
+                }
+
+                resources.forEach(resource => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b hover:bg-gray-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-3"><strong>${resource.title || 'Untitled'}</strong></td>
+                        <td class="px-6 py-3">${resource.subject || 'N/A'}</td>
+                        <td class="px-6 py-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">${resource.type || 'File'}</span></td>
+                        <td class="px-6 py-3">${resource.applicableForms?.join(', ') || 'All'}</td>
+                        <td class="px-6 py-3"><span class="font-bold">${resource.downloadCount || 0}</span></td>
+                        <td class="px-6 py-3 text-gray-500">${new Date(resource.createdAt).toLocaleDateString()}</td>
+                        <td class="px-6 py-3 space-x-2">
+                            <button onclick="editResource('${resource._id}')" class="text-blue-600 hover:text-blue-800 font-bold">Edit</button>
+                            <button onclick="deleteResource('${resource._id}')" class="text-red-600 hover:text-red-800 font-bold">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading resources:', error);
+                showNotification('Failed to load resources', 'error');
+            }
+        }
+
+        // Handle upload
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('resourceTitle').value;
+            const description = document.getElementById('resourceDesc').value;
+            const subject = document.getElementById('resourceSubject').value;
+            const type = document.getElementById('resourceType').value;
+            const forms = Array.from(document.querySelectorAll('.form-checkbox:checked')).map(cb => cb.value);
+
+            try {
+                // Simulate resource creation (in production, would upload to server)
+                const newResource = {
+                    title,
+                    description,
+                    subject,
+                    type,
+                    applicableForms: forms,
+                    downloadCount: 0,
+                    createdAt: new Date()
+                };
+
+                // Show success
+                showNotification('Resource uploaded successfully!', 'success');
+                document.getElementById('uploadModal').classList.add('hidden');
+                document.getElementById('uploadForm').reset();
+                loadResources();
+            } catch (error) {
+                showNotification('Failed to upload resource', 'error');
+            }
+        });
+
+        function editResource(resourceId) {
+            showNotification('Edit feature coming soon', 'info');
+        }
+
+        async function deleteResource(resourceId) {
+            if (confirm('Delete this resource?')) {
+                try {
+                    // Would delete from server
+                    showNotification('Resource deleted', 'success');
+                    loadResources();
+                } catch (error) {
+                    showNotification('Failed to delete resource', 'error');
+                }
+            }
+        }
+
+        function adminLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('isAdmin');
+                localStorage.removeItem('adminToken');
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+            loadResources();
+        });
+    </script>
+</body>
+</html>

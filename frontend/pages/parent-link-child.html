@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Child Account - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-blue-900 text-white flex flex-col">
+            <div class="p-6 border-b border-blue-800">
+                <h1 class="text-2xl font-bold">Elite Hub</h1>
+                <p class="text-sm text-blue-200">Parent Portal</p>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="parent-dashboard.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📊 Dashboard</a>
+                <a href="parent-link-child.html" class="block px-4 py-2 rounded-lg bg-blue-700">🔗 Link Child</a>
+            </nav>
+            <div class="p-4 border-t border-blue-800">
+                <button onclick="parentLogout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
+                    🚪 Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+            <!-- Header -->
+            <header class="bg-white shadow-sm sticky top-0 z-10">
+                <div class="px-8 py-4">
+                    <h1 class="text-3xl font-bold text-gray-800">Link Child Account</h1>
+                </div>
+            </header>
+
+            <div class="p-8">
+                <!-- Instructions -->
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-8">
+                    <h2 class="text-xl font-bold text-blue-900 mb-3">How to Link Your Child's Account</h2>
+                    <ol class="list-decimal list-inside space-y-2 text-blue-900">
+                        <li>Enter your child's email address below</li>
+                        <li>We'll send them a unique linking code</li>
+                        <li>Your child should log in and accept the parent linking request</li>
+                        <li>Once confirmed, you'll have access to their academic progress</li>
+                    </ol>
+                </div>
+
+                <!-- Link Child Form -->
+                <div class="bg-white rounded-lg shadow p-8 max-w-2xl">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Request Child Link</h2>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Child's Email Address</label>
+                            <input type="email" id="child-email" placeholder="child@example.com"
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                            <p class="text-xs text-gray-500 mt-2">Make sure to use the email your child registered with</p>
+                        </div>
+
+                        <button onclick="requestChildLink()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">
+                            Send Link Request
+                        </button>
+                    </div>
+
+                    <!-- Request Status -->
+                    <div id="request-status" class="hidden mt-6 p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                        <p class="text-green-900 font-bold mb-2">✅ Link Request Sent!</p>
+                        <p class="text-sm text-green-800 mb-3">
+                            A linking request has been sent to your child. They need to log in to their account and accept the request.
+                        </p>
+                        <div class="bg-white p-4 rounded border border-green-200">
+                            <p class="text-sm text-gray-700 mb-2"><strong>Linking Code:</strong></p>
+                            <p id="link-code-display" class="text-lg font-bold text-blue-600 font-mono p-2 bg-gray-100 rounded">-</p>
+                            <p class="text-xs text-gray-600 mt-2">This code will expire in 24 hours</p>
+                        </div>
+                        <button onclick="copyLinkCode()" class="mt-3 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg">
+                            Copy Code
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Currently Linked Children -->
+                <div class="bg-white rounded-lg shadow p-8 max-w-2xl mt-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Linked Children</h2>
+
+                    <div id="linked-children-list" class="space-y-3">
+                        <!-- Linked children will be displayed here -->
+                    </div>
+
+                    <div id="no-linked" class="text-center py-8 text-gray-600">
+                        <p>No children linked yet</p>
+                    </div>
+                </div>
+
+                <!-- For Students Section -->
+                <div class="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6 mt-8 max-w-2xl">
+                    <h3 class="text-lg font-bold text-yellow-900 mb-3">👨‍👩‍👧 For Students: How to Accept Parent Link</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-yellow-900 text-sm">
+                        <li>When your parent sends a linking request, you'll receive a notification</li>
+                        <li>Log in to your student account</li>
+                        <li>Go to Settings → Parent Linking</li>
+                        <li>Enter the code your parent provides or confirm the request</li>
+                        <li>Once confirmed, your parent can view your progress, scores, and announcements</li>
+                    </ol>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        let currentParent = null;
+        let linkedChildren = [];
+
+        // Initialize
+        async function init() {
+            try {
+                const parentToken = localStorage.getItem('parentToken');
+                if (!parentToken) {
+                    window.location.href = 'parent-login.html';
+                    return;
+                }
+
+                // Fetch parent data
+                const response = await fetch('/api/parents/me', {
+                    headers: { 'Authorization': `Bearer ${parentToken}` }
+                });
+
+                if (!response.ok) {
+                    localStorage.removeItem('parentToken');
+                    window.location.href = 'parent-login.html';
+                    return;
+                }
+
+                currentParent = await response.json();
+                linkedChildren = currentParent.linkedStudents || [];
+
+                displayLinkedChildren();
+            } catch (error) {
+                console.error('Error initializing:', error);
+            }
+        }
+
+        function displayLinkedChildren() {
+            const list = document.getElementById('linked-children-list');
+            const noLinked = document.getElementById('no-linked');
+
+            if (linkedChildren.length === 0) {
+                list.innerHTML = '';
+                noLinked.classList.remove('hidden');
+                return;
+            }
+
+            noLinked.classList.add('hidden');
+
+            list.innerHTML = linkedChildren.map(child => {
+                const studentName = child.studentId.name || 'Unknown';
+                const studentForm = child.studentId.form || 'N/A';
+                const linkedDate = new Date(child.linkedAt).toLocaleDateString();
+
+                return `
+                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-green-600">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-bold text-gray-800">${studentName}</p>
+                                <p class="text-sm text-gray-600">Form ${studentForm}</p>
+                                <p class="text-xs text-gray-500 mt-1">Linked: ${linkedDate}</p>
+                            </div>
+                            <div class="text-green-600 font-bold">✅ Verified</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function requestChildLink() {
+            const email = document.getElementById('child-email').value.trim();
+
+            if (!email) {
+                showNotification('Please enter child\'s email', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/parents/link-child-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('parentToken')}`
+                    },
+                    body: JSON.stringify({ studentEmail: email })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showNotification(data.error || 'Failed to send link request', 'error');
+                    return;
+                }
+
+                // Display link code
+                document.getElementById('link-code-display').textContent = data.linkCode;
+                document.getElementById('request-status').classList.remove('hidden');
+
+                // Clear input
+                document.getElementById('child-email').value = '';
+
+                showNotification('Link request sent! Your child will receive a notification.', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('An error occurred', 'error');
+            }
+        }
+
+        function copyLinkCode() {
+            const code = document.getElementById('link-code-display').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification('Code copied to clipboard!', 'success');
+            });
+        }
+
+        function parentLogout() {
+            localStorage.removeItem('parentToken');
+            localStorage.removeItem('parent');
+            localStorage.removeItem('isParent');
+            window.location.href = 'parent-login.html';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

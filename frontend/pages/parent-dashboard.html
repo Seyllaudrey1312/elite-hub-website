@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-blue-900 text-white flex flex-col">
+            <div class="p-6 border-b border-blue-800">
+                <h1 class="text-2xl font-bold">Elite Hub</h1>
+                <p class="text-sm text-blue-200">Parent Portal</p>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="parent-dashboard.html" class="block px-4 py-2 rounded-lg bg-blue-700">📊 Dashboard</a>
+                <a href="parent-link-child.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">🔗 Link Child</a>
+            </nav>
+            <div class="p-4 border-t border-blue-800">
+                <button onclick="parentLogout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
+                    🚪 Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+            <!-- Header -->
+            <header class="bg-white shadow-sm sticky top-0 z-10">
+                <div class="px-8 py-4 flex justify-between items-center">
+                    <h1 class="text-3xl font-bold text-gray-800">Parent Dashboard</h1>
+                    <div class="flex items-center gap-4">
+                        <button onclick="refreshData()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                            🔄 Refresh
+                        </button>
+                        <span id="parent-name" class="text-gray-700 font-medium"></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-8">
+                <!-- Children Overview -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Children</h2>
+                    <div id="children-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Child cards will be inserted here -->
+                    </div>
+                    <div id="no-children" class="bg-white rounded-lg shadow p-12 text-center hidden">
+                        <p class="text-gray-600 text-lg mb-4">👨‍👧 No linked children yet</p>
+                        <a href="parent-link-child.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg inline-block">
+                            Link Your Child
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Selected Child Details -->
+                <div id="child-details-section" class="hidden">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                        <span id="selected-child-name"></span>'s Academic Progress
+                    </h2>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-4 gap-4 mb-8">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <p class="text-sm text-gray-600 mb-2">Average Quiz Score</p>
+                            <p class="text-3xl font-bold text-blue-600" id="avg-score">0%</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <p class="text-sm text-gray-600 mb-2">Quizzes Passed</p>
+                            <p class="text-3xl font-bold text-green-600">
+                                <span id="passed-quizzes">0</span>/<span id="total-quizzes">0</span>
+                            </p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <p class="text-sm text-gray-600 mb-2">Pass Rate</p>
+                            <p class="text-3xl font-bold text-purple-600" id="pass-rate">0%</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <p class="text-sm text-gray-600 mb-2">Attendance</p>
+                            <p class="text-3xl font-bold text-orange-600" id="attendance-rate">0%</p>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="bg-white rounded-lg shadow p-6 mb-8">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Quiz Score Trend</h3>
+                        <canvas id="score-chart"></canvas>
+                    </div>
+
+                    <!-- Recent Quizzes -->
+                    <div class="bg-white rounded-lg shadow p-6 mb-8">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Recent Quiz Results</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-100 border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Quiz Title</th>
+                                        <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Score</th>
+                                        <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Percentage</th>
+                                        <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Status</th>
+                                        <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-quizzes-tbody" class="divide-y divide-gray-200">
+                                    <!-- Quiz rows will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Important Updates -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">📢 Important Updates</h3>
+                        <div id="updates-list" class="space-y-3">
+                            <!-- Updates will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        let currentParent = null;
+        let linkedChildren = [];
+        let selectedChildId = null;
+        let scoreChart = null;
+
+        // Initialize
+        async function init() {
+            try {
+                const parentToken = localStorage.getItem('parentToken');
+                if (!parentToken) {
+                    window.location.href = 'parent-login.html';
+                    return;
+                }
+
+                // Fetch parent data
+                const response = await fetch('/api/parents/me', {
+                    headers: { 'Authorization': `Bearer ${parentToken}` }
+                });
+
+                if (!response.ok) {
+                    localStorage.removeItem('parentToken');
+                    window.location.href = 'parent-login.html';
+                    return;
+                }
+
+                currentParent = await response.json();
+                document.getElementById('parent-name').textContent = currentParent.name;
+
+                linkedChildren = currentParent.linkedStudents || [];
+
+                displayChildren();
+
+                // Auto-select first child if available
+                if (linkedChildren.length > 0) {
+                    selectChild(linkedChildren[0].studentId._id || linkedChildren[0].studentId);
+                }
+            } catch (error) {
+                console.error('Error initializing:', error);
+                showNotification('Failed to load data', 'error');
+            }
+        }
+
+        function displayChildren() {
+            const container = document.getElementById('children-cards');
+            const noChildren = document.getElementById('no-children');
+
+            if (linkedChildren.length === 0) {
+                container.innerHTML = '';
+                noChildren.classList.remove('hidden');
+                document.getElementById('child-details-section').classList.add('hidden');
+                return;
+            }
+
+            noChildren.classList.add('hidden');
+
+            container.innerHTML = linkedChildren.map(child => {
+                const studentId = child.studentId._id || child.studentId;
+                const studentName = child.studentId.name || 'Unknown';
+                const form = child.studentId.form || 'N/A';
+
+                return `
+                    <div onclick="selectChild('${studentId}')" class="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition border-l-4 border-blue-600">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">${studentName}</h3>
+                        <p class="text-gray-600 mb-4">Form ${form}</p>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full transition">
+                            View Progress
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function selectChild(childId) {
+            selectedChildId = childId;
+
+            try {
+                const response = await fetch(`/api/parents/child/${childId}/progress`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('parentToken')}` }
+                });
+
+                if (!response.ok) {
+                    showNotification('Failed to load child progress', 'error');
+                    return;
+                }
+
+                const progress = await response.json();
+
+                // Update UI
+                document.getElementById('selected-child-name').textContent = progress.student.name;
+                document.getElementById('avg-score').textContent = progress.performance.averageScore + '%';
+                document.getElementById('passed-quizzes').textContent = progress.performance.passedQuizzes;
+                document.getElementById('total-quizzes').textContent = progress.performance.totalQuizzes;
+                document.getElementById('pass-rate').textContent = progress.performance.passRate + '%';
+                document.getElementById('attendance-rate').textContent = progress.attendance.percentage + '%';
+
+                // Display recent quizzes
+                displayRecentQuizzes(progress.recentQuizzes);
+
+                // Load updates
+                await loadChildUpdates(childId);
+
+                // Update chart
+                updateScoreChart(progress.recentQuizzes);
+
+                document.getElementById('child-details-section').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error selecting child:', error);
+                showNotification('Failed to load child data', 'error');
+            }
+        }
+
+        function displayRecentQuizzes(quizzes) {
+            const tbody = document.getElementById('recent-quizzes-tbody');
+            tbody.innerHTML = '';
+
+            if (!quizzes || quizzes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-600">No quizzes taken yet</td></tr>';
+                return;
+            }
+
+            quizzes.forEach(quiz => {
+                const statusColor = quiz.passed ? 'text-green-600' : 'text-red-600';
+                const statusText = quiz.passed ? '✅ Passed' : '❌ Failed';
+
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition';
+                row.innerHTML = `
+                    <td class="px-6 py-4 font-medium text-gray-800">${quiz.title}</td>
+                    <td class="px-6 py-4 text-gray-700">${quiz.score} pts</td>
+                    <td class="px-6 py-4 font-bold text-gray-800">${quiz.percentage}%</td>
+                    <td class="px-6 py-4 ${statusColor} font-bold">${statusText}</td>
+                    <td class="px-6 py-4 text-gray-600 text-sm">${new Date(quiz.date).toLocaleDateString()}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function loadChildUpdates(childId) {
+            try {
+                const response = await fetch(`/api/parents/child/${childId}/updates`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('parentToken')}` }
+                });
+
+                if (!response.ok) return;
+
+                const updates = await response.json();
+                const list = document.getElementById('updates-list');
+
+                if (!updates || updates.length === 0) {
+                    list.innerHTML = '<p class="text-gray-600">No recent updates</p>';
+                    return;
+                }
+
+                list.innerHTML = updates.slice(0, 5).map(update => `
+                    <div class="p-3 bg-gray-50 rounded-lg border-l-4 border-blue-600">
+                        <p class="font-bold text-gray-800">${update.title}</p>
+                        <p class="text-sm text-gray-600">${update.message}</p>
+                        <p class="text-xs text-gray-500 mt-1">${new Date(update.createdAt).toLocaleDateString()}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading updates:', error);
+            }
+        }
+
+        function updateScoreChart(quizzes) {
+            if (!quizzes || quizzes.length === 0) return;
+
+            // Destroy existing chart
+            if (scoreChart) {
+                scoreChart.destroy();
+            }
+
+            const labels = quizzes.map(q => q.title.substring(0, 10));
+            const scores = quizzes.map(q => q.percentage);
+            const colors = quizzes.map(q => q.passed ? 'rgba(34, 197, 94, 1)' : 'rgba(239, 68, 68, 1)');
+
+            const ctx = document.getElementById('score-chart').getContext('2d');
+            scoreChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Quiz Score (%)',
+                        data: scores,
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: colors,
+                        pointBorderColor: colors,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { callback: v => v + '%' }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function refreshData() {
+            if (selectedChildId) {
+                await selectChild(selectedChildId);
+                showNotification('Data refreshed', 'success');
+            }
+        }
+
+        function parentLogout() {
+            localStorage.removeItem('parentToken');
+            localStorage.removeItem('parent');
+            localStorage.removeItem('isParent');
+            window.location.href = 'parent-login.html';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

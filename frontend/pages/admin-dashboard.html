@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Navigation -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-900 text-white overflow-y-auto">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
+                <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
+            </div>
+
+            <nav class="mt-8">
+                <a href="admin-dashboard.html" class="block px-6 py-3 bg-blue-800 border-l-4 border-yellow-400 text-white hover:bg-blue-700 transition">
+                    📊 Dashboard
+                </a>
+                <a href="admin-resources.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📄 Manage Resources
+                </a>
+                <a href="admin-quiz-builder.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    ❓ Create Quizzes
+                </a>
+                <a href="admin-quiz-results.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📈 Quiz Results
+                </a>
+                <a href="admin-students.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    👥 Students
+                </a>
+                <a href="admin-announcements.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📢 Announcements
+                </a>
+                <a href="admin-subjects.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📚 Subjects
+                </a>
+                <hr class="my-4 border-blue-700">
+                <a href="#" onclick="adminLogout()" class="block px-6 py-3 text-gray-300 hover:bg-red-600 transition">
+                    🔓 Logout
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Top Navigation -->
+            <div class="bg-white shadow">
+                <div class="px-8 py-4 flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
+                    <div class="flex items-center space-x-4">
+                        <input type="text" id="searchInput" placeholder="Search..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <div class="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">👤</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="p-8">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <!-- Total Students -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-600 text-sm font-bold">Total Students</p>
+                                <p id="totalStudents" class="text-4xl font-bold text-blue-900 mt-2">0</p>
+                            </div>
+                            <span class="text-3xl">👥</span>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-4">Active enrollments</p>
+                    </div>
+
+                    <!-- Total Quizzes -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-600 text-sm font-bold">Total Quizzes</p>
+                                <p id="totalQuizzes" class="text-4xl font-bold text-green-600 mt-2">0</p>
+                            </div>
+                            <span class="text-3xl">❓</span>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-4">Created quizzes</p>
+                    </div>
+
+                    <!-- Avg Score -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-600 text-sm font-bold">Avg Score</p>
+                                <p id="avgScore" class="text-4xl font-bold text-yellow-500 mt-2">0%</p>
+                            </div>
+                            <span class="text-3xl">📊</span>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-4">Across all quizzes</p>
+                    </div>
+
+                    <!-- Resources -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-600 text-sm font-bold">Resources</p>
+                                <p id="totalResources" class="text-4xl font-bold text-purple-600 mt-2">0</p>
+                            </div>
+                            <span class="text-3xl">📄</span>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-4">Uploaded materials</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">📝 Recent Activity</h3>
+                        <div id="recentActivityContainer" class="space-y-4"></div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">⚡ Quick Actions</h3>
+                        <div class="space-y-3">
+                            <a href="admin-quiz-builder.html" class="block w-full p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-bold text-center">
+                                ➕ Create New Quiz
+                            </a>
+                            <a href="admin-resources.html" class="block w-full p-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold text-center">
+                                📤 Upload Resource
+                            </a>
+                            <a href="admin-announcements.html" class="block w-full p-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition font-bold text-center">
+                                📢 Post Announcement
+                            </a>
+                            <a href="admin-students.html" class="block w-full p-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition font-bold text-center">
+                                👥 View All Students
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Quiz Submissions -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">📊 Recent Quiz Submissions</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-700">
+                            <thead class="bg-gray-50 border-b-2 border-gray-200">
+                                <tr>
+                                    <th class="px-4 py-3 font-bold">Student Name</th>
+                                    <th class="px-4 py-3 font-bold">Quiz Title</th>
+                                    <th class="px-4 py-3 font-bold">Score</th>
+                                    <th class="px-4 py-3 font-bold">Percentage</th>
+                                    <th class="px-4 py-3 font-bold">Status</th>
+                                    <th class="px-4 py-3 font-bold">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="submissionsTableBody">
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td colspan="6" class="px-4 py-3 text-center text-gray-500">Loading submissions...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // Check admin authentication
+        function checkAdminAuth() {
+            if (!localStorage.getItem('isAdmin') || !localStorage.getItem('adminToken')) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load students
+                const students = await getAllStudentsAdmin();
+                document.getElementById('totalStudents').textContent = students.length || 0;
+
+                // Load quizzes
+                const quizzes = await getAllQuizzes();
+                document.getElementById('totalQuizzes').textContent = quizzes.length || 0;
+
+                // Load resources
+                const resources = await getAllResources();
+                document.getElementById('totalResources').textContent = resources.length || 0;
+
+                // Calculate average score
+                let totalScore = 0;
+                let totalCount = 0;
+                if (quizzes.length > 0) {
+                    quizzes.forEach(quiz => {
+                        if (quiz.submissions && quiz.submissions.length > 0) {
+                            quiz.submissions.forEach(submission => {
+                                totalScore += submission.score || 0;
+                                totalCount++;
+                            });
+                        }
+                    });
+                }
+                const avgScore = totalCount > 0 ? Math.round((totalScore / totalCount) * 100) : 0;
+                document.getElementById('avgScore').textContent = avgScore + '%';
+
+                // Load recent activity
+                loadRecentActivity(students, quizzes);
+
+                // Load recent submissions
+                loadRecentSubmissions(quizzes);
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showNotification('Failed to load dashboard data', 'error');
+            }
+        }
+
+        function loadRecentActivity(students, quizzes) {
+            const container = document.getElementById('recentActivityContainer');
+            container.innerHTML = '';
+
+            const activities = [
+                { type: 'student', count: students.length, label: 'New students registered' },
+                { type: 'quiz', count: quizzes.length, label: 'Quizzes created' },
+                { type: 'activity', count: '3', label: 'Active sessions right now' }
+            ];
+
+            activities.forEach(activity => {
+                const activityDiv = document.createElement('div');
+                activityDiv.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                activityDiv.innerHTML = `
+                    <span class="text-gray-700">${activity.label}</span>
+                    <span class="bg-blue-900 text-white px-3 py-1 rounded-full font-bold">${activity.count}</span>
+                `;
+                container.appendChild(activityDiv);
+            });
+        }
+
+        function loadRecentSubmissions(quizzes) {
+            const tbody = document.getElementById('submissionsTableBody');
+            tbody.innerHTML = '';
+
+            let submissions = [];
+            if (quizzes && quizzes.length > 0) {
+                quizzes.forEach(quiz => {
+                    if (quiz.submissions && quiz.submissions.length > 0) {
+                        quiz.submissions.slice(-5).forEach(submission => {
+                            submissions.push({
+                                studentName: submission.studentName || 'Unknown',
+                                quizTitle: quiz.title || 'Untitled Quiz',
+                                score: submission.score || 0,
+                                totalPoints: quiz.totalPoints || 100,
+                                date: new Date(submission.submittedAt).toLocaleDateString()
+                            });
+                        });
+                    }
+                });
+            }
+
+            if (submissions.length === 0) {
+                tbody.innerHTML = '<tr class="border-b"><td colspan="6" class="px-4 py-3 text-center text-gray-500">No submissions yet</td></tr>';
+                return;
+            }
+
+            submissions.slice(-5).forEach(submission => {
+                const percentage = Math.round((submission.score / submission.totalPoints) * 100);
+                const statusColor = percentage >= 70 ? 'green' : percentage >= 50 ? 'yellow' : 'red';
+                const statusText = percentage >= 70 ? 'Passed' : percentage >= 50 ? 'Fair' : 'Failed';
+
+                const row = document.createElement('tr');
+                row.className = 'border-b hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="px-4 py-3">${submission.studentName}</td>
+                    <td class="px-4 py-3">${submission.quizTitle}</td>
+                    <td class="px-4 py-3">${submission.score}/${submission.totalPoints}</td>
+                    <td class="px-4 py-3"><strong>${percentage}%</strong></td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 bg-${statusColor}-100 text-${statusColor}-800 rounded text-xs font-bold">${statusText}</span></td>
+                    <td class="px-4 py-3 text-gray-500">${submission.date}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function adminLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('isAdmin');
+                localStorage.removeItem('adminToken');
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+            loadDashboardData();
+        });
+    </script>
+</body>
+</html>

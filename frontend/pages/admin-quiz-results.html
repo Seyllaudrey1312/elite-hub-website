@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-blue-900 text-white flex flex-col">
+            <div class="p-6 border-b border-blue-800">
+                <h1 class="text-2xl font-bold">Elite Hub Admin</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="admin-dashboard.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📊 Dashboard</a>
+                <a href="admin-quiz-builder.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📝 Create Quiz</a>
+                <a href="admin-quiz-results.html" class="block px-4 py-2 rounded-lg bg-blue-700">📈 Quiz Results</a>
+                <a href="admin-resources.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📚 Resources</a>
+                <a href="admin-students.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">👥 Students</a>
+                <a href="admin-announcements.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📢 Announcements</a>
+            </nav>
+            <div class="p-4 border-t border-blue-800">
+                <button onclick="adminLogout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
+                    🚪 Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+            <div class="p-8">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Quiz Results & Analytics</h2>
+                    <p class="text-gray-600">View detailed results and performance analytics for all quizzes</p>
+                </div>
+
+                <!-- Quiz Selection -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Select Quiz</label>
+                    <select id="quiz-select" onchange="loadQuizResults()" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                        <option value="">-- Choose a quiz --</option>
+                    </select>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div id="stats-section" class="hidden grid grid-cols-4 gap-4 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600 mb-2">Total Submissions</p>
+                        <p class="text-3xl font-bold text-blue-600" id="total-submissions">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600 mb-2">Average Score</p>
+                        <p class="text-3xl font-bold text-green-600" id="avg-score">0%</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600 mb-2">Pass Rate</p>
+                        <p class="text-3xl font-bold text-purple-600" id="pass-rate">0%</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600 mb-2">Students Passed</p>
+                        <p class="text-3xl font-bold text-emerald-600">
+                            <span id="passed-count">0</span> / <span id="total-count">0</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div id="charts-section" class="hidden grid grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Score Distribution</h3>
+                        <canvas id="score-distribution-chart"></canvas>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Pass/Fail Breakdown</h3>
+                        <canvas id="pass-fail-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Submissions Table -->
+                <div id="table-section" class="hidden bg-white rounded-lg shadow overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-800">Student Submissions</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-100 border-b border-gray-200">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Student Name</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Score</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Percentage</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Status</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Submitted At</th>
+                                    <th class="px-6 py-3 text-left text-sm font-bold text-gray-700">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="submissions-tbody">
+                                <!-- Submissions will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="bg-white rounded-lg shadow p-12 text-center">
+                    <p class="text-gray-600 text-lg">Select a quiz to view results</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for detailed feedback -->
+    <div id="feedback-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="px-6 py-4 border-b border-gray-200 sticky top-0 bg-white">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-gray-800">Question Feedback</h3>
+                    <button onclick="closeFeedbackModal()" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+            </div>
+            <div id="feedback-content" class="px-6 py-4">
+                <!-- Feedback will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        // State
+        let allQuizzes = [];
+        let currentQuizData = null;
+        let scoreDistributionChart = null;
+        let passFailChart = null;
+
+        // Initialize
+        async function init() {
+            try {
+                // Check admin auth
+                checkAdminAuth();
+
+                // Load quizzes
+                allQuizzes = await getAllQuizzes();
+                
+                // Populate quiz dropdown
+                const quizSelect = document.getElementById('quiz-select');
+                allQuizzes.forEach(quiz => {
+                    const option = document.createElement('option');
+                    option.value = quiz._id;
+                    option.textContent = quiz.title;
+                    quizSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error initializing:', error);
+                showNotification('Failed to load quizzes', 'error');
+            }
+        }
+
+        async function loadQuizResults() {
+            const quizId = document.getElementById('quiz-select').value;
+            if (!quizId) {
+                document.getElementById('stats-section').classList.add('hidden');
+                document.getElementById('charts-section').classList.add('hidden');
+                document.getElementById('table-section').classList.add('hidden');
+                document.getElementById('empty-state').classList.remove('hidden');
+                return;
+            }
+
+            try {
+                // Fetch quiz results
+                const response = await fetch(`/api/quizzes/${quizId}/results`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to load results');
+
+                currentQuizData = await response.json();
+
+                // Hide empty state
+                document.getElementById('empty-state').classList.add('hidden');
+
+                // Show sections
+                document.getElementById('stats-section').classList.remove('hidden');
+                document.getElementById('charts-section').classList.remove('hidden');
+                document.getElementById('table-section').classList.remove('hidden');
+
+                // Update stats
+                updateStats();
+
+                // Update charts
+                updateCharts();
+
+                // Update table
+                updateTable();
+            } catch (error) {
+                console.error('Error loading results:', error);
+                showNotification('Failed to load quiz results', 'error');
+            }
+        }
+
+        function updateStats() {
+            const totalSubmissions = currentQuizData.submissions.length;
+            const totalPassed = currentQuizData.passedCount || 0;
+            const averagePercentage = currentQuizData.averageScore || 0;
+            const passRate = currentQuizData.passRate || 0;
+
+            document.getElementById('total-submissions').textContent = totalSubmissions;
+            document.getElementById('avg-score').textContent = averagePercentage + '%';
+            document.getElementById('pass-rate').textContent = passRate + '%';
+            document.getElementById('passed-count').textContent = totalPassed;
+            document.getElementById('total-count').textContent = totalSubmissions;
+        }
+
+        function updateCharts() {
+            // Destroy existing charts
+            if (scoreDistributionChart) scoreDistributionChart.destroy();
+            if (passFailChart) passFailChart.destroy();
+
+            // Score Distribution
+            const scoreRanges = {
+                '0-20%': 0,
+                '21-40%': 0,
+                '41-60%': 0,
+                '61-80%': 0,
+                '81-100%': 0
+            };
+
+            currentQuizData.submissions.forEach(sub => {
+                if (sub.percentage <= 20) scoreRanges['0-20%']++;
+                else if (sub.percentage <= 40) scoreRanges['21-40%']++;
+                else if (sub.percentage <= 60) scoreRanges['41-60%']++;
+                else if (sub.percentage <= 80) scoreRanges['61-80%']++;
+                else scoreRanges['81-100%']++;
+            });
+
+            const ctx1 = document.getElementById('score-distribution-chart').getContext('2d');
+            scoreDistributionChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(scoreRanges),
+                    datasets: [{
+                        label: 'Number of Students',
+                        data: Object.values(scoreRanges),
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+
+            // Pass/Fail Pie Chart
+            const passedCount = currentQuizData.passedCount || 0;
+            const failedCount = currentQuizData.submissions.length - passedCount;
+
+            const ctx2 = document.getElementById('pass-fail-chart').getContext('2d');
+            passFailChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Passed', 'Failed'],
+                    datasets: [{
+                        data: [passedCount, failedCount],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.5)',
+                            'rgba(239, 68, 68, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        function updateTable() {
+            const tbody = document.getElementById('submissions-tbody');
+            tbody.innerHTML = '';
+
+            currentQuizData.submissions.forEach((sub, index) => {
+                const statusColor = sub.passed ? 'text-green-600' : 'text-red-600';
+                const statusText = sub.passed ? '✅ Passed' : '❌ Failed';
+
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200 hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="px-6 py-4 font-medium text-gray-800">${sub.studentName}</td>
+                    <td class="px-6 py-4 text-gray-700">${sub.score} pts</td>
+                    <td class="px-6 py-4 font-bold text-gray-800">${sub.percentage}%</td>
+                    <td class="px-6 py-4 ${statusColor} font-bold">${statusText}</td>
+                    <td class="px-6 py-4 text-gray-600 text-sm">${new Date(sub.submittedAt).toLocaleDateString()}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="viewFeedback(${index})" class="text-blue-600 hover:text-blue-800 font-medium">
+                            View Details
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function viewFeedback(submissionIndex) {
+            // This would require fetching detailed feedback for the submission
+            // For now, show a message that this feature requires backend extension
+            showNotification('Detailed feedback feature coming soon', 'info');
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+        }
+
+        function checkAdminAuth() {
+            const isAdmin = localStorage.getItem('isAdmin');
+            if (!isAdmin) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        function adminLogout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('isAdmin');
+            window.location.href = 'admin-login.html';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

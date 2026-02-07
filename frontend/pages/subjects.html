@@ -6,7 +6,7 @@
     <title>Subjects - Elite Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="icon" type="image/png" href="Favicon.png">
+    <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
@@ -316,6 +316,49 @@
         </div>
     </footer>
 
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
+    <script>
+        // Load subjects dynamically from API
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const subjects = await getAllSubjects();
+                const subjectsGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+                
+                if (subjects && subjects.length > 0) {
+                    // Clear existing hardcoded subjects
+                    subjectsGrid.innerHTML = '';
+                    
+                    // Create subject cards from API data
+                    subjects.forEach(subject => {
+                        const colors = ['blue', 'yellow', 'green', 'red', 'purple', 'orange', 'indigo', 'teal'];
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        
+                        const subjectCard = document.createElement('div');
+                        subjectCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition cursor-pointer';
+                        subjectCard.onclick = function() { toggleSubject(this); };
+                        subjectCard.innerHTML = `
+                            <div class="bg-${color}-500 text-white p-6">
+                                <h3 class="text-2xl font-bold">${subject.name}</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-2 form-list hidden">
+                                    ${[1,2,3,4].map(form => `
+                                        <a href="#" class="block px-4 py-2 bg-${color}-50 text-${color}-900 rounded hover:bg-${color}-100 transition">Form ${form}</a>
+                                    `).join('')}
+                                </div>
+                                <p class="text-gray-600 form-prompt">Click to expand</p>
+                            </div>
+                        `;
+                        subjectsGrid.appendChild(subjectCard);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading subjects:', error);
+                showNotification('Failed to load subjects from server', 'warning');
+                // Keep existing hardcoded subjects as fallback
+            }
+        });
+    </script>
 </body>
 </html>

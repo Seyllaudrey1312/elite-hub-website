@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Navigation -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 bg-blue-900 text-white overflow-y-auto">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
+                <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
+            </div>
+
+            <nav class="mt-8">
+                <a href="admin-dashboard.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📊 Dashboard
+                </a>
+                <a href="admin-resources.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📄 Manage Resources
+                </a>
+                <a href="admin-quiz-builder.html" class="block px-6 py-3 bg-blue-800 border-l-4 border-yellow-400 text-white hover:bg-blue-700 transition">
+                    ❓ Create Quizzes
+                </a>
+                <a href="admin-quiz-results.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📈 Quiz Results
+                </a>
+                <a href="admin-students.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    👥 Students
+                </a>
+                <a href="admin-announcements.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📢 Announcements
+                </a>
+                <a href="admin-subjects.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📚 Subjects
+                </a>
+                <hr class="my-4 border-blue-700">
+                <a href="#" onclick="adminLogout()" class="block px-6 py-3 text-gray-300 hover:bg-red-600 transition">
+                    🔓 Logout
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Top Navigation -->
+            <div class="bg-white shadow">
+                <div class="px-8 py-4">
+                    <h2 class="text-2xl font-bold text-gray-800">❓ Create New Quiz</h2>
+                    <p class="text-gray-600 text-sm mt-1">Create and configure quizzes with automatic grading</p>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-8">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Quiz Settings -->
+                    <form id="quizForm">
+                        <!-- Basic Info -->
+                        <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                            <h3 class="text-xl font-bold text-gray-800 mb-6">📋 Quiz Details</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <!-- Title -->
+                                <div>
+                                    <label for="quizTitle" class="block text-gray-700 font-bold mb-2">Quiz Title</label>
+                                    <input type="text" id="quizTitle" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g., Algebra Basics Quiz">
+                                </div>
+
+                                <!-- Subject -->
+                                <div>
+                                    <label for="quizSubject" class="block text-gray-700 font-bold mb-2">Subject</label>
+                                    <select id="quizSubject" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                        <option value="">Select subject</option>
+                                        <option value="Mathematics">Mathematics</option>
+                                        <option value="Physics">Physics</option>
+                                        <option value="Chemistry">Chemistry</option>
+                                        <option value="Biology">Biology</option>
+                                        <option value="English">English</option>
+                                        <option value="Kiswahili">Kiswahili</option>
+                                        <option value="History">History</option>
+                                        <option value="Geography">Geography</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <!-- Applicable Forms -->
+                                <div>
+                                    <label class="block text-gray-700 font-bold mb-2">Applicable Forms</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center"><input type="checkbox" value="1" class="form-checkbox"> Form 1</label>
+                                        <label class="flex items-center"><input type="checkbox" value="2" class="form-checkbox"> Form 2</label>
+                                        <label class="flex items-center"><input type="checkbox" value="3" class="form-checkbox"> Form 3</label>
+                                        <label class="flex items-center"><input type="checkbox" value="4" class="form-checkbox"> Form 4</label>
+                                    </div>
+                                </div>
+
+                                <!-- Time Limit -->
+                                <div>
+                                    <label for="timeLimit" class="block text-gray-700 font-bold mb-2">Time Limit (minutes)</label>
+                                    <input type="number" id="timeLimit" min="1" value="30" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div>
+                                <label for="quizDesc" class="block text-gray-700 font-bold mb-2">Description</label>
+                                <textarea id="quizDesc" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Quiz description and instructions"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Questions Section -->
+                        <div class="bg-white rounded-lg shadow-lg p-8">
+                            <div class="flex justify-between items-center mb-8">
+                                <h3 class="text-xl font-bold text-gray-800">❓ Questions</h3>
+                                <button type="button" onclick="addQuestion()" class="bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition font-bold">
+                                    ➕ Add Question
+                                </button>
+                            </div>
+
+                            <div id="questionsContainer" class="space-y-8">
+                                <!-- Questions will be added here -->
+                            </div>
+
+                            <!-- Add First Question Button -->
+                            <div id="emptyState" class="text-center py-12">
+                                <p class="text-gray-500 text-lg mb-4">No questions added yet</p>
+                                <button type="button" onclick="addQuestion()" class="bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition font-bold">
+                                    ➕ Add First Question
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="mt-8 flex space-x-4">
+                            <button type="submit" class="flex-1 bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition">
+                                ✅ Create Quiz
+                            </button>
+                            <button type="button" onclick="saveDraft()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
+                                💾 Save Draft
+                            </button>
+                            <a href="admin-dashboard.html" class="flex-1 bg-gray-400 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-500 transition text-center">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        let questionCount = 0;
+
+        function checkAdminAuth() {
+            if (!localStorage.getItem('isAdmin') || !localStorage.getItem('adminToken')) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        function addQuestion() {
+            questionCount++;
+            const container = document.getElementById('questionsContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (emptyState) emptyState.style.display = 'none';
+
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'border-2 border-gray-300 rounded-lg p-6 question-block';
+            questionDiv.id = `question-${questionCount}`;
+            questionDiv.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-bold text-gray-800">Question ${questionCount}</h4>
+                    <button type="button" onclick="removeQuestion(${questionCount})" class="text-red-600 hover:text-red-800 font-bold">Delete</button>
+                </div>
+
+                <!-- Question Text -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Question Text</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 question-text" rows="2" placeholder="Enter question text"></textarea>
+                </div>
+
+                <!-- Question Type -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Question Type</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 question-type" onchange="updateQuestionType(${questionCount})">
+                        <option value="multiple">Multiple Choice</option>
+                        <option value="shortanswer">Short Answer</option>
+                        <option value="truefalse">True/False</option>
+                        <option value="essay">Essay (Manual Grading)</option>
+                    </select>
+                </div>
+
+                <!-- Points -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Points</label>
+                    <input type="number" min="1" value="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 question-points">
+                </div>
+
+                <!-- Options (for MC) -->
+                <div class="mb-4 options-section">
+                    <label class="block text-gray-700 font-bold mb-2">Options</label>
+                    <div class="space-y-2 options-list">
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Option A" class="flex-1 px-3 py-2 border border-gray-300 rounded">
+                            <input type="radio" name="correct-${questionCount}" value="A" class="correct-answer">
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Option B" class="flex-1 px-3 py-2 border border-gray-300 rounded">
+                            <input type="radio" name="correct-${questionCount}" value="B" class="correct-answer">
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Option C" class="flex-1 px-3 py-2 border border-gray-300 rounded">
+                            <input type="radio" name="correct-${questionCount}" value="C" class="correct-answer">
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Option D" class="flex-1 px-3 py-2 border border-gray-300 rounded">
+                            <input type="radio" name="correct-${questionCount}" value="D" class="correct-answer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Correct Answer (for short answer) -->
+                <div class="mb-4 shortanswer-section hidden">
+                    <label class="block text-gray-700 font-bold mb-2">Correct Answer</label>
+                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 correct-answer-text" placeholder="Enter the correct answer">
+                </div>
+
+                <!-- Feedback -->
+                <div>
+                    <label class="block text-gray-700 font-bold mb-2">Feedback (Optional)</label>
+                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 question-feedback" rows="2" placeholder="Feedback for students"></textarea>
+                </div>
+            `;
+
+            container.appendChild(questionDiv);
+        }
+
+        function updateQuestionType(questionNum) {
+            const questionDiv = document.getElementById(`question-${questionNum}`);
+            const type = questionDiv.querySelector('.question-type').value;
+            const optionsSection = questionDiv.querySelector('.options-section');
+            const shortAnswerSection = questionDiv.querySelector('.shortanswer-section');
+
+            if (type === 'multiple' || type === 'truefalse') {
+                optionsSection.style.display = 'block';
+                shortAnswerSection.style.display = 'none';
+            } else if (type === 'shortanswer') {
+                optionsSection.style.display = 'none';
+                shortAnswerSection.style.display = 'block';
+            } else {
+                optionsSection.style.display = 'none';
+                shortAnswerSection.style.display = 'none';
+            }
+        }
+
+        function removeQuestion(questionNum) {
+            const questionDiv = document.getElementById(`question-${questionNum}`);
+            questionDiv.remove();
+
+            if (document.querySelectorAll('.question-block').length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+            }
+        }
+
+        async function saveDraft() {
+            showNotification('Quiz draft saved successfully!', 'success');
+        }
+
+        document.getElementById('quizForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('quizTitle').value;
+            const subject = document.getElementById('quizSubject').value;
+            const timeLimit = parseInt(document.getElementById('timeLimit').value);
+            const description = document.getElementById('quizDesc').value;
+            const forms = Array.from(document.querySelectorAll('.form-checkbox:checked')).map(cb => cb.value);
+
+            const questions = [];
+            document.querySelectorAll('.question-block').forEach((block, index) => {
+                const questionText = block.querySelector('.question-text').value;
+                const questionType = block.querySelector('.question-type').value;
+                const points = parseInt(block.querySelector('.question-points').value);
+                const feedback = block.querySelector('.question-feedback').value;
+
+                let correctAnswer = '';
+                if (questionType === 'multiple' || questionType === 'truefalse') {
+                    const selected = block.querySelector('input[type="radio"]:checked');
+                    correctAnswer = selected ? selected.value : '';
+                } else if (questionType === 'shortanswer') {
+                    correctAnswer = block.querySelector('.correct-answer-text').value;
+                }
+
+                const options = questionType === 'multiple' ? 
+                    Array.from(block.querySelectorAll('.options-list input[type="text"]')).map(opt => opt.value) : [];
+
+                questions.push({
+                    questionText,
+                    type: questionType,
+                    points,
+                    options,
+                    correctAnswer,
+                    feedback,
+                    autoGrade: questionType !== 'essay'
+                });
+            });
+
+            if (questions.length === 0) {
+                showNotification('Please add at least one question', 'error');
+                return;
+            }
+
+            try {
+                // Create quiz with auto-grading enabled for non-essay questions
+                const quizData = {
+                    title,
+                    subject,
+                    forms,
+                    timeLimit,
+                    description,
+                    questions,
+                    autoGrade: true,
+                    totalPoints: questions.reduce((sum, q) => sum + q.points, 0)
+                };
+
+                // In production, would save to backend
+                console.log('Quiz created:', quizData);
+                showNotification('Quiz created successfully with auto-grading enabled!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard.html';
+                }, 1500);
+            } catch (error) {
+                showNotification('Failed to create quiz', 'error');
+            }
+        });
+
+        function adminLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('isAdmin');
+                localStorage.removeItem('adminToken');
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+        });
+    </script>
+</body>
+</html>

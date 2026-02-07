@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussion Forums - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-blue-900 text-white flex flex-col fixed h-full">
+            <div class="p-6 border-b border-blue-800">
+                <h1 class="text-2xl font-bold">Elite Hub</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <a href="dashboard.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📊 Dashboard</a>
+                <a href="subjects.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📚 Subjects</a>
+                <a href="forums.html" class="block px-4 py-2 rounded-lg bg-blue-700">💬 Forums</a>
+                <a href="profile-edit.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">👤 Profile</a>
+                <a href="parent-login.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">👨‍👩‍👧 Parent Portal</a>
+            </nav>
+            <div class="p-4 border-t border-blue-800">
+                <button onclick="logout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
+                    🚪 Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-64 overflow-auto">
+            <!-- Header -->
+            <header class="bg-white shadow-sm sticky top-0 z-10">
+                <div class="px-8 py-4 flex justify-between items-center">
+                    <h1 class="text-3xl font-bold text-gray-800">Discussion Forums</h1>
+                    <div class="flex items-center gap-4">
+                        <button onclick="openNotifications()" class="relative p-2 text-gray-600 hover:text-gray-900">
+                            🔔
+                            <span id="notification-badge" class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                        </button>
+                        <span id="student-name" class="text-gray-700 font-medium"></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-8">
+                <!-- Search and Filter -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <input type="text" id="search-input" placeholder="Search forums..."
+                            onkeyup="filterForums()"
+                            class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                        <select id="subject-filter" onchange="filterForums()"
+                            class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                            <option value="">All Subjects</option>
+                        </select>
+                        <button onclick="openCreateForumModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg py-2">
+                            + New Forum
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Forums List -->
+                <div id="forums-container" class="space-y-4">
+                    <!-- Forums will be inserted here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="bg-white rounded-lg shadow p-12 text-center hidden">
+                    <p class="text-gray-600 text-lg mb-4">📭 No forums found</p>
+                    <button onclick="openCreateForumModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">
+                        Create First Forum
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Discussions Modal -->
+        <div id="discussions-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl mx-4 max-h-screen overflow-y-auto">
+                <div class="px-6 py-4 border-b border-gray-200 sticky top-0 bg-white flex justify-between items-center">
+                    <h2 id="forum-title" class="text-2xl font-bold text-gray-800"></h2>
+                    <button onclick="closeDiscussionsModal()" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+
+                <div class="p-6">
+                    <!-- Create Discussion Button -->
+                    <button onclick="openCreateDiscussionModal()" class="mb-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+                        + Start New Discussion
+                    </button>
+
+                    <!-- Discussions List -->
+                    <div id="discussions-list" class="space-y-4">
+                        <!-- Discussions will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Discussion Detail Modal -->
+        <div id="discussion-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl mx-4 max-h-screen overflow-y-auto">
+                <div class="px-6 py-4 border-b border-gray-200 sticky top-0 bg-white flex justify-between items-center">
+                    <h2 id="discussion-title" class="text-2xl font-bold text-gray-800"></h2>
+                    <button onclick="closeDiscussionDetailModal()" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+
+                <div class="p-6">
+                    <!-- Original Post -->
+                    <div id="original-post" class="bg-gray-50 rounded-lg p-4 mb-6 border-l-4 border-blue-600">
+                        <p id="post-author" class="text-sm text-gray-600 mb-2"></p>
+                        <p id="post-content" class="text-gray-800 mb-3"></p>
+                        <div class="flex gap-2">
+                            <button onclick="likeDiscussion()" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                👍 Like (<span id="discussion-likes">0</span>)
+                            </button>
+                            <button onclick="openReplyForm()" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                💬 Reply
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reply Form -->
+                    <div id="reply-form-container" class="hidden mb-6 bg-blue-50 rounded-lg p-4 border border-blue-200">
+                        <textarea id="reply-content" placeholder="Write your reply..."
+                            class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none" rows="4"></textarea>
+                        <div class="flex gap-2 mt-3">
+                            <button onclick="submitReply()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                                Post Reply
+                            </button>
+                            <button onclick="closeReplyForm()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Replies -->
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Replies (<span id="reply-count">0</span>)</h3>
+                    <div id="replies-list" class="space-y-4">
+                        <!-- Replies will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Forum Modal -->
+        <div id="create-forum-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800">Create New Forum</h2>
+                </div>
+                <form onsubmit="submitCreateForum(event)" class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Forum Title</label>
+                        <input type="text" id="forum-title-input" required
+                            class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                        <textarea id="forum-description-input" rows="3"
+                            class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Subject</label>
+                        <select id="forum-subject-input" required
+                            class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                            <option value="">-- Select Subject --</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2 justify-end">
+                        <button type="button" onclick="closeCreateForumModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                            Create Forum
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Create Discussion Modal -->
+        <div id="create-discussion-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800">Start New Discussion</h2>
+                </div>
+                <form onsubmit="submitCreateDiscussion(event)" class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Discussion Title</label>
+                        <input type="text" id="discussion-title-input" required
+                            class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Content</label>
+                        <textarea id="discussion-content-input" rows="5" required
+                            class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Tags (comma-separated)</label>
+                        <input type="text" id="discussion-tags-input" placeholder="e.g., algebra, help, homework"
+                            class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none">
+                    </div>
+                    <div class="flex gap-2 justify-end">
+                        <button type="button" onclick="closeCreateDiscussionModal()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                            Create Discussion
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notifications Panel -->
+        <div id="notifications-panel" class="hidden fixed right-0 top-0 h-screen w-96 bg-white shadow-lg z-40 overflow-y-auto">
+            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-800">Notifications</h2>
+                <button onclick="closeNotifications()" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            <div id="notifications-list" class="p-4 space-y-3">
+                <!-- Notifications will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        let allForums = [];
+        let filteredForums = [];
+        let currentForum = null;
+        let currentDiscussion = null;
+        let allSubjects = [];
+
+        // Initialize
+        async function init() {
+            try {
+                const student = JSON.parse(localStorage.getItem('student'));
+                if (!student) window.location.href = 'login.html';
+
+                document.getElementById('student-name').textContent = student.name;
+
+                // Load all data
+                await loadAllForums();
+                await loadAllSubjects();
+                await loadNotifications();
+
+                // Poll for notifications every 30 seconds
+                setInterval(loadNotifications, 30000);
+            } catch (error) {
+                console.error('Error initializing:', error);
+            }
+        }
+
+        async function loadAllForums() {
+            try {
+                allForums = await fetch('/api/forums', {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('studentToken')}` }
+                }).then(r => r.json());
+
+                filteredForums = [...allForums];
+                displayForums();
+            } catch (error) {
+                console.error('Error loading forums:', error);
+                showNotification('Failed to load forums', 'error');
+            }
+        }
+
+        async function loadAllSubjects() {
+            try {
+                allSubjects = await fetch('/api/subjects', {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('studentToken')}` }
+                }).then(r => r.json());
+
+                const subjectSelect = document.getElementById('subject-filter');
+                const forumSubjectSelect = document.getElementById('forum-subject-input');
+
+                allSubjects.forEach(subject => {
+                    const option1 = document.createElement('option');
+                    option1.value = subject._id;
+                    option1.textContent = subject.name;
+                    subjectSelect.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = subject._id;
+                    option2.textContent = subject.name;
+                    forumSubjectSelect.appendChild(option2);
+                });
+            } catch (error) {
+                console.error('Error loading subjects:', error);
+            }
+        }
+
+        function displayForums() {
+            const container = document.getElementById('forums-container');
+            const emptyState = document.getElementById('empty-state');
+
+            if (filteredForums.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            container.innerHTML = '';
+
+            filteredForums.forEach(forum => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow hover:shadow-lg transition p-6 cursor-pointer';
+                card.onclick = () => openForum(forum);
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">${forum.title}</h3>
+                            <p class="text-sm text-gray-600">${forum.subject}</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4 line-clamp-2">${forum.description}</p>
+                    <div class="flex justify-between items-center text-sm text-gray-600">
+                        <span>💬 ${forum.discussionCount || 0} discussions</span>
+                        <span>👥 ${forum.members?.length || 0} members</span>
+                        <button onclick="event.stopPropagation(); joinForum('${forum._id}')" class="text-blue-600 hover:text-blue-800 font-medium">
+                            Join
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterForums() {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const subject = document.getElementById('subject-filter').value;
+
+            filteredForums = allForums.filter(f => {
+                const matchesSearch = f.title.toLowerCase().includes(search) || 
+                    f.description.toLowerCase().includes(search);
+                const matchesSubject = !subject || f.subject === subject;
+                return matchesSearch && matchesSubject;
+            });
+
+            displayForums();
+        }
+
+        async function openForum(forum) {
+            currentForum = forum;
+            document.getElementById('forum-title').textContent = forum.title;
+
+            try {
+                const response = await fetch(`/api/forums/${forum._id}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('studentToken')}` }
+                });
+
+                const data = await response.json();
+                const discussions = data.discussions || [];
+
+                const list = document.getElementById('discussions-list');
+                list.innerHTML = '';
+
+                if (discussions.length === 0) {
+                    list.innerHTML = '<p class="text-gray-600">No discussions yet. Start one!</p>';
+                }
+
+                discussions.forEach(discussion => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-gray-100 rounded-lg p-4 cursor-pointer hover:bg-gray-200 transition';
+                    item.onclick = () => openDiscussion(discussion);
+                    item.innerHTML = `
+                        <h4 class="font-bold text-gray-800 mb-2">${discussion.title}</h4>
+                        <p class="text-sm text-gray-600 mb-2">By ${discussion.authorName} • ${discussion.replyCount || 0} replies</p>
+                        <div class="flex gap-4 text-xs text-gray-500">
+                            <span>👁️ ${discussion.views || 0} views</span>
+                            <span>👍 ${discussion.likes?.length || 0} likes</span>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+
+                document.getElementById('discussions-modal').classList.remove('hidden');
+            } catch (error) {
+                showNotification('Failed to load forum discussions', 'error');
+            }
+        }
+
+        function openDiscussionModal(discussion) {
+            currentDiscussion = discussion;
+            document.getElementById('discussion-title').textContent = discussion.title;
+            document.getElementById('post-author').textContent = `${discussion.authorName} • ${new Date(discussion.createdAt).toLocaleDateString()}`;
+            document.getElementById('post-content').textContent = discussion.content;
+            document.getElementById('discussion-likes').textContent = discussion.likes?.length || 0;
+            document.getElementById('reply-count').textContent = discussion.replyCount || 0;
+
+            document.getElementById('discussions-modal').classList.add('hidden');
+            document.getElementById('discussion-detail-modal').classList.remove('hidden');
+
+            loadReplies();
+        }
+
+        async function openDiscussion(discussion) {
+            currentDiscussion = discussion;
+            openDiscussionModal(discussion);
+        }
+
+        async function loadReplies() {
+            try {
+                const response = await fetch(
+                    `/api/forums/${currentForum._id}/discussions/${currentDiscussion._id}`,
+                    { headers: { 'Authorization': `Bearer ${localStorage.getItem('studentToken')}` } }
+                );
+
+                const data = await response.json();
+                const replies = data.replies || [];
+
+                const list = document.getElementById('replies-list');
+                list.innerHTML = '';
+
+                replies.forEach(reply => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-gray-50 rounded-lg p-4 border-l-4 border-green-600';
+                    item.innerHTML = `
+                        <p class="text-sm text-gray-600 mb-2">${reply.authorName}</p>
+                        <p class="text-gray-800 mb-2">${reply.content}</p>
+                        <div class="flex gap-4">
+                            <button onclick="likeReply('${reply._id}')" class="text-blue-600 hover:text-blue-800 text-sm">
+                                👍 Like (${reply.likes?.length || 0})
+                            </button>
+                            ${reply.isMarkedAsAnswer ? '<span class="text-green-600 text-sm font-bold">✅ Marked as Answer</span>' : ''}
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading replies:', error);
+            }
+        }
+
+        async function submitReply() {
+            const content = document.getElementById('reply-content').value.trim();
+
+            if (!content) {
+                showNotification('Reply cannot be empty', 'error');
+                return;
+            }
+
+            try {
+                await fetch(
+                    `/api/forums/${currentForum._id}/discussions/${currentDiscussion._id}/reply`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('studentToken')}`
+                        },
+                        body: JSON.stringify({ content })
+                    }
+                );
+
+                showNotification('Reply posted successfully!', 'success');
+                closeReplyForm();
+                loadReplies();
+            } catch (error) {
+                showNotification('Failed to post reply', 'error');
+            }
+        }
+
+        async function submitCreateDiscussion(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('discussion-title-input').value;
+            const content = document.getElementById('discussion-content-input').value;
+            const tags = document.getElementById('discussion-tags-input').value.split(',').map(t => t.trim());
+
+            try {
+                await fetch(
+                    `/api/forums/${currentForum._id}/discussions`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('studentToken')}`
+                        },
+                        body: JSON.stringify({ title, content, tags })
+                    }
+                );
+
+                showNotification('Discussion created successfully!', 'success');
+                closeCreateDiscussionModal();
+                await openForum(currentForum);
+            } catch (error) {
+                showNotification('Failed to create discussion', 'error');
+            }
+        }
+
+        async function joinForum(forumId) {
+            try {
+                await fetch(
+                    `/api/forums/${forumId}/join`,
+                    {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('studentToken')}` }
+                    }
+                );
+
+                showNotification('Joined forum successfully!', 'success');
+                await loadAllForums();
+            } catch (error) {
+                showNotification('Failed to join forum', 'error');
+            }
+        }
+
+        async function submitCreateForum(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('forum-title-input').value;
+            const description = document.getElementById('forum-description-input').value;
+            const subject = document.getElementById('forum-subject-input').value;
+
+            try {
+                await fetch('/api/forums', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('studentToken')}`
+                    },
+                    body: JSON.stringify({ title, description, subject })
+                });
+
+                showNotification('Forum created successfully!', 'success');
+                closeCreateForumModal();
+                await loadAllForums();
+            } catch (error) {
+                showNotification('Failed to create forum', 'error');
+            }
+        }
+
+        async function loadNotifications() {
+            try {
+                const response = await fetch('/api/notifications?unreadOnly=true', {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('studentToken')}` }
+                });
+
+                const data = await response.json();
+                const unreadCount = data.unreadCount || 0;
+
+                const badge = document.getElementById('notification-badge');
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+
+                // Update panel
+                const list = document.getElementById('notifications-list');
+                if (data.notifications?.length > 0) {
+                    list.innerHTML = data.notifications.map(n => `
+                        <div class="p-3 bg-gray-50 rounded-lg border-l-4 border-blue-600">
+                            <p class="font-bold text-gray-800">${n.title}</p>
+                            <p class="text-sm text-gray-600">${n.message}</p>
+                            <p class="text-xs text-gray-500 mt-1">${new Date(n.createdAt).toLocaleDateString()}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    list.innerHTML = '<p class="text-gray-600">No notifications</p>';
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+
+        function openNotifications() {
+            document.getElementById('notifications-panel').classList.remove('hidden');
+        }
+
+        function closeNotifications() {
+            document.getElementById('notifications-panel').classList.add('hidden');
+        }
+
+        // Modal functions
+        function openCreateForumModal() {
+            document.getElementById('create-forum-modal').classList.remove('hidden');
+        }
+
+        function closeCreateForumModal() {
+            document.getElementById('create-forum-modal').classList.add('hidden');
+            document.getElementById('forum-title-input').value = '';
+            document.getElementById('forum-description-input').value = '';
+        }
+
+        function openCreateDiscussionModal() {
+            document.getElementById('create-discussion-modal').classList.remove('hidden');
+        }
+
+        function closeCreateDiscussionModal() {
+            document.getElementById('create-discussion-modal').classList.add('hidden');
+            document.getElementById('discussion-title-input').value = '';
+            document.getElementById('discussion-content-input').value = '';
+            document.getElementById('discussion-tags-input').value = '';
+        }
+
+        function closeDiscussionsModal() {
+            document.getElementById('discussions-modal').classList.add('hidden');
+        }
+
+        function openReplyForm() {
+            document.getElementById('reply-form-container').classList.remove('hidden');
+            document.getElementById('reply-content').focus();
+        }
+
+        function closeReplyForm() {
+            document.getElementById('reply-form-container').classList.add('hidden');
+            document.getElementById('reply-content').value = '';
+        }
+
+        function closeDiscussionDetailModal() {
+            document.getElementById('discussion-detail-modal').classList.add('hidden');
+            document.getElementById('reply-form-container').classList.add('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('studentToken');
+            localStorage.removeItem('student');
+            window.location.href = 'login.html';
+        }
+
+        async function likeDiscussion() {
+            try {
+                await fetch(
+                    `/api/forums/${currentForum._id}/discussions/${currentDiscussion._id}/like`,
+                    {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('studentToken')}` }
+                    }
+                );
+
+                showNotification('Liked!', 'success');
+                loadReplies();
+            } catch (error) {
+                console.error('Error liking:', error);
+            }
+        }
+
+        async function likeReply(replyId) {
+            try {
+                await fetch(
+                    `/api/forums/${currentForum._id}/discussions/${currentDiscussion._id}/replies/${replyId}/like`,
+                    {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('studentToken')}` }
+                    }
+                );
+
+                showNotification('Liked!', 'success');
+                loadReplies();
+            } catch (error) {
+                console.error('Error liking:', error);
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

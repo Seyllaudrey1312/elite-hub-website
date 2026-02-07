@@ -1,0 +1,243 @@
+<!-- Notification Integration Guide and HTML Components -->
+<!-- Include this in any page to add notification support -->
+
+<!-- ============================================
+     STEP 1: Add these script tags to your page
+     ============================================ -->
+<!-- Script sources to add to <head> or before </body>:
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/notification-center.js"></script>
+-->
+
+<!-- ============================================
+     STEP 2: Add this HTML to your page
+     (Copy and paste in your page where you want notifications to appear)
+     ============================================ -->
+
+<!-- Notification Bell with Badge (Add to Header) -->
+<div class="flex items-center gap-4">
+    <div class="relative">
+        <button onclick="toggleNotificationPanel()" class="relative p-2 text-gray-600 hover:text-gray-900 transition">
+            🔔
+            <span id="notification-badge" data-notification-badge class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
+        </button>
+    </div>
+    <span id="user-name" class="text-gray-700 font-medium"></span>
+</div>
+
+<!-- Notification Panel (Add to page end, before </body>) -->
+<div id="notification-panel" class="hidden fixed right-0 top-0 h-screen w-96 bg-white shadow-lg z-40 overflow-y-auto border-l border-gray-200">
+    <div class="p-4 border-b border-gray-200 sticky top-0 bg-white flex justify-between items-center">
+        <h2 class="text-xl font-bold text-gray-800">📬 Notifications</h2>
+        <div class="flex gap-2">
+            <button onclick="markAllNotificationsAsRead()" class="text-xs px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded transition">
+                Mark All Read
+            </button>
+            <button onclick="toggleNotificationPanel()" class="text-gray-600 hover:text-gray-800 text-2xl">×</button>
+        </div>
+    </div>
+    <div id="notification-panel-content" class="p-4 space-y-3">
+        <p class="text-center text-gray-500 py-8">Loading notifications...</p>
+    </div>
+</div>
+
+<!-- ============================================
+     STEP 3: Add this JavaScript to your page
+     (In a <script> tag or after the HTML components)
+     ============================================ -->
+
+<script>
+// Notification Panel Management
+let notificationPanelOpen = false;
+
+function toggleNotificationPanel() {
+    const panel = document.getElementById('notification-panel');
+    if (panel) {
+        panel.classList.toggle('hidden');
+        notificationPanelOpen = !notificationPanelOpen;
+    }
+}
+
+function closeNotificationPanel() {
+    document.getElementById('notification-panel').classList.add('hidden');
+    notificationPanelOpen = false;
+}
+
+function openNotificationPanel() {
+    document.getElementById('notification-panel').classList.remove('hidden');
+    notificationPanelOpen = true;
+}
+
+// Load and display notifications
+async function loadNotificationsPanel() {
+    try {
+        const data = await getAllNotifications(false, 50);
+        const content = document.getElementById('notification-panel-content');
+        
+        if (!data.notifications || data.notifications.length === 0) {
+            content.innerHTML = '<p class="text-center text-gray-500 py-8">No notifications yet</p>';
+            return;
+        }
+
+        content.innerHTML = data.notifications.map(notif => {
+            const type = notif.type || 'system';
+            const icon = getNotificationIcon(type);
+            const date = new Date(notif.createdAt).toLocaleString();
+            const readClass = notif.read ? 'opacity-60' : '';
+            
+            return `
+                <div onclick="markNotificationAsRead('${notif._id}')" class="p-3 bg-${notif.read ? 'gray' : 'blue'}-50 rounded-lg border-l-4 border-${notif.read ? 'gray' : 'blue'}-600 cursor-pointer hover:shadow transition ${readClass}">
+                    <div class="flex gap-2">
+                        <span class="text-lg">${icon}</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-gray-800 text-sm truncate">${notif.title}</p>
+                            <p class="text-xs text-gray-600 line-clamp-2">${notif.message}</p>
+                            <p class="text-xs text-gray-500 mt-1">${date}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Error loading notifications:', error);
+    }
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'quiz_submitted': '📝',
+        'quiz_graded': '📊',
+        'announcement': '📢',
+        'forum_reply': '💬',
+        'new_resource': '📚',
+        'assignment': '✏️',
+        'system': 'ℹ️'
+    };
+    return icons[type] || icons.system;
+}
+
+// Real-time notification polling
+let notificationPolling = null;
+
+function startNotificationPolling() {
+    if (notificationPolling) return;
+
+    // Poll immediately
+    loadUn readBadgeAndPanel();
+
+    // Then every 30 seconds
+    notificationPolling = setInterval(() => {
+        loadUnreadBadgeAndPanel();
+    }, 30000);
+}
+
+function stopNotificationPolling() {
+    if (notificationPolling) {
+        clearInterval(notificationPolling);
+        notificationPolling = null;
+    }
+}
+
+async function loadUnreadBadgeAndPanel() {
+    try {
+        const data = await getAllNotifications(true, 50);
+        
+        // Update badge
+        const badge = document.getElementById('notification-badge');
+        if (badge) {
+            if (data.unreadCount > 0) {
+                badge.textContent = data.unreadCount > 99 ? '99+' : data.unreadCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Update panel if open
+        if (notificationPanelOpen) {
+            await loadNotificationsPanel();
+        }
+    } catch (error) {
+        console.error('Error updating notifications:', error);
+    }
+}
+
+// Close panel when clicking outside
+document.addEventListener('click', function(event) {
+    const panel = document.getElementById('notification-panel');
+    const bellButton = event.target.closest('[onclick*="toggleNotificationPanel"]');
+    
+    if (panel && !panel.contains(event.target) && !bellButton) {
+        closeNotificationPanel();
+    }
+});
+
+// Initialize notifications on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set user name if available
+    const student = JSON.parse(localStorage.getItem('student') || '{}');
+    const parent = JSON.parse(localStorage.getItem('parent') || '{}');
+    const userName = student.name || parent.name || 'User';
+    
+    const userNameElement = document.getElementById('user-name');
+    if (userNameElement) {
+        userNameElement.textContent = userName;
+    }
+
+    // Start notification polling
+    startNotificationPolling();
+
+    // Click handler for notification bell
+    const bellButton = document.querySelector('[onclick*="toggleNotificationPanel"]');
+    if (bellButton) {
+        bellButton.addEventListener('click', async function(e) {
+            e.stopPropagation();
+            await loadNotificationsPanel();
+            toggleNotificationPanel();
+        });
+    }
+});
+
+// Clean up on page unload
+window.addEventListener('beforeunload', function() {
+    stopNotificationPolling();
+});
+
+// Make sure unread badge is hidden initially
+window.addEventListener('load', function() {
+    const badge = document.getElementById('notification-badge');
+    if (badge) {
+        badge.classList.add('hidden');
+    }
+});
+</script>
+
+<!-- ============================================
+     INTEGRATION EXAMPLE
+     ============================================
+
+     Place in your header/navbar section:
+     
+     <header class="bg-white shadow-sm sticky top-0 z-10">
+         <div class="px-8 py-4 flex justify-between items-center">
+             <h1 class="text-3xl font-bold text-gray-800">Your Page Title</h1>
+             <div class="flex items-center gap-4">
+                 <!-- Add notification bell component here -->
+                 <div class="relative">
+                     <button onclick="toggleNotificationPanel()" class="relative p-2 text-gray-600 hover:text-gray-900 transition">
+                         🔔
+                         <span id="notification-badge" data-notification-badge class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
+                     </button>
+                 </div>
+                 <span id="user-name" class="text-gray-700 font-medium"></span>
+             </div>
+         </div>
+     </header>
+
+     Place at the end of the page body:
+     
+     <div id="notification-panel" class="hidden fixed right-0 top-0 h-screen w-96 bg-white shadow-lg z-40 overflow-y-auto border-l border-gray-200">
+         <!-- Panel content -->
+     </div>
+
+============================================ -->
