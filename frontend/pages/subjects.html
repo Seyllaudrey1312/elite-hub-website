@@ -69,10 +69,10 @@
                     </div>
                     <div class="p-6">
                         <div class="space-y-2 form-list hidden">
-                            <a href="../assets/docs/maths/Maths-Form-1-Notes-Updated-Teacher.co_.ke_.pdf" download class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 1</a>
-                            <a href="../assets/docs/maths/Maths-Form-2-Notes-Updated-Teacher.co_.ke_.pdf" download class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 2</a>
-                            <a href="../assets/docs/maths/Maths-Form-3-Notes-Teacher.co_.ke_.pdf" download class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 3</a>
-                            <a href="../assets/docs/maths/Math-Form-4-Notes-Teacher.co_.ke_.pdf" download class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 4</a>
+                            <a href="#" onclick="openDoc('../assets/docs/maths/Maths-Form-1-Notes-Updated-Teacher.co_.ke_.pdf','Maths Form 1')" class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 1</a>
+                            <a href="#" onclick="openDoc('../assets/docs/maths/Maths-Form-2-Notes-Updated-Teacher.co_.ke_.pdf','Maths Form 2')" class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 2</a>
+                            <a href="#" onclick="openDoc('../assets/docs/maths/Maths-Form-3-Notes-Teacher.co_.ke_.pdf','Maths Form 3')" class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 3</a>
+                            <a href="#" onclick="openDoc('../assets/docs/maths/Math-Form-4-Notes-Teacher.co_.ke_.pdf','Maths Form 4')" class="block px-4 py-2 bg-blue-50 text-blue-900 rounded hover:bg-blue-100 transition">Form 4</a>
                         </div>
                         <p class="text-gray-600 form-prompt">Click to expand</p>
                     </div>
@@ -318,6 +318,21 @@
 
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
+    <!-- PDF viewer modal -->
+    <div id="doc-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white w-11/12 md:w-3/4 lg:w-2/3 h-4/5 rounded shadow-lg overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between px-4 py-2 bg-gray-100 border-b">
+                <div id="doc-title" class="font-semibold">Document</div>
+                <div class="space-x-2">
+                    <a id="doc-download" href="#" download class="px-3 py-1 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Download</a>
+                    <button onclick="closeDoc()" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-200">Close</button>
+                </div>
+            </div>
+            <div class="flex-1 bg-gray-50">
+                <iframe id="doc-frame" src="" class="w-full h-full" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
     <script>
         // Load subjects dynamically from API
         document.addEventListener('DOMContentLoaded', async function() {
@@ -352,7 +367,7 @@
                             [1,2,3,4].forEach(f => {
                                 const fileName = mathFiles[f];
                                 const href = fileName ? `../assets/docs/maths/${fileName}` : '#';
-                                formsHtml += `<a href="${href}" download class="block px-4 py-2 bg-${color}-50 text-${color}-900 rounded hover:bg-${color}-100 transition">Form ${f}</a>`;
+                                formsHtml += `<a href="#" onclick="openDoc('${href}','${subject.name} Form ${f}')" class="block px-4 py-2 bg-${color}-50 text-${color}-900 rounded hover:bg-${color}-100 transition">Form ${f}</a>`;
                             });
                         } else {
                             [1,2,3,4].forEach(f => {
@@ -379,6 +394,36 @@
                 showNotification('Failed to load subjects from server', 'warning');
                 // Keep existing hardcoded subjects as fallback
             }
+        });
+
+        // PDF viewer functions
+        function openDoc(href, title) {
+            if (!href || href === '#') {
+                showNotification('Document not available', 'warning');
+                return;
+            }
+            const modal = document.getElementById('doc-modal');
+            const frame = document.getElementById('doc-frame');
+            const docTitle = document.getElementById('doc-title');
+            const download = document.getElementById('doc-download');
+            frame.src = href;
+            docTitle.textContent = title || 'Document';
+            download.href = href;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDoc() {
+            const modal = document.getElementById('doc-modal');
+            const frame = document.getElementById('doc-frame');
+            frame.src = '';
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        // close on ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDoc();
         });
     </script>
 </body>
