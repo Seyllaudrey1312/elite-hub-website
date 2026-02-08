@@ -201,16 +201,34 @@
 
         async function loadAnnouncements() {
             try {
-                // This would fetch from backend (endpoint not yet created)
-                // For now, use mock data
-                allAnnouncements = generateMockAnnouncements();
+                const data = await getAllAnnouncements();
+                // Expecting an array from backend
+                if (Array.isArray(data)) {
+                    allAnnouncements = data.map(a => ({
+                        _id: a._id,
+                        title: a.title,
+                        content: a.content,
+                        targetForm: (a.targetForms && a.targetForms.length > 0) ? String(a.targetForms[0]) : '',
+                        status: a.status || 'published',
+                        createdAt: a.createdAt || new Date().toISOString(),
+                        createdBy: (a.author && a.author.name) || 'Admin'
+                    }));
+                } else {
+                    // Fallback to demo data
+                    allAnnouncements = generateMockAnnouncements();
+                }
+
                 filteredAnnouncements = [...allAnnouncements];
 
                 updateStats();
                 displayAnnouncements();
             } catch (error) {
                 console.error('Error loading announcements:', error);
-                showNotification('Using demo data', 'info');
+                showNotification('Failed to load announcements from server — using demo data', 'warning');
+                allAnnouncements = generateMockAnnouncements();
+                filteredAnnouncements = [...allAnnouncements];
+                updateStats();
+                displayAnnouncements();
             }
         }
 
@@ -351,7 +369,7 @@
             document.getElementById('announcement-modal').classList.add('hidden');
         }
 
-        function saveAnnouncement(event) {
+        async function saveAnnouncement(event) {
             event.preventDefault();
 
             const id = document.getElementById('announcement-id').value;
@@ -361,28 +379,85 @@
             const status = document.getElementById('status-input').value;
 
             if (id) {
-                // Update existing
-                const announcement = allAnnouncements.find(a => a._id === id);
-                if (announcement) {
-                    announcement.title = title;
-                    announcement.content = content;
-                    announcement.targetForm = targetForm;
-                    announcement.status = status;
-                    showNotification('Announcement updated successfully', 'success');
+                // Try to update on server (if endpoint exists)
+                try {
+                    const res = await fetch(`${API_BASE_URL}/announcements/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, content, targetForms: targetForm ? [targetForm] : [] })
+                    });
+
+                    if (res.ok) {
+                        const updated = await res.json();
+                        // Update local list
+                        const idx = allAnnouncements.findIndex(a => a._id === id);
+                        if (idx !== -1) allAnnouncements[idx] = { ...allAnnouncements[idx], title, content, targetForm, status };
+                        showNotification('Announcement updated on server', 'success');
+                    } else {
+                        // Server doesn't support update - fallback to local
+                        const announcement = allAnnouncements.find(a => a._id === id);
+                        if (announcement) {
+                            announcement.title = title;
+                            announcement.content = content;
+                            announcement.targetForm = targetForm;
+                            announcement.status = status;
+                        }
+                        showNotification('Server update not available — updated locally', 'warning');
+                    }
+                } catch (err) {
+                    console.error('Update failed', err);
+                    const announcement = allAnnouncements.find(a => a._id === id);
+                    if (announcement) {
+                        announcement.title = title;
+                        announcement.content = content;
+                        announcement.targetForm = targetForm;
+                        announcement.status = status;
+                    }
+                    showNotification('Update failed — saved locally', 'warning');
                 }
             } else {
-                // Create new
-                const newAnnouncement = {
-                    _id: Date.now().toString(),
-                    title,
-                    content,
-                    targetForm,
-                    status,
-                    createdAt: new Date().toISOString(),
-                    createdBy: 'Admin'
-                };
-                allAnnouncements.unshift(newAnnouncement);
-                showNotification('Announcement created successfully', 'success');
+                // Create new on server
+                try {
+                    const payload = { title, content, targetForms: targetForm ? [targetForm] : [] };
+                    const res = await fetch(`${API_BASE_URL}/announcements`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (res.ok) {
+                        const body = await res.json();
+                        const created = body.announcement || body;
+                        const newAnnouncement = {
+                            _id: created._id,
+                            title: created.title,
+                            content: created.content,
+                            targetForm: (created.targetForms && created.targetForms[0]) || targetForm || '',
+                            status: created.status || 'published',
+                            createdAt: created.createdAt || new Date().toISOString(),
+                            createdBy: (created.author && created.author.name) || 'Admin'
+                        };
+                        allAnnouncements.unshift(newAnnouncement);
+                        showNotification('Announcement created successfully', 'success');
+                    } else {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.error || 'Create failed');
+                    }
+                } catch (err) {
+                    console.error('Create announcement failed', err);
+                    // Fallback to local-only
+                    const newAnnouncement = {
+                        _id: Date.now().toString(),
+                        title,
+                        content,
+                        targetForm,
+                        status,
+                        createdAt: new Date().toISOString(),
+                        createdBy: 'Admin'
+                    };
+                    allAnnouncements.unshift(newAnnouncement);
+                    showNotification('Failed to create on server — saved locally', 'warning');
+                }
             }
 
             // If publish requested and send-email checked, call backend to email students
@@ -406,11 +481,28 @@
         function deleteAnnouncement(id) {
             if (!confirm('Are you sure you want to delete this announcement?')) return;
 
-            allAnnouncements = allAnnouncements.filter(a => a._id !== id);
-            filteredAnnouncements = [...allAnnouncements];
-            updateStats();
-            displayAnnouncements();
-            showNotification('Announcement deleted successfully', 'success');
+            (async () => {
+                try {
+                    const res = await fetch(`${API_BASE_URL}/announcements/${id}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        allAnnouncements = allAnnouncements.filter(a => a._id !== id);
+                        filteredAnnouncements = [...allAnnouncements];
+                        updateStats();
+                        displayAnnouncements();
+                        showNotification('Announcement deleted on server', 'success');
+                        return;
+                    }
+                } catch (err) {
+                    console.warn('Server delete failed or not supported', err);
+                }
+
+                // Fallback: local delete
+                allAnnouncements = allAnnouncements.filter(a => a._id !== id);
+                filteredAnnouncements = [...allAnnouncements];
+                updateStats();
+                displayAnnouncements();
+                showNotification('Announcement deleted locally (server delete failed)', 'warning');
+            })();
         }
 
         async function sendEmailNotification(subject, message, targetForm) {
