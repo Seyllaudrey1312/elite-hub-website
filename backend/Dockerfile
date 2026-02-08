@@ -3,11 +3,11 @@ FROM node:18-alpine
 WORKDIR /usr/src/app
 
 # install deps
-COPY package*.json ./
+COPY backend/package*.json ./
 RUN npm ci --only=production
 
 # copy app
-COPY . .
+COPY backend/ ./
 
 ENV NODE_ENV=production
 EXPOSE 3000
