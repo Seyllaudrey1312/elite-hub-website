@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # install deps
 COPY backend/package*.json ./
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # copy app
 COPY backend/ ./
