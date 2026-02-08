@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Classes - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0ea5a4">
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-3xl mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-4">Schedule Live Class</h1>
+        <form id="live-class-form" class="bg-white p-6 rounded shadow space-y-4" onsubmit="saveLiveClass(event)">
+            <div>
+                <label class="block text-sm font-bold mb-1">Title</label>
+                <input id="lc-title" class="w-full border px-3 py-2 rounded" required>
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Subject</label>
+                <input id="lc-subject" class="w-full border px-3 py-2 rounded">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Scheduled At</label>
+                <input id="lc-datetime" type="datetime-local" class="w-full border px-3 py-2 rounded" required>
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Join Link (Zoom/Jitsi)</label>
+                <input id="lc-link" class="w-full border px-3 py-2 rounded">
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="checkbox" id="create-on-zoom" class="w-4 h-4">
+                <label for="create-on-zoom" class="text-gray-700">Create meeting on Zoom automatically</label>
+            </div>
+            <div class="flex justify-end">
+                <button class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+            </div>
+        </form>
+    </div>
+    <script src="../assets/js/api.js"></script>
+    <script>
+        async function saveLiveClass(e) {
+            e.preventDefault();
+            const payload = {
+                title: document.getElementById('lc-title').value,
+                subject: document.getElementById('lc-subject').value,
+                scheduledAt: document.getElementById('lc-datetime').value,
+                joinLink: document.getElementById('lc-link').value
+            };
+            try {
+                // include createOnProvider if requested
+                if (document.getElementById('create-on-zoom').checked) {
+                    payload.createOnProvider = 'zoom';
+                }
+
+                const res = await fetch(`${API_BASE_URL}/live-classes`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.class && data.class.joinLink) {
+                    alert((data.message || 'Scheduled') + '\nJoin link: ' + data.class.joinLink);
+                } else {
+                    alert(data.message || 'Scheduled');
+                }
+                document.getElementById('live-class-form').reset();
+            } catch (err) {
+                console.error(err);
+                alert('Failed to schedule live class');
+            }
+        }
+    </script>
+    <script src="../assets/js/pwa-register.js"></script>
+</body>
+</html>

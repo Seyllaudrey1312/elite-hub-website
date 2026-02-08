@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Announcements - Elite Hub Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0ea5a4">
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen overflow-hidden">
@@ -17,7 +19,9 @@
                 <a href="admin-dashboard.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📊 Dashboard</a>
                 <a href="admin-quiz-builder.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📝 Create Quiz</a>
                 <a href="admin-quiz-results.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📈 Quiz Results</a>
-                <a href="admin-resources.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📚 Resources</a>
+				<a href="admin-resources.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📚 Resources</a>
+				<a href="admin-live-classes.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">🎥 Live Classes</a>
+				<a href="admin-video-lessons.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">🎬 Video Lessons</a>
                 <a href="admin-students.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">👥 Students</a>
                 <a href="admin-announcements.html" class="block px-4 py-2 rounded-lg bg-blue-700">📢 Announcements</a>
             </nav>
@@ -153,6 +157,13 @@
                             <option value="draft">Draft</option>
                             <option value="published">Publish Now</option>
                         </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Options</label>
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="send-email-checkbox" class="w-4 h-4">
+                            <label for="send-email-checkbox" class="text-gray-700">Also send email to recipients</label>
+                        </div>
                     </div>
                 </div>
 
@@ -374,6 +385,18 @@
                 showNotification('Announcement created successfully', 'success');
             }
 
+            // If publish requested and send-email checked, call backend to email students
+            const sendEmail = document.getElementById('send-email-checkbox').checked;
+            if (status === 'published' && sendEmail) {
+                try {
+                    await sendEmailNotification(title, content, targetForm);
+                    showNotification('Emails queued/sent', 'success');
+                } catch (err) {
+                    console.error('Send email failed', err);
+                    showNotification('Failed to send emails', 'warning');
+                }
+            }
+
             filteredAnnouncements = [...allAnnouncements];
             updateStats();
             displayAnnouncements();
@@ -388,6 +411,21 @@
             updateStats();
             displayAnnouncements();
             showNotification('Announcement deleted successfully', 'success');
+        }
+
+        async function sendEmailNotification(subject, message, targetForm) {
+            try {
+                const payload = { subject, message, targetForm };
+                const res = await fetch(`${API_BASE_URL}/notifications/send-email`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                return await res.json();
+            } catch (error) {
+                console.error('sendEmailNotification error', error);
+                throw error;
+            }
         }
 
         function checkAdminAuth() {
@@ -406,5 +444,6 @@
         // Initialize on load
         window.addEventListener('load', init);
     </script>
+        <script src="../assets/js/pwa-register.js"></script>
 </body>
 </html>

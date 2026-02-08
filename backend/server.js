@@ -47,6 +47,15 @@ app.use('/api/resources', require('./resources'));
 // Announcement Routes
 app.use('/api/announcements', require('./announcements'));
 
+// Notifications (email + in-app)
+app.use('/api/notifications', require('./routes/notifications'));
+
+// Live class scheduling
+app.use('/api/live-classes', require('./routes/liveClasses'));
+
+// Video lessons
+app.use('/api/video-lessons', require('./routes/videoLessons'));
+
 // Error Handling Middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);

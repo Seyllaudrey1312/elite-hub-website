@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Lessons - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0ea5a4">
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-3xl mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-4">Add Video Lesson</h1>
+        <form id="video-form" class="bg-white p-6 rounded shadow space-y-4" onsubmit="saveVideo(event)">
+            <div>
+                <label class="block text-sm font-bold mb-1">Title</label>
+                <input id="video-title" class="w-full border px-3 py-2 rounded" required>
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Subject</label>
+                <input id="video-subject" class="w-full border px-3 py-2 rounded">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Video URL (YouTube/Vimeo/Hosted)</label>
+                <input id="video-url" class="w-full border px-3 py-2 rounded" required>
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Description</label>
+                <textarea id="video-desc" class="w-full border px-3 py-2 rounded"></textarea>
+            </div>
+            <div class="flex justify-end">
+                <button class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+            </div>
+        </form>
+    </div>
+    <script src="../assets/js/api.js"></script>
+    <script>
+        async function saveVideo(e) {
+            e.preventDefault();
+            const payload = {
+                title: document.getElementById('video-title').value,
+                subject: document.getElementById('video-subject').value,
+                url: document.getElementById('video-url').value,
+                description: document.getElementById('video-desc').value
+            };
+            try {
+                const res = await fetch(`${API_BASE_URL}/video-lessons`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                alert(data.message || 'Saved');
+                document.getElementById('video-form').reset();
+            } catch (err) {
+                console.error(err);
+                alert('Failed to save video lesson');
+            }
+        }
+    </script>
+    <script src="../assets/js/pwa-register.js"></script>
+</body>
+</html>
