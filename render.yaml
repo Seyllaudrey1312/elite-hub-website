@@ -1,7 +1,7 @@
 services:
   - type: web
     name: elite-hub-backend
-    env: docker
+    runtime: docker
     repo: https://github.com/Seyllaudrey1312/elite-hub-website.git
     branch: main
     region: oregon
