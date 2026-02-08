@@ -30,22 +30,22 @@ app.get('/api', (req, res) => {
 app.use('/api/auth', require('./routes/auth'));
 
 // Student Routes
-app.use('/api/students', require('./students'));
+app.use('/api/students', require('./routes/students'));
 
 // Subject Routes
-app.use('/api/subjects', require('./subjects'));
+app.use('/api/subjects', require('./routes/subjects'));
 
 // Quiz Routes
-app.use('/api/quizzes', require('./quizzes'));
+app.use('/api/quizzes', require('./routes/quizzes'));
 
 // Assignment Routes
-app.use('/api/assignments', require('./assignments'));
+app.use('/api/assignments', require('./routes/assignments'));
 
 // Resource Routes
-app.use('/api/resources', require('./resources'));
+app.use('/api/resources', require('./routes/resources'));
 
 // Announcement Routes
-app.use('/api/announcements', require('./announcements'));
+app.use('/api/announcements', require('./routes/announcements'));
 
 // Notifications (email + in-app)
 app.use('/api/notifications', require('./routes/notifications'));

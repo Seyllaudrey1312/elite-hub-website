@@ -1,20 +1,8 @@
 // routes/resources.js - Resource Routes
 const express = require('express');
 const router = express.Router();
-const Resource = require('Resource');
+const Resource = require('../models/Resource');
 const auth = require("../middleware/auth")
-
-
-// Get all resources (protected)
-
-router.get("/" , auth, async (req, res) => {
-    try {
-        const assignments = await Resource.find();
-        res.json(resources);
-    } catch (error) {
-        res.status(500).json({ message: "Server Error"})
-    }
-});
 
 // Get all resources
 router.get('/', async (req, res) => {
