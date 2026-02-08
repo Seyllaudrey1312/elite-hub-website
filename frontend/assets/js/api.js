@@ -5,13 +5,13 @@
 let API_BASE_URL;
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     // Local development
-    API_BASE_URL = 'http://localhost:5000/api';
+    API_BASE_URL = 'https://elite-hub-website.onrender.com/';
 } else {
     // Production - CHANGE THIS to your deployed backend URL
     // Example: 'https://your-backend.herokuapp.com/api'
     // Example: 'https://your-backend.railway.app/api'
     // Example: 'https://api.yourdomain.com/api'
-    API_BASE_URL = 'http://localhost:5000/api'; // CHANGE THIS!
+    API_BASE_URL = 'https://elite-hub-website.onrender.com/'; // CHANGE THIS!
 }
 
 // ==================== AUTH ENDPOINTS ====================
