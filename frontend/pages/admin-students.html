@@ -150,26 +150,19 @@
         // State
         let allStudents = [];
         let filteredStudents = [];
-        }
-    </script>
-    <script src="../assets/js/pwa-register.js"></script>
-</body>
-</html>
-                // Check admin auth
-                checkAdminAuth();
 
-                // Load students
+        async function init() {
+            try {
+                checkAdminAuth();
                 await loadStudents();
             } catch (error) {
                 console.error('Error initializing:', error);
-                showNotification('Failed to load students', 'error');
+                if (typeof showNotification === 'function') showNotification('Failed to load students', 'error');
             }
         }
 
         async function loadStudents() {
             try {
-                // Fetch all students (would need to create this endpoint)
-                // For now, showing mock data structure
                 const response = await fetch('/api/students', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
@@ -185,8 +178,7 @@
                 displayStudents();
             } catch (error) {
                 console.error('Error loading students:', error);
-                // Show mock data for demo
-                showNotification('Using demo data (backend endpoint not yet created)', 'info');
+                if (typeof showNotification === 'function') showNotification('Using demo data (backend endpoint not yet created)', 'info');
                 allStudents = generateMockStudents();
                 filteredStudents = [...allStudents];
                 updateStats();
@@ -252,7 +244,6 @@
                     const avgScore = student.quizResults.reduce((sum, r) => sum + r.percentage, 0) / student.quizResults.length;
                     totalAvgScore += avgScore;
                     scoreCount++;
-                    // Completion rate = completed quizzes / available quizzes (mock: 70% baseline)
                     totalCompletionRate += Math.min(student.quizResults.length * 20, 100);
                 }
             });
@@ -260,9 +251,9 @@
             document.getElementById('total-students').textContent = totalStudents;
             document.getElementById('active-students').textContent = activeStudents;
             document.getElementById('avg-completion').textContent = 
-                completionCount > 0 ? Math.round(totalCompletionRate / completionCount) : 0;
+                completionCount > 0 ? Math.round(totalCompletionRate / completionCount) + '%' : '0%';
             document.getElementById('avg-score').textContent = 
-                scoreCount > 0 ? Math.round(totalAvgScore / scoreCount) : 0;
+                scoreCount > 0 ? Math.round(totalAvgScore / scoreCount) + '%' : '0%';
         }
 
         function displayStudents() {
@@ -291,7 +282,7 @@
                     <td class="px-6 py-4 font-medium text-gray-800">${student.name}</td>
                     <td class="px-6 py-4 text-gray-700">${student.email}</td>
                     <td class="px-6 py-4 text-gray-700">Form ${student.form}</td>
-                    <td class="px-6 py-4 text-gray-700">${student.subjects.join(', ')}</td>
+                    <td class="px-6 py-4 text-gray-700">${student.subjects ? student.subjects.join(', ') : ''}</td>
                     <td class="px-6 py-4 font-bold text-gray-800">${quizzesTaken}</td>
                     <td class="px-6 py-4 font-bold text-blue-600">${avgScore}%</td>
                     <td class="px-6 py-4 ${statusColor} font-bold">${statusText}</td>
@@ -311,8 +302,8 @@
             const statusFilter = document.getElementById('status-filter').value;
 
             filteredStudents = allStudents.filter(student => {
-                const matchesSearch = student.name.toLowerCase().includes(searchTerm) ||
-                    student.email.toLowerCase().includes(searchTerm);
+                const matchesSearch = (student.name || '').toLowerCase().includes(searchTerm) ||
+                    (student.email || '').toLowerCase().includes(searchTerm);
                 const matchesForm = !formFilter || student.form === formFilter;
                 const matchesStatus = !statusFilter || student.status === statusFilter;
 
@@ -346,7 +337,7 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Subjects</p>
-                        <p class="text-lg text-gray-800">${student.subjects.join(', ')}</p>
+                        <p class="text-lg text-gray-800">${student.subjects ? student.subjects.join(', ') : ''}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Quizzes Taken</p>
@@ -393,5 +384,6 @@
         // Initialize on load
         window.addEventListener('load', init);
     </script>
+    <script src="../assets/js/pwa-register.js"></script>
 </body>
 </html>
