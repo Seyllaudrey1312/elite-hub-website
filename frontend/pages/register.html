@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration - Elite Hub</title>
+    <title>Registration - Elite Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0ea5a4">
@@ -20,10 +20,16 @@
                 <p class="text-white text-lg">Learn. Practice. Excel.</p>
             </div>
 
+            <!-- Role Toggle -->
+            <div class="flex justify-center mb-6 bg-white rounded-lg p-1 shadow-lg">
+                <button type="button" class="roleToggle student-toggle flex-1 py-2 px-4 rounded-md bg-blue-900 text-white font-bold transition" data-role="student">Student</button>
+                <button type="button" class="roleToggle admin-toggle flex-1 py-2 px-4 rounded-md text-gray-700 font-bold transition hover:bg-gray-100" data-role="admin">Admin/Tutor</button>
+            </div>
+
             <!-- Registration Card -->
             <div class="bg-white rounded-lg shadow-2xl p-8">
-                <h2 class="text-3xl font-bold text-blue-900 mb-2 text-center">Student Registration</h2>
-                <p class="text-gray-600 text-center mb-8">Create your account to get started</p>
+                <h2 class="text-3xl font-bold text-blue-900 mb-2 text-center registrationTitle">Student Registration</h2>
+                <p class="text-gray-600 text-center mb-8 registrationSubtitle">Create your account to get started</p>
 
                 <form id="registerForm">
                     <!-- Name Input -->
@@ -38,16 +44,42 @@
                         <input type="email" id="registerEmail" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="student@school.com">
                     </div>
 
-                    <!-- Form/Class Input -->
-                    <div class="mb-6">
+                    <!-- Form/Class Input (Student Only) -->
+                    <div class="mb-6 studentField">
                         <label for="registerFormClass" class="block text-gray-700 font-bold mb-2">Form/Class</label>
-                        <select id="registerFormClass" name="form" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200">
+                        <select id="registerFormClass" name="form" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200">
                             <option value="">Select your form</option>
                             <option value="1">Form 1</option>
                             <option value="2">Form 2</option>
                             <option value="3">Form 3</option>
                             <option value="4">Form 4</option>
                         </select>
+                    </div>
+
+                    <!-- Subject/Specialization (Admin Only) -->
+                    <div class="mb-6 adminField hidden">
+                        <label for="adminSubject" class="block text-gray-700 font-bold mb-2">Subject/Specialization</label>
+                        <select id="adminSubject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200">
+                            <option value="">Select subject</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="English">English</option>
+                            <option value="Science">Science</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Physics">Physics</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Computer Studies">Computer Studies</option>
+                            <option value="Business Studies">Business Studies</option>
+                            <option value="CRE">CRE</option>
+                            <option value="Kiswahili">Kiswahili</option>
+                        </select>
+                    </div>
+
+                    <!-- Tutor ID/Code (Admin Only) -->
+                    <div class="mb-6 adminField hidden">
+                        <label for="adminCode" class="block text-gray-700 font-bold mb-2">Tutor Code (if provided)</label>
+                        <input type="text" id="adminCode" name="tutorCode" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="Optional tutor registration code">
                     </div>
 
                     <!-- Password Input -->
@@ -75,7 +107,10 @@
                 </form>
 
                 <!-- Login Link -->
-                <p class="text-center text-gray-600">Already have an account? <a href="./login.html" class="text-blue-900 font-bold hover:underline">Login here</a></p>
+                <p class="text-center text-gray-600">Already have an account? 
+                    <a href="./login.html" class="studentLogin text-blue-900 font-bold hover:underline">Login here</a>
+                    <a href="./admin-login.html" class="adminLogin text-blue-900 font-bold hover:underline hidden">Admin Login</a>
+                </p>
             </div>
 
             <!-- Additional Info -->
@@ -89,13 +124,56 @@
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
     <script>
+        let currentRole = 'student';
+
+        // Role toggle functionality
+        document.querySelectorAll('.roleToggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const role = btn.getAttribute('data-role');
+                currentRole = role;
+
+                // Update toggle styling
+                document.querySelectorAll('.roleToggle').forEach(b => {
+                    b.classList.remove('bg-blue-900', 'text-white');
+                    b.classList.add('text-gray-700', 'hover:bg-gray-100');
+                });
+                btn.classList.remove('text-gray-700', 'hover:bg-gray-100');
+                btn.classList.add('bg-blue-900', 'text-white');
+
+                // Update form title and subtitle
+                const title = document.querySelector('.registrationTitle');
+                const subtitle = document.querySelector('.registrationSubtitle');
+                
+                if (role === 'student') {
+                    title.textContent = 'Student Registration';
+                    subtitle.textContent = 'Create your account to get started';
+                    // Show student fields, hide admin fields
+                    document.querySelectorAll('.studentField').forEach(field => field.classList.remove('hidden'));
+                    document.querySelectorAll('.adminField').forEach(field => field.classList.add('hidden'));
+                    document.getElementById('registerFormClass').required = true;
+                    // Update login links
+                    document.querySelector('.studentLogin').classList.remove('hidden');
+                    document.querySelector('.adminLogin').classList.add('hidden');
+                } else {
+                    title.textContent = 'Tutor/Admin Registration';
+                    subtitle.textContent = 'Create your admin account';
+                    // Hide student fields, show admin fields
+                    document.querySelectorAll('.studentField').forEach(field => field.classList.add('hidden'));
+                    document.querySelectorAll('.adminField').forEach(field => field.classList.remove('hidden'));
+                    document.getElementById('registerFormClass').required = false;
+                    // Update login links
+                    document.querySelector('.studentLogin').classList.add('hidden');
+                    document.querySelector('.adminLogin').classList.remove('hidden');
+                }
+            });
+        });
+
         // Register Form Submission
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const name = document.getElementById('registerName').value;
             const email = document.getElementById('registerEmail').value;
-            const form = document.getElementById('registerFormClass').value;
             const password = document.getElementById('registerPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -106,11 +184,35 @@
             }
 
             try {
-                const result = await registerStudent(name, email, password, form);
-                showNotification('Registration successful! Redirecting...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                let result;
+                if (currentRole === 'student') {
+                    const form = document.getElementById('registerFormClass').value;
+                    if (!form) {
+                        showNotification('Please select a form', 'error');
+                        return;
+                    }
+                    result = await registerStudent(name, email, password, form);
+                    showNotification('Student registration successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 1500);
+                } else {
+                    const subject = document.getElementById('adminSubject').value;
+                    const tutorCode = document.getElementById('adminCode').value;
+                    
+                    if (!subject) {
+                        showNotification('Please select a subject specialization', 'error');
+                        return;
+                    }
+                    
+                    result = await registerAdmin(name, email, password, subject, tutorCode);
+                    showNotification('Admin registration successful! Redirecting...', 'success');
+                    localStorage.setItem('isAdmin', 'true');
+                    localStorage.setItem('adminToken', result.token);
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 1500);
+                }
             } catch (error) {
                 showNotification(error.message || 'Registration failed', 'error');
             }

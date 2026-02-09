@@ -42,6 +42,36 @@ async function registerStudent(name, email, password, form) {
     }
 }
 
+// Register a new admin/tutor
+async function registerAdmin(name, email, password, subject, tutorCode = '') {
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/register-admin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, password, subject, tutorCode })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Admin registration failed');
+        }
+
+        // Store token in localStorage
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('adminToken', data.token);
+        localStorage.setItem('admin', JSON.stringify(data.admin));
+        localStorage.setItem('isAdmin', 'true');
+
+        return data;
+    } catch (error) {
+        console.error('Admin registration error:', error);
+        throw error;
+    }
+}
+
 // Login student
 async function loginStudent(email, password) {
     try {
