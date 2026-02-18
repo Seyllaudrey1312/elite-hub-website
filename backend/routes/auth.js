@@ -142,12 +142,12 @@ router.post('/login', async (req, res) => {
         }
 
         // Try to find student by email
-        let user = await Student.findOne({ email });
+        let user = await Student.findOne({ email }).select('+password');
         let userType = 'student';
 
         // If not a student, try to find admin
         if (!user) {
-            user = await Admin.findOne({ email });
+            user = await Admin.findOne({ email }).select('+password');
             userType = 'admin';
         }
 
