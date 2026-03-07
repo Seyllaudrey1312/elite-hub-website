@@ -34,30 +34,30 @@
         <h1 class="text-4xl font-bold text-blue-900 mb-8">Student Dashboard</h1>
 
         <!-- Dashboard Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12" id="statsContainer">
+            <!-- Stats Cards - Loaded dynamically -->
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h3 class="text-gray-600 text-sm font-bold mb-2">ENROLLED SUBJECTS</h3>
-                <p class="text-4xl font-bold text-blue-900">8</p>
+                <p class="text-4xl font-bold text-blue-900" id="enrolledCount">-</p>
                 <p class="text-gray-500 text-sm mt-2">Active courses</p>
             </div>
 
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h3 class="text-gray-600 text-sm font-bold mb-2">QUIZ AVERAGE</h3>
-                <p class="text-4xl font-bold text-green-600">78%</p>
-                <p class="text-gray-500 text-sm mt-2">From 24 completed</p>
+                <p class="text-4xl font-bold text-green-600" id="quizAverage">-</p>
+                <p class="text-gray-500 text-sm mt-2" id="quizCount">From 0 completed</p>
             </div>
 
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h3 class="text-gray-600 text-sm font-bold mb-2">PENDING ASSIGNMENTS</h3>
-                <p class="text-4xl font-bold text-orange-600">3</p>
-                <p class="text-gray-500 text-sm mt-2">Due this month</p>
+                <p class="text-4xl font-bold text-orange-600" id="pendingCount">-</p>
+                <p class="text-gray-500 text-sm mt-2">Due soon</p>
             </div>
 
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h3 class="text-gray-600 text-sm font-bold mb-2">STUDY STREAK</h3>
-                <p class="text-4xl font-bold text-purple-600">12</p>
-                <p class="text-gray-500 text-sm mt-2">Days in a row</p>
+                <p class="text-4xl font-bold text-purple-600" id="studyStreak">-</p>
+                <p class="text-gray-500 text-sm mt-2" id="streakDays">Days in a row</p>
             </div>
         </div>
 
@@ -68,38 +68,9 @@
                 <!-- Recent Quiz Results -->
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-blue-900 mb-6">Recent Quiz Results</h2>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div>
-                                <h3 class="font-bold text-blue-900">Algebra Basics Quiz</h3>
-                                <p class="text-sm text-gray-600">Completed on Feb 2, 2026</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-2xl font-bold text-green-600">85%</p>
-                                <p class="text-sm text-gray-600">17 out of 20</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div>
-                                <h3 class="font-bold text-blue-900">Motion & Forces Quiz</h3>
-                                <p class="text-sm text-gray-600">Completed on Feb 1, 2026</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-2xl font-bold text-yellow-600">72%</p>
-                                <p class="text-sm text-gray-600">11 out of 15</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div>
-                                <h3 class="font-bold text-blue-900">Atomic Structure Quiz</h3>
-                                <p class="text-sm text-gray-600">Completed on Jan 30, 2026</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-2xl font-bold text-green-600">91%</p>
-                                <p class="text-sm text-gray-600">11 out of 12</p>
-                            </div>
+                    <div class="space-y-4" id="recentQuizzesContainer">
+                        <div class="text-center py-6 text-gray-500">
+                            Loading quiz results...
                         </div>
                     </div>
                     <a href="./quizzes.html" class="mt-4 inline-block text-blue-900 font-bold hover:underline">View all quiz results →</a>
@@ -108,46 +79,10 @@
                 <!-- My Subjects -->
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-blue-900 mb-6">My Enrolled Subjects</h2>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <a href="#" class="p-4 bg-blue-50 rounded-lg text-center hover:bg-blue-100 transition">
-                            <p class="font-bold text-blue-900">📐 Mathematics</p>
-                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
-                        </a>
-
-                        <a href="#" class="p-4 bg-yellow-50 rounded-lg text-center hover:bg-yellow-100 transition">
-                            <p class="font-bold text-blue-900">⚡ Physics</p>
-                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
-                        </a>
-
-                        <a href="#" class="p-4 bg-green-50 rounded-lg text-center hover:bg-green-100 transition">
-                            <p class="font-bold text-blue-900">🧪 Chemistry</p>
-                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
-                        </a>
-
-                        <a href="#" class="p-4 bg-red-50 rounded-lg text-center hover:bg-red-100 transition">
-                            <p class="font-bold text-blue-900">🔬 Biology</p>
-                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
-                        </a>
-
-                        <a href="#" class="p-4 bg-purple-50 rounded-lg text-center hover:bg-purple-100 transition">
-                            <p class="font-bold text-blue-900">📖 English</p>
-                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
-                        </a>
-
-                        <a href="#" class="p-4 bg-orange-50 rounded-lg text-center hover:bg-orange-100 transition">
-                            <p class="font-bold text-blue-900">🗣️ Kiswahili</p>
-                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
-                        </a>
-
-                        <a href="#" class="p-4 bg-indigo-50 rounded-lg text-center hover:bg-indigo-100 transition">
-                            <p class="font-bold text-blue-900">📚 History</p>
-                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
-                        </a>
-
-                        <a href="#" class="p-4 bg-teal-50 rounded-lg text-center hover:bg-teal-100 transition">
-                            <p class="font-bold text-blue-900">🌍 Geography</p>
-                            <p class="text-xs text-gray-600 mt-1">Form 2</p>
-                        </a>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="enrolledSubjectsContainer">
+                        <div class="text-center py-6 text-gray-500 col-span-4">
+                            Loading subjects...
+                        </div>
                     </div>
                 </div>
             </div>
@@ -157,42 +92,20 @@
                 <!-- Pending Assignments -->
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h2 class="text-xl font-bold text-blue-900 mb-4">📋 Pending Assignments</h2>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-red-50 border-l-4 border-red-500 rounded">
-                            <p class="font-bold text-sm text-blue-900">Math Problem Set</p>
-                            <p class="text-xs text-gray-600">Due: Feb 10</p>
-                        </div>
-
-                        <div class="p-3 bg-orange-50 border-l-4 border-orange-500 rounded">
-                            <p class="font-bold text-sm text-blue-900">Physics Report</p>
-                            <p class="text-xs text-gray-600">Due: Feb 12</p>
-                        </div>
-
-                        <div class="p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded">
-                            <p class="font-bold text-sm text-blue-900">Essay - Renaissance</p>
-                            <p class="text-xs text-gray-600">Due: Feb 15</p>
+                    <div class="space-y-3" id="pendingAssignmentsContainer">
+                        <div class="text-center py-4 text-gray-500 text-sm">
+                            Loading assignments...
                         </div>
                     </div>
-                    <a href="./quizzes.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>
+                    <a href="./assignments.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>
                 </div>
 
                 <!-- Recent Announcements -->
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h2 class="text-xl font-bold text-blue-900 mb-4">📢 Recent Announcements</h2>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-yellow-50 rounded">
-                            <p class="font-bold text-sm text-blue-900">Form 4 Exam Schedule</p>
-                            <p class="text-xs text-gray-600">Feb 4</p>
-                        </div>
-
-                        <div class="p-3 bg-green-50 rounded">
-                            <p class="font-bold text-sm text-blue-900">New Physics Notes</p>
-                            <p class="text-xs text-gray-600">Feb 2</p>
-                        </div>
-
-                        <div class="p-3 bg-blue-50 rounded">
-                            <p class="font-bold text-sm text-blue-900">Office Hours Extended</p>
-                            <p class="text-xs text-gray-600">Feb 1</p>
+                    <div class="space-y-3" id="recentAnnouncementsContainer">
+                        <div class="text-center py-4 text-gray-500 text-sm">
+                            Loading announcements...
                         </div>
                     </div>
                     <a href="./announcements.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>
@@ -211,13 +124,13 @@
                 <!-- Profile Card -->
                 <div class="bg-gradient-to-br from-blue-900 to-green-700 rounded-lg shadow-lg p-6 text-white">
                     <h3 class="text-lg font-bold mb-2">👤 Profile</h3>
-                    <div class="space-y-1 text-sm">
-                        <p><strong>Name:</strong> John Doe</p>
-                        <p><strong>Form:</strong> Form 2</p>
+                    <div class="space-y-1 text-sm" id="profileCardContent">
+                        <p><strong>Name:</strong> <span id="profileName">-</span></p>
+                        <p><strong>Form:</strong> <span id="profileForm">-</span></p>
+                        <p><strong>Email:</strong> <span id="profileEmail">-</span></p>
                         <p><strong>Status:</strong> Active</p>
-                        <p><strong>Joined:</strong> Jan 2026</p>
                     </div>
-                    <a href="#" class="mt-4 inline-block text-yellow-400 hover:underline text-sm font-bold">Edit Profile →</a>
+                    <a href="profile-edit.html" class="mt-4 inline-block text-yellow-400 hover:underline text-sm font-bold">Edit Profile →</a>
                 </div>
             </div>
         </div>
@@ -259,6 +172,40 @@
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
     <script>
+        // Subject icons mapping
+        const subjectIcons = {
+            'Mathematics': '📐',
+            'Maths': '📐',
+            'Physics': '⚡',
+            'Chemistry': '🧪',
+            'Biology': '🔬',
+            'English': '📖',
+            'Kiswahili': '🗣️',
+            'History': '📚',
+            'Geography': '🌍',
+            'Computer Studies': '💻',
+            'Business Studies': '💼',
+            'CRE': '✝️',
+            'Integrated Science': '🔭'
+        };
+
+        // Subject color mapping
+        const subjectColors = {
+            'Mathematics': 'blue',
+            'Maths': 'blue',
+            'Physics': 'yellow',
+            'Chemistry': 'green',
+            'Biology': 'red',
+            'English': 'purple',
+            'Kiswahili': 'orange',
+            'History': 'indigo',
+            'Geography': 'teal',
+            'Computer Studies': 'gray',
+            'Business Studies': 'pink',
+            'CRE': 'rose',
+            'Integrated Science': 'cyan'
+        };
+
         // Load dashboard data on page load
         document.addEventListener('DOMContentLoaded', async function() {
             // Check authentication
@@ -267,90 +214,312 @@
                 return;
             }
 
-            // Load and display student info
+            // Load student data
             const student = getStoredStudent();
-            if (student) {
-                document.getElementById('welcomeText').textContent = `Welcome, ${student.name}!`;
-                
-                // Update profile card
-                document.querySelector('[contains(text(), "Name:")]')?.parentElement?.textContent ||
-                    updateProfileInfo(student);
+            if (!student) {
+                console.error('No student data found');
+                window.location.href = 'login.html';
+                return;
             }
 
-            // Load announcements
-            try {
-                const announcements = await getAllAnnouncements();
-                if (announcements.length > 0) {
-                    updateAnnouncementsDisplay(announcements.slice(0, 3));
-                }
-            } catch (error) {
-                console.error('Error loading announcements:', error);
-            }
+            // Update welcome text
+            document.getElementById('welcomeText').textContent = `Welcome, ${student.name}!`;
 
-            // Load assignments
-            try {
-                const assignments = await getAllAssignments();
-                if (assignments.length > 0) {
-                    updateAssignmentsDisplay(assignments.slice(0, 3));
-                }
-            } catch (error) {
-                console.error('Error loading assignments:', error);
-            }
+            // Update profile card
+            updateProfileCard(student);
+
+            // Load all dashboard data
+            await loadDashboardStats(student);
+            await loadRecentQuizzes(student);
+            await loadEnrolledSubjects(student);
+            await loadPendingAssignments(student);
+            await loadRecentAnnouncements();
         });
 
-        function updateProfileInfo(student) {
-            const profileCard = document.querySelector('.from-blue-900.to-green-700');
-            if (profileCard) {
-                profileCard.innerHTML = `
-                    <h3 class="text-lg font-bold mb-2">👤 Profile</h3>
-                    <div class="space-y-1 text-sm">
-                        <p><strong>Name:</strong> ${student.name}</p>
-                        <p><strong>Form:</strong> Form ${student.form}</p>
-                        <p><strong>Email:</strong> ${student.email}</p>
-                        <p><strong>Status:</strong> Active</p>
-                    </div>
-                    <a href="profile-edit.html" class="mt-4 inline-block text-yellow-400 hover:underline text-sm font-bold">Edit Profile →</a>
-                `;
+        // Update profile card with student info
+        function updateProfileCard(student) {
+            document.getElementById('profileName').textContent = student.name || 'N/A';
+            document.getElementById('profileForm').textContent = student.form || 'N/A';
+            document.getElementById('profileEmail').textContent = student.email || 'N/A';
+        }
+
+        // Load and display dashboard statistics
+        async function loadDashboardStats(student) {
+            try {
+                // Count enrolled subjects
+                const enrolledCount = student.enrolledSubjects ? student.enrolledSubjects.length : 0;
+                document.getElementById('enrolledCount').textContent = enrolledCount;
+
+                // Calculate quiz statistics
+                const quizResults = student.quizResults || [];
+                let totalPercentage = 0;
+                let completedCount = 0;
+
+                if (quizResults.length > 0) {
+                    quizResults.forEach(result => {
+                        totalPercentage += result.percentage || 0;
+                        completedCount++;
+                    });
+                    const averagePercentage = Math.round(totalPercentage / completedCount);
+                    document.getElementById('quizAverage').textContent = averagePercentage + '%';
+                    document.getElementById('quizCount').textContent = `From ${completedCount} completed`;
+                } else {
+                    document.getElementById('quizAverage').textContent = 'N/A';
+                    document.getElementById('quizCount').textContent = 'No quizzes completed yet';
+                }
+
+                // Load pending assignments
+                const allAssignments = await getAllAssignments();
+                const now = new Date();
+                const pendingAssignments = allAssignments.filter(assignment => {
+                    const dueDate = new Date(assignment.dueDate);
+                    return dueDate > now && (!student.assignments || !student.assignments.includes(assignment._id));
+                });
+                document.getElementById('pendingCount').textContent = pendingAssignments.length;
+
+                // Calculate study streak (based on quiz completion dates)
+                const streak = calculateStudyStreak(quizResults);
+                document.getElementById('studyStreak').textContent = streak;
+                document.getElementById('streakDays').textContent = streak + (streak === 1 ? ' day in a row' : ' days in a row');
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+                document.getElementById('enrolledCount').textContent = '0';
+                document.getElementById('quizAverage').textContent = 'N/A';
+                document.getElementById('pendingCount').textContent = '0';
+                document.getElementById('studyStreak').textContent = '0';
             }
         }
 
-        function updateAnnouncementsDisplay(announcements) {
-            const announcementsContainer = document.querySelectorAll('.bg-white.rounded-lg.shadow-lg.p-6')[3];
-            if (announcementsContainer) {
-                let html = '<h2 class="text-xl font-bold text-blue-900 mb-4">📢 Recent Announcements</h2><div class="space-y-3">';
-                announcements.forEach(ann => {
-                    const categoryColor = {
-                        'important': 'red', 'resource': 'green', 'event': 'yellow',
-                        'update': 'blue', 'notice': 'orange'
-                    }[ann.category] || 'gray';
+        // Calculate study streak based on quiz completion dates
+        function calculateStudyStreak(quizResults) {
+            if (!quizResults || quizResults.length === 0) return 0;
+
+            // Sort by date descending
+            const sortedResults = quizResults
+                .filter(r => r.completedAt)
+                .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+
+            if (sortedResults.length === 0) return 0;
+
+            let streak = 1;
+            const oneDay = 24 * 60 * 60 * 1000;
+
+            for (let i = 1; i < sortedResults.length; i++) {
+                const current = new Date(sortedResults[i].completedAt);
+                const previous = new Date(sortedResults[i - 1].completedAt);
+                const daysDiff = Math.floor((previous - current) / oneDay);
+
+                // If within ~3 days, count as streak (allowing some flexibility)
+                if (daysDiff <= 3) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+
+            return Math.min(streak, 99); // Cap at 99 for display
+        }
+
+        // Load and display recent quiz results
+        async function loadRecentQuizzes(student) {
+            try {
+                const container = document.getElementById('recentQuizzesContainer');
+                const quizResults = student.quizResults || [];
+
+                if (quizResults.length === 0) {
+                    container.innerHTML = `<div class="text-center py-6 text-gray-500">
+                        No quiz results yet. <a href="./quizzes.html" class="text-blue-900 font-bold hover:underline">Take a quiz</a>
+                    </div>`;
+                    return;
+                }
+
+                // Sort by date descending and get top 3
+                const recentQuizzes = quizResults
+                    .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
+                    .slice(0, 3);
+
+                let html = '';
+                for (const result of recentQuizzes) {
+                    const quiz = result.quiz;
+                    const percentage = result.percentage || 0;
+                    const score = result.score || 0;
+                    const total = result.totalQuestions || 0;
+                    const date = new Date(result.completedAt);
+                    const dateStr = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+                    // Determine color based on score
+                    let scoreColor = 'text-red-600';
+                    if (percentage >= 80) scoreColor = 'text-green-600';
+                    else if (percentage >= 70) scoreColor = 'text-yellow-600';
+
                     html += `
-                        <div class="p-3 bg-${categoryColor}-50 rounded">
-                            <p class="font-bold text-sm text-blue-900">${ann.title}</p>
-                            <p class="text-xs text-gray-600">${new Date(ann.createdAt).toLocaleDateString()}</p>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h3 class="font-bold text-blue-900">${quiz.title || 'Quiz'}</h3>
+                                <p class="text-sm text-gray-600">Completed on ${dateStr}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold ${scoreColor}">${percentage}%</p>
+                                <p class="text-sm text-gray-600">${score} out of ${total}</p>
+                            </div>
                         </div>
                     `;
-                });
-                html += '</div><a href="./announcements.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>';
-                announcementsContainer.innerHTML = html;
+                }
+
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading recent quizzes:', error);
+                document.getElementById('recentQuizzesContainer').innerHTML = `<div class="text-center py-6 text-red-500">
+                    Error loading quiz results
+                </div>`;
             }
         }
 
-        function updateAssignmentsDisplay(assignments) {
-            const assignmentsContainer = document.querySelectorAll('.bg-white.rounded-lg.shadow-lg.p-6')[2];
-            if (assignmentsContainer) {
-                let html = '<h2 class="text-xl font-bold text-blue-900 mb-4">📋 Pending Assignments</h2><div class="space-y-3">';
-                assignments.forEach(ass => {
-                    const daysLeft = Math.ceil((new Date(ass.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
+        // Load and display enrolled subjects
+        async function loadEnrolledSubjects(student) {
+            try {
+                const container = document.getElementById('enrolledSubjectsContainer');
+                const subjectIds = student.enrolledSubjects || [];
+
+                if (subjectIds.length === 0) {
+                    container.innerHTML = `<div class="text-center py-6 text-gray-500 col-span-4">
+                        No enrolled subjects yet.
+                    </div>`;
+                    return;
+                }
+
+                // Fetch all subjects and filter by enrolled IDs
+                const allSubjects = await getAllSubjects();
+                const enrolledSubjects = subjectIds.map(id => {
+                    if (typeof id === 'string') {
+                        return allSubjects.find(s => s._id === id);
+                    }
+                    return id;
+                }).filter(Boolean);
+
+                let html = '';
+                enrolledSubjects.forEach(subject => {
+                    const subjectName = subject.name || 'Unknown';
+                    const icon = subjectIcons[subjectName] || '📚';
+                    const color = subjectColors[subjectName] || 'blue';
+                    
+                    html += `
+                        <a href="./resources.html?subject=${subject._id}" class="p-4 bg-${color}-50 rounded-lg text-center hover:bg-${color}-100 transition">
+                            <p class="font-bold text-blue-900">${icon} ${subjectName}</p>
+                            <p class="text-xs text-gray-600 mt-1">${student.form || 'Form'}</p>
+                        </a>
+                    `;
+                });
+
+                container.innerHTML = html || `<div class="text-center py-6 text-gray-500 col-span-4">No subjects found</div>`;
+            } catch (error) {
+                console.error('Error loading enrolled subjects:', error);
+                document.getElementById('enrolledSubjectsContainer').innerHTML = `<div class="text-center py-6 text-red-500 col-span-4">
+                    Error loading subjects
+                </div>`;
+            }
+        }
+
+        // Load and display pending assignments
+        async function loadPendingAssignments(student) {
+            try {
+                const container = document.getElementById('pendingAssignmentsContainer');
+                const allAssignments = await getAllAssignments();
+                const now = new Date();
+
+                // Filter pending assignments - those with due date in future
+                const pendingAssignments = allAssignments
+                    .filter(assignment => {
+                        const dueDate = new Date(assignment.dueDate);
+                        return dueDate > now;
+                    })
+                    .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+                    .slice(0, 5); // Show top 5 pending
+
+                if (pendingAssignments.length === 0) {
+                    container.innerHTML = `<div class="text-center py-4 text-gray-500 text-sm">
+                        No pending assignments. Great job!
+                    </div>`;
+                    return;
+                }
+
+                let html = '';
+                pendingAssignments.forEach(assignment => {
+                    const dueDate = new Date(assignment.dueDate);
+                    const daysLeft = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
                     const isUrgent = daysLeft < 3;
+                    const dateStr = dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
                     html += `
                         <div class="p-3 bg-${isUrgent ? 'red' : 'orange'}-50 border-l-4 border-${isUrgent ? 'red' : 'orange'}-500 rounded">
-                            <p class="font-bold text-sm text-blue-900">${ass.title}</p>
-                            <p class="text-xs text-gray-600">Due: ${new Date(ass.dueDate).toLocaleDateString()}</p>
+                            <p class="font-bold text-sm text-blue-900">${assignment.title || 'Assignment'}</p>
+                            <p class="text-xs text-gray-600">Due: ${dateStr} (${daysLeft} days)</p>
                         </div>
                     `;
                 });
-                html += '</div><a href="./quizzes.html" class="mt-4 text-blue-900 text-sm font-bold hover:underline">View all →</a>';
-                assignmentsContainer.innerHTML = html;
+
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading pending assignments:', error);
+                document.getElementById('pendingAssignmentsContainer').innerHTML = `<div class="text-center py-4 text-red-500 text-sm">
+                    Error loading assignments
+                </div>`;
+            }
+        }
+
+        // Load and display recent announcements
+        async function loadRecentAnnouncements() {
+            try {
+                const container = document.getElementById('recentAnnouncementsContainer');
+                const allAnnouncements = await getAllAnnouncements();
+
+                if (allAnnouncements.length === 0) {
+                    container.innerHTML = `<div class="text-center py-4 text-gray-500 text-sm">
+                        No announcements yet.
+                    </div>`;
+                    return;
+                }
+
+                // Get recent announcements (sort by date, get top 3)
+                const recentAnnouncements = allAnnouncements
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    .slice(0, 3);
+
+                let html = '';
+                recentAnnouncements.forEach(announcement => {
+                    const categoryColorMap = {
+                        'important': 'red',
+                        'resource': 'green',
+                        'event': 'yellow',
+                        'update': 'blue',
+                        'notice': 'orange'
+                    };
+                    const categoryColor = categoryColorMap[announcement.category] || 'gray';
+                    const dateStr = new Date(announcement.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+                    html += `
+                        <div class="p-3 bg-${categoryColor}-50 rounded">
+                            <p class="font-bold text-sm text-blue-900">${announcement.title || 'Announcement'}</p>
+                            <p class="text-xs text-gray-600">${dateStr}</p>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading announcements:', error);
+                document.getElementById('recentAnnouncementsContainer').innerHTML = `<div class="text-center py-4 text-red-500 text-sm">
+                    Error loading announcements
+                </div>`;
+            }
+        }
+
+        // Logout handler
+        async function logoutHandler() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('student');
+                window.location.href = 'login.html';
             }
         }
     </script>
