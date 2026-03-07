@@ -9,9 +9,34 @@
     <meta name="theme-color" content="#0ea5a4">
 </head>
 <body class="bg-gray-100">
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="closeMobileMenu()"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed top-0 left-0 h-full w-4/5 max-w-xs bg-blue-900 text-white z-50 transform -translate-x-full transition-transform duration-300 lg:hidden">
+        <div class="p-6 border-b border-blue-800">
+            <h1 class="text-2xl font-bold">Elite Hub Admin</h1>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <a href="admin-dashboard.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📊 Dashboard</a>
+            <a href="admin-quiz-builder.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📝 Create Quiz</a>
+            <a href="admin-quiz-results.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📈 Quiz Results</a>
+            <a href="admin-resources.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📚 Resources</a>
+            <a href="admin-students.html" class="block px-4 py-2 rounded-lg bg-blue-700">👥 Students</a>
+            <a href="admin-announcements.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📢 Announcements</a>
+            <a href="admin-live-classes.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">🎥 Live Classes</a>
+            <a href="admin-video-lessons.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📹 Video Lessons</a>
+        </nav>
+        <div class="p-4 border-t border-blue-800">
+            <button onclick="adminLogout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
+                🚪 Logout
+            </button>
+        </div>
+    </div>
+
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-blue-900 text-white flex flex-col">
+        <!-- Desktop Sidebar -->
+        <aside class="hidden lg:flex lg:w-64 bg-blue-900 text-white flex-col">
             <div class="p-6 border-b border-blue-800">
                 <h1 class="text-2xl font-bold">Elite Hub Admin</h1>
             </div>
@@ -22,6 +47,8 @@
                 <a href="admin-resources.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📚 Resources</a>
                 <a href="admin-students.html" class="block px-4 py-2 rounded-lg bg-blue-700">👥 Students</a>
                 <a href="admin-announcements.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📢 Announcements</a>
+                <a href="admin-live-classes.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">🎥 Live Classes</a>
+                <a href="admin-video-lessons.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">📹 Video Lessons</a>
             </nav>
             <div class="p-4 border-t border-blue-800">
                 <button onclick="adminLogout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
@@ -32,16 +59,27 @@
 
         <!-- Main Content -->
         <main class="flex-1 overflow-auto">
-            <div class="p-8">
+            <!-- Mobile Header -->
+            <div class="lg:hidden bg-white shadow-sm border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+                <button onclick="toggleMobileMenu()" class="text-gray-600 hover:text-gray-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <h1 class="text-lg font-semibold text-gray-800">Students</h1>
+                <div class="w-6"></div> <!-- Spacer for centering -->
+            </div>
+
+            <div class="p-4 lg:p-8">
                 <!-- Header -->
-                <div class="mb-8">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Student Management</h2>
+                <div class="mb-6 lg:mb-8">
+                    <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">Student Management</h2>
                     <p class="text-gray-600">View and manage all enrolled students</p>
                 </div>
 
-                <!-- Filter Section -->
-                <div class="bg-white rounded-lg shadow p-6 mb-8">
-                    <div class="grid grid-cols-3 gap-4">
+                <!-- Search and Filter Section -->
+                <div class="bg-white rounded-lg shadow p-4 lg:p-6 mb-6 lg:mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Search by Name or Email</label>
                             <input type="text" id="search-input" placeholder="Type to search..."
@@ -147,6 +185,27 @@
 
     <script src="../assets/js/api.js"></script>
     <script>
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            
+            if (menu.classList.contains('-translate-x-full')) {
+                menu.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                menu.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            menu.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
         // State
         let allStudents = [];
         let filteredStudents = [];
@@ -163,70 +222,20 @@
 
         async function loadStudents() {
             try {
-                const response = await fetch('/api/students', {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-                    }
-                });
-
-                if (!response.ok) throw new Error('Failed to load students');
-
-                allStudents = await response.json();
+                allStudents = await getAllStudents();
                 filteredStudents = [...allStudents];
 
                 updateStats();
                 displayStudents();
             } catch (error) {
                 console.error('Error loading students:', error);
-                if (typeof showNotification === 'function') showNotification('Using demo data (backend endpoint not yet created)', 'info');
-                allStudents = generateMockStudents();
-                filteredStudents = [...allStudents];
+                if (typeof showNotification === 'function') showNotification('Failed to load students', 'error');
+                // Show empty state instead of demo data
+                allStudents = [];
+                filteredStudents = [];
                 updateStats();
                 displayStudents();
             }
-        }
-
-        function generateMockStudents() {
-            return [
-                {
-                    _id: '1',
-                    name: 'Alice Johnson',
-                    email: 'alice@example.com',
-                    form: '3',
-                    subjects: ['Mathematics', 'Physics', 'Chemistry'],
-                    quizResults: [
-                        { percentage: 85 },
-                        { percentage: 90 },
-                        { percentage: 78 }
-                    ],
-                    status: 'active'
-                },
-                {
-                    _id: '2',
-                    name: 'Bob Smith',
-                    email: 'bob@example.com',
-                    form: '4',
-                    subjects: ['Biology', 'Chemistry'],
-                    quizResults: [
-                        { percentage: 72 },
-                        { percentage: 81 }
-                    ],
-                    status: 'active'
-                },
-                {
-                    _id: '3',
-                    name: 'Carol White',
-                    email: 'carol@example.com',
-                    form: '2',
-                    subjects: ['English', 'History'],
-                    quizResults: [
-                        { percentage: 92 },
-                        { percentage: 88 },
-                        { percentage: 95 }
-                    ],
-                    status: 'active'
-                }
-            ];
         }
 
         function updateStats() {
@@ -276,13 +285,21 @@
                 const statusColor = student.status === 'active' ? 'text-green-600' : 'text-red-600';
                 const statusText = student.status === 'active' ? '✅ Active' : '⚫ Inactive';
 
+                // Handle subjects - could be array of strings or populated objects
+                let subjectsText = '';
+                if (student.subjects && Array.isArray(student.subjects)) {
+                    subjectsText = student.subjects.map(subject => 
+                        typeof subject === 'object' ? subject.name : subject
+                    ).join(', ');
+                }
+
                 const row = document.createElement('tr');
                 row.className = 'border-b border-gray-200 hover:bg-gray-50';
                 row.innerHTML = `
-                    <td class="px-6 py-4 font-medium text-gray-800">${student.name}</td>
-                    <td class="px-6 py-4 text-gray-700">${student.email}</td>
-                    <td class="px-6 py-4 text-gray-700">Form ${student.form}</td>
-                    <td class="px-6 py-4 text-gray-700">${student.subjects ? student.subjects.join(', ') : ''}</td>
+                    <td class="px-6 py-4 font-medium text-gray-800">${student.name || 'N/A'}</td>
+                    <td class="px-6 py-4 text-gray-700">${student.email || 'N/A'}</td>
+                    <td class="px-6 py-4 text-gray-700">Form ${student.form || 'N/A'}</td>
+                    <td class="px-6 py-4 text-gray-700">${subjectsText}</td>
                     <td class="px-6 py-4 font-bold text-gray-800">${quizzesTaken}</td>
                     <td class="px-6 py-4 font-bold text-blue-600">${avgScore}%</td>
                     <td class="px-6 py-4 ${statusColor} font-bold">${statusText}</td>
@@ -337,7 +354,7 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Subjects</p>
-                        <p class="text-lg text-gray-800">${student.subjects ? student.subjects.join(', ') : ''}</p>
+                        <p class="text-lg text-gray-800">${subjectsText}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Quizzes Taken</p>

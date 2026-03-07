@@ -32,23 +32,26 @@
                 <a href="admin-dashboard.html" class="block px-4 py-3 bg-blue-800 border-l-4 border-yellow-400 text-white hover:bg-blue-700 transition rounded mb-2">
                     📊 Dashboard
                 </a>
-                <a href="admin-resources.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
-                    📄 Manage Resources
-                </a>
-                <a href="admin-quiz-builder.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
-                    ❓ Create Quizzes
-                </a>
-                <a href="admin-quiz-results.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
-                    📈 Quiz Results
-                </a>
-                <a href="admin-students.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
+                <a href="admin-students.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2" onclick="closeMobileMenu()">
                     👥 Students
                 </a>
-                <a href="admin-announcements.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
+                <a href="admin-resources.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2" onclick="closeMobileMenu()">
+                    📄 Manage Resources
+                </a>
+                <a href="admin-quiz-builder.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2" onclick="closeMobileMenu()">
+                    ❓ Create Quizzes
+                </a>
+                <a href="admin-quiz-results.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2" onclick="closeMobileMenu()">
+                    📈 Quiz Results
+                </a>
+                <a href="admin-announcements.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2" onclick="closeMobileMenu()">
                     📢 Announcements
                 </a>
-                <a href="admin-subjects.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
-                    📚 Subjects
+                <a href="admin-live-classes.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2" onclick="closeMobileMenu()">
+                    📹 Live Classes
+                </a>
+                <a href="admin-video-lessons.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2" onclick="closeMobileMenu()">
+                    🎥 Video Lessons
                 </a>
                 <hr class="my-6 border-blue-700">
                 <a href="#" onclick="adminLogout(); closeMobileMenu();" class="block px-4 py-3 text-gray-300 hover:bg-red-600 hover:text-white transition rounded">
@@ -71,6 +74,9 @@
                 <a href="admin-dashboard.html" class="block px-6 py-3 bg-blue-800 border-l-4 border-yellow-400 text-white hover:bg-blue-700 transition">
                     📊 Dashboard
                 </a>
+                <a href="admin-students.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    👥 Students
+                </a>
                 <a href="admin-resources.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
                     📄 Manage Resources
                 </a>
@@ -80,14 +86,14 @@
                 <a href="admin-quiz-results.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
                     📈 Quiz Results
                 </a>
-                <a href="admin-students.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    👥 Students
-                </a>
                 <a href="admin-announcements.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
                     📢 Announcements
                 </a>
-                <a href="admin-subjects.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📚 Subjects
+                <a href="admin-live-classes.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    📹 Live Classes
+                </a>
+                <a href="admin-video-lessons.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
+                    🎥 Video Lessons
                 </a>
                 <hr class="my-4 border-blue-700">
                 <a href="#" onclick="adminLogout()" class="block px-6 py-3 text-gray-300 hover:bg-red-600 transition">
@@ -491,6 +497,147 @@
             });
         });
 
+        // Search functionality
+        async function performSearch(query) {
+            if (!query.trim()) {
+                // Reset to show all data
+                await loadDashboardData();
+                return;
+            }
+
+            try {
+                const [students, quizzes, resources, announcements] = await Promise.all([
+                    getAllStudents(),
+                    getAllQuizzes(),
+                    getAllResources(),
+                    getAllAnnouncements()
+                ]);
+
+                const queryLower = query.toLowerCase();
+
+                // Filter results
+                const filteredStudents = students.filter(student =>
+                    student.name?.toLowerCase().includes(queryLower) ||
+                    student.email?.toLowerCase().includes(queryLower) ||
+                    student.form?.toLowerCase().includes(queryLower)
+                );
+
+                const filteredQuizzes = quizzes.filter(quiz =>
+                    quiz.title?.toLowerCase().includes(queryLower) ||
+                    quiz.description?.toLowerCase().includes(queryLower) ||
+                    quiz.subject?.name?.toLowerCase().includes(queryLower)
+                );
+
+                const filteredResources = resources.filter(resource =>
+                    resource.title?.toLowerCase().includes(queryLower) ||
+                    resource.description?.toLowerCase().includes(queryLower) ||
+                    resource.subject?.name?.toLowerCase().includes(queryLower)
+                );
+
+                const filteredAnnouncements = announcements.filter(announcement =>
+                    announcement.title?.toLowerCase().includes(queryLower) ||
+                    announcement.content?.toLowerCase().includes(queryLower)
+                );
+
+                // Update dashboard with filtered results
+                updateDashboardWithSearchResults({
+                    students: filteredStudents,
+                    quizzes: filteredQuizzes,
+                    resources: filteredResources,
+                    announcements: filteredAnnouncements,
+                    query: query
+                });
+
+            } catch (error) {
+                console.error('Search error:', error);
+                showNotification('Search failed', 'error');
+            }
+        }
+
+        function updateDashboardWithSearchResults(results) {
+            const { students, quizzes, resources, announcements, query } = results;
+
+            // Update stats
+            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalQuizzes').textContent = quizzes.length;
+            document.getElementById('totalResources').textContent = resources.length;
+            document.getElementById('totalAnnouncements').textContent = announcements.length;
+
+            // Calculate average score from filtered students
+            let totalScore = 0;
+            let totalCount = 0;
+            students.forEach(student => {
+                if (student.quizResults && student.quizResults.length > 0) {
+                    student.quizResults.forEach(result => {
+                        totalScore += result.percentage || 0;
+                        totalCount++;
+                    });
+                }
+            });
+            const avgScore = totalCount > 0 ? Math.round(totalScore / totalCount) : 0;
+            document.getElementById('avgScore').textContent = avgScore + '%';
+
+            // Update active students count
+            const activeCount = getActiveStudentsCount(students);
+            document.getElementById('activeStudents').textContent = activeCount;
+
+            // Update recent activity with search context
+            loadRecentActivity(students, quizzes, resources, announcements, []);
+
+            // Update submissions table with filtered data
+            loadRecentSubmissions(students);
+
+            // Show search results summary
+            showSearchResultsSummary(results);
+        }
+
+        function showSearchResultsSummary(results) {
+            const { students, quizzes, resources, announcements, query } = results;
+            const totalResults = students.length + quizzes.length + resources.length + announcements.length;
+
+            let summaryHtml = `
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                    <h3 class="text-lg font-bold text-blue-900 mb-2">🔍 Search Results for "${query}"</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-600">${students.length}</div>
+                            <div class="text-gray-600">Students</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-600">${quizzes.length}</div>
+                            <div class="text-gray-600">Quizzes</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-600">${resources.length}</div>
+                            <div class="text-gray-600">Resources</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-600">${announcements.length}</div>
+                            <div class="text-gray-600">Announcements</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button onclick="clearSearch()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                            Clear Search
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Insert summary at the top of dashboard content
+            const dashboardContent = document.querySelector('.p-4.lg\\:p-8');
+            const existingSummary = dashboardContent.querySelector('.bg-blue-50');
+            if (existingSummary) {
+                existingSummary.remove();
+            }
+            dashboardContent.insertAdjacentHTML('afterbegin', summaryHtml);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            loadDashboardData();
+        }
+
         function adminLogout() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('isAdmin');
@@ -503,6 +650,27 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkAdminAuth();
             loadDashboardData();
+
+            // Add search functionality
+            const searchInput = document.getElementById('searchInput');
+            let searchTimeout;
+
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    performSearch(e.target.value);
+                }, 300); // Debounce search by 300ms
+            });
+
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch(e.target.value);
+                }
+                if (e.key === 'Escape') {
+                    clearSearch();
+                }
+            });
         });
     </script>
     <script src="../assets/js/pwa-register.js"></script>
