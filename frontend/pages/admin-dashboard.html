@@ -11,10 +11,57 @@
     <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gray-100">
-    <!-- Sidebar Navigation -->
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden lg:hidden">
+        <div class="fixed top-0 left-0 w-80 max-w-[85vw] h-full bg-blue-900 text-white shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out" id="mobileMenuPanel">
+            <div class="p-6 border-b border-blue-800">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
+                        <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
+                    </div>
+                    <button onclick="closeMobileMenu()" class="text-white hover:text-gray-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <nav class="mt-8 px-6">
+                <a href="admin-dashboard.html" class="block px-4 py-3 bg-blue-800 border-l-4 border-yellow-400 text-white hover:bg-blue-700 transition rounded mb-2">
+                    📊 Dashboard
+                </a>
+                <a href="admin-resources.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
+                    📄 Manage Resources
+                </a>
+                <a href="admin-quiz-builder.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
+                    ❓ Create Quizzes
+                </a>
+                <a href="admin-quiz-results.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
+                    📈 Quiz Results
+                </a>
+                <a href="admin-students.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
+                    👥 Students
+                </a>
+                <a href="admin-announcements.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
+                    📢 Announcements
+                </a>
+                <a href="admin-subjects.html" class="block px-4 py-3 text-gray-300 hover:bg-blue-800 hover:text-white transition rounded mb-2">
+                    📚 Subjects
+                </a>
+                <hr class="my-6 border-blue-700">
+                <a href="#" onclick="adminLogout(); closeMobileMenu();" class="block px-4 py-3 text-gray-300 hover:bg-red-600 hover:text-white transition rounded">
+                    🔓 Logout
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Desktop Layout -->
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <div class="w-64 bg-blue-900 text-white overflow-y-auto">
+        <!-- Desktop Sidebar -->
+        <div class="hidden lg:block w-64 bg-blue-900 text-white overflow-y-auto">
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
                 <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
@@ -53,10 +100,18 @@
         <div class="flex-1 overflow-auto">
             <!-- Top Navigation -->
             <div class="bg-white shadow">
-                <div class="px-8 py-4 flex justify-between items-center">
-                    <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
+                <div class="px-4 lg:px-8 py-4 flex justify-between items-center">
+                    <div class="flex items-center">
+                        <!-- Mobile Menu Button -->
+                        <button onclick="toggleMobileMenu()" class="lg:hidden mr-4 p-2 rounded-lg hover:bg-gray-100 transition">
+                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <h2 class="text-xl lg:text-2xl font-bold text-gray-800">Admin Dashboard</h2>
+                    </div>
                     <div class="flex items-center space-x-4">
-                        <span id="adminWelcome" class="text-sm text-gray-600">Welcome, Admin!</span>
+                        <span id="adminWelcome" class="hidden sm:block text-sm text-gray-600">Welcome, Admin!</span>
                         <input type="text" id="searchInput" placeholder="Search..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <div class="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">👤</div>
                     </div>
@@ -64,9 +119,9 @@
             </div>
 
             <!-- Dashboard Content -->
-            <div class="p-8">
+            <div class="p-4 lg:p-8">
                 <!-- Stats Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
                     <!-- Total Students -->
                     <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
                         <div class="flex justify-between items-start">
@@ -117,7 +172,7 @@
                 </div>
 
                 <!-- Additional Stats Row -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
                     <!-- Total Announcements -->
                     <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
                         <div class="flex justify-between items-start">
@@ -156,7 +211,7 @@
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-6 lg:mb-8">
                     <!-- Recent Activity -->
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-6">📝 Recent Activity</h3>
@@ -166,17 +221,17 @@
                     <!-- Quick Actions -->
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <h3 class="text-xl font-bold text-gray-800 mb-6">⚡ Quick Actions</h3>
-                        <div class="space-y-3">
-                            <a href="admin-quiz-builder.html" class="block w-full p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-bold text-center">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <a href="admin-quiz-builder.html" class="block w-full p-3 lg:p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-bold text-center text-sm lg:text-base">
                                 ➕ Create New Quiz
                             </a>
-                            <a href="admin-resources.html" class="block w-full p-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold text-center">
+                            <a href="admin-resources.html" class="block w-full p-3 lg:p-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold text-center text-sm lg:text-base">
                                 📤 Upload Resource
                             </a>
-                            <a href="admin-announcements.html" class="block w-full p-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition font-bold text-center">
+                            <a href="admin-announcements.html" class="block w-full p-3 lg:p-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition font-bold text-center text-sm lg:text-base">
                                 📢 Post Announcement
                             </a>
-                            <a href="admin-students.html" class="block w-full p-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition font-bold text-center">
+                            <a href="admin-students.html" class="block w-full p-3 lg:p-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition font-bold text-center text-sm lg:text-base">
                                 👥 View All Students
                             </a>
                         </div>
@@ -190,17 +245,17 @@
                         <table class="w-full text-sm text-left text-gray-700">
                             <thead class="bg-gray-50 border-b-2 border-gray-200">
                                 <tr>
-                                    <th class="px-4 py-3 font-bold">Student Name</th>
-                                    <th class="px-4 py-3 font-bold">Quiz Title</th>
-                                    <th class="px-4 py-3 font-bold">Score</th>
-                                    <th class="px-4 py-3 font-bold">Percentage</th>
-                                    <th class="px-4 py-3 font-bold">Status</th>
-                                    <th class="px-4 py-3 font-bold">Date</th>
+                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Student</th>
+                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Quiz</th>
+                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Score</th>
+                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">%</th>
+                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Status</th>
+                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Date</th>
                                 </tr>
                             </thead>
                             <tbody id="submissionsTableBody">
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td colspan="6" class="px-4 py-3 text-center text-gray-500">Loading submissions...</td>
+                                    <td colspan="6" class="px-2 lg:px-4 py-3 text-center text-gray-500 text-sm">Loading submissions...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -341,7 +396,7 @@
             });
 
             if (submissions.length === 0) {
-                tbody.innerHTML = '<tr class="border-b"><td colspan="6" class="px-4 py-3 text-center text-gray-500">No quiz submissions yet</td></tr>';
+                tbody.innerHTML = '<tr class="border-b"><td colspan="6" class="px-2 lg:px-4 py-3 text-center text-gray-500 text-sm">No quiz submissions yet</td></tr>';
                 return;
             }
 
@@ -355,12 +410,12 @@
                 const row = document.createElement('tr');
                 row.className = 'border-b hover:bg-gray-50';
                 row.innerHTML = `
-                    <td class="px-4 py-3">${submission.studentName}</td>
-                    <td class="px-4 py-3">${submission.quizTitle}</td>
-                    <td class="px-4 py-3">${submission.score}/${submission.totalQuestions}</td>
-                    <td class="px-4 py-3"><strong>${percentage}%</strong></td>
-                    <td class="px-4 py-3"><span class="px-2 py-1 bg-${statusColor}-100 text-${statusColor}-800 rounded text-xs font-bold">${statusText}</span></td>
-                    <td class="px-4 py-3 text-gray-500">${submission.date}</td>
+                    <td class="px-2 lg:px-4 py-3 text-sm">${submission.studentName}</td>
+                    <td class="px-2 lg:px-4 py-3 text-sm">${submission.quizTitle}</td>
+                    <td class="px-2 lg:px-4 py-3 text-sm">${submission.score}/${submission.totalQuestions}</td>
+                    <td class="px-2 lg:px-4 py-3 text-sm"><strong>${percentage}%</strong></td>
+                    <td class="px-2 lg:px-4 py-3"><span class="px-2 py-1 bg-${statusColor}-100 text-${statusColor}-800 rounded text-xs font-bold">${statusText}</span></td>
+                    <td class="px-2 lg:px-4 py-3 text-sm text-gray-500">${submission.date}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -385,6 +440,56 @@
                 }
             }, 3000);
         }
+
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+
+            if (mobileMenu.classList.contains('hidden')) {
+                // Show menu
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => {
+                    mobileMenuPanel.classList.remove('-translate-x-full');
+                }, 10);
+                // Prevent body scroll
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Hide menu
+                closeMobileMenu();
+            }
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+
+            mobileMenuPanel.classList.add('-translate-x-full');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+                // Restore body scroll
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Close mobile menu when clicking on overlay
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function(e) {
+                    if (e.target === mobileMenu) {
+                        closeMobileMenu();
+                    }
+                });
+            }
+
+            // Close mobile menu on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !document.getElementById('mobileMenu').classList.contains('hidden')) {
+                    closeMobileMenu();
+                }
+            });
+        });
 
         function adminLogout() {
             if (confirm('Are you sure you want to logout?')) {
