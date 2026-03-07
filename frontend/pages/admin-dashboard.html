@@ -56,6 +56,7 @@
                 <div class="px-8 py-4 flex justify-between items-center">
                     <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
                     <div class="flex items-center space-x-4">
+                        <span id="adminWelcome" class="text-sm text-gray-600">Welcome, Admin!</span>
                         <input type="text" id="searchInput" placeholder="Search..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <div class="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">👤</div>
                     </div>
@@ -112,6 +113,45 @@
                             <span class="text-3xl">📄</span>
                         </div>
                         <p class="text-gray-500 text-xs mt-4">Uploaded materials</p>
+                    </div>
+                </div>
+
+                <!-- Additional Stats Row -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Total Announcements -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-600 text-sm font-bold">Announcements</p>
+                                <p id="totalAnnouncements" class="text-4xl font-bold text-orange-600 mt-2">0</p>
+                            </div>
+                            <span class="text-3xl">📢</span>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-4">Posted announcements</p>
+                    </div>
+
+                    <!-- Total Assignments -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-600 text-sm font-bold">Assignments</p>
+                                <p id="totalAssignments" class="text-4xl font-bold text-red-600 mt-2">0</p>
+                            </div>
+                            <span class="text-3xl">📋</span>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-4">Created assignments</p>
+                    </div>
+
+                    <!-- Active Students (30 days) -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-600 text-sm font-bold">Active Students</p>
+                                <p id="activeStudents" class="text-4xl font-bold text-indigo-600 mt-2">0</p>
+                            </div>
+                            <span class="text-3xl">📈</span>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-4">Last 30 days</p>
                     </div>
                 </div>
 
@@ -173,10 +213,17 @@
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
     <script>
-        // Check admin authentication
+        // Check admin authentication and load admin info
         function checkAdminAuth() {
             if (!localStorage.getItem('isAdmin') || !localStorage.getItem('adminToken')) {
                 window.location.href = 'admin-login.html';
+                return;
+            }
+
+            // Load admin info
+            const admin = JSON.parse(localStorage.getItem('admin') || '{}');
+            if (admin.name) {
+                document.getElementById('adminWelcome').textContent = `Welcome, ${admin.name}!`;
             }
         }
 
@@ -184,7 +231,7 @@
         async function loadDashboardData() {
             try {
                 // Load students
-                const students = await getAllStudentsAdmin();
+                const students = await getAllStudents();
                 document.getElementById('totalStudents').textContent = students.length || 0;
 
                 // Load quizzes
@@ -195,82 +242,113 @@
                 const resources = await getAllResources();
                 document.getElementById('totalResources').textContent = resources.length || 0;
 
-                // Calculate average score
+                // Load announcements
+                const announcements = await getAllAnnouncements();
+                document.getElementById('totalAnnouncements').textContent = announcements.length || 0;
+
+                // Load assignments
+                const assignments = await getAllAssignments();
+                document.getElementById('totalAssignments').textContent = assignments.length || 0;
+
+                // Calculate average score from all student quiz results
                 let totalScore = 0;
                 let totalCount = 0;
-                if (quizzes.length > 0) {
-                    quizzes.forEach(quiz => {
-                        if (quiz.submissions && quiz.submissions.length > 0) {
-                            quiz.submissions.forEach(submission => {
-                                totalScore += submission.score || 0;
-                                totalCount++;
-                            });
-                        }
-                    });
-                }
-                const avgScore = totalCount > 0 ? Math.round((totalScore / totalCount) * 100) : 0;
+                students.forEach(student => {
+                    if (student.quizResults && student.quizResults.length > 0) {
+                        student.quizResults.forEach(result => {
+                            totalScore += result.percentage || 0;
+                            totalCount++;
+                        });
+                    }
+                });
+                const avgScore = totalCount > 0 ? Math.round(totalScore / totalCount) : 0;
                 document.getElementById('avgScore').textContent = avgScore + '%';
 
+                // Calculate active students (with activity in last 30 days)
+                const activeCount = getActiveStudentsCount(students);
+                document.getElementById('activeStudents').textContent = activeCount;
+
                 // Load recent activity
-                loadRecentActivity(students, quizzes);
+                loadRecentActivity(students, quizzes, resources, announcements, assignments);
 
                 // Load recent submissions
-                loadRecentSubmissions(quizzes);
+                loadRecentSubmissions(students);
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
                 showNotification('Failed to load dashboard data', 'error');
             }
         }
 
-        function loadRecentActivity(students, quizzes) {
+        function loadRecentActivity(students, quizzes, resources, announcements, assignments) {
             const container = document.getElementById('recentActivityContainer');
             container.innerHTML = '';
 
             const activities = [
-                { type: 'student', count: students.length, label: 'New students registered' },
-                { type: 'quiz', count: quizzes.length, label: 'Quizzes created' },
-                { type: 'activity', count: '3', label: 'Active sessions right now' }
+                { type: 'student', count: students.length, label: 'Total registered students', icon: '👥' },
+                { type: 'quiz', count: quizzes.length, label: 'Quizzes created', icon: '❓' },
+                { type: 'resource', count: resources.length, label: 'Resources uploaded', icon: '📄' },
+                { type: 'announcement', count: announcements.length, label: 'Announcements posted', icon: '📢' },
+                { type: 'assignment', count: assignments.length, label: 'Assignments created', icon: '📋' },
+                { type: 'activity', count: getActiveStudentsCount(students), label: 'Students with recent activity', icon: '📈' }
             ];
 
             activities.forEach(activity => {
                 const activityDiv = document.createElement('div');
                 activityDiv.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
                 activityDiv.innerHTML = `
-                    <span class="text-gray-700">${activity.label}</span>
+                    <div class="flex items-center">
+                        <span class="text-lg mr-3">${activity.icon}</span>
+                        <span class="text-gray-700">${activity.label}</span>
+                    </div>
                     <span class="bg-blue-900 text-white px-3 py-1 rounded-full font-bold">${activity.count}</span>
                 `;
                 container.appendChild(activityDiv);
             });
         }
 
-        function loadRecentSubmissions(quizzes) {
+        function getActiveStudentsCount(students) {
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            return students.filter(student => {
+                if (student.quizResults && student.quizResults.length > 0) {
+                    return student.quizResults.some(result =>
+                        new Date(result.completedAt) > thirtyDaysAgo
+                    );
+                }
+                return false;
+            }).length;
+        }
+
+        function loadRecentSubmissions(students) {
             const tbody = document.getElementById('submissionsTableBody');
             tbody.innerHTML = '';
 
             let submissions = [];
-            if (quizzes && quizzes.length > 0) {
-                quizzes.forEach(quiz => {
-                    if (quiz.submissions && quiz.submissions.length > 0) {
-                        quiz.submissions.slice(-5).forEach(submission => {
-                            submissions.push({
-                                studentName: submission.studentName || 'Unknown',
-                                quizTitle: quiz.title || 'Untitled Quiz',
-                                score: submission.score || 0,
-                                totalPoints: quiz.totalPoints || 100,
-                                date: new Date(submission.submittedAt).toLocaleDateString()
-                            });
+            students.forEach(student => {
+                if (student.quizResults && student.quizResults.length > 0) {
+                    student.quizResults.forEach(result => {
+                        submissions.push({
+                            studentName: student.name || 'Unknown',
+                            quizTitle: result.quiz?.title || 'Unknown Quiz',
+                            score: result.score || 0,
+                            totalQuestions: result.totalQuestions || 1,
+                            percentage: result.percentage || 0,
+                            date: new Date(result.completedAt).toLocaleDateString()
                         });
-                    }
-                });
-            }
+                    });
+                }
+            });
 
             if (submissions.length === 0) {
-                tbody.innerHTML = '<tr class="border-b"><td colspan="6" class="px-4 py-3 text-center text-gray-500">No submissions yet</td></tr>';
+                tbody.innerHTML = '<tr class="border-b"><td colspan="6" class="px-4 py-3 text-center text-gray-500">No quiz submissions yet</td></tr>';
                 return;
             }
 
-            submissions.slice(-5).forEach(submission => {
-                const percentage = Math.round((submission.score / submission.totalPoints) * 100);
+            // Sort by date (most recent first) and take top 10
+            submissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            submissions.slice(0, 10).forEach(submission => {
+                const percentage = submission.percentage;
                 const statusColor = percentage >= 70 ? 'green' : percentage >= 50 ? 'yellow' : 'red';
                 const statusText = percentage >= 70 ? 'Passed' : percentage >= 50 ? 'Fair' : 'Failed';
 
@@ -279,13 +357,33 @@
                 row.innerHTML = `
                     <td class="px-4 py-3">${submission.studentName}</td>
                     <td class="px-4 py-3">${submission.quizTitle}</td>
-                    <td class="px-4 py-3">${submission.score}/${submission.totalPoints}</td>
+                    <td class="px-4 py-3">${submission.score}/${submission.totalQuestions}</td>
                     <td class="px-4 py-3"><strong>${percentage}%</strong></td>
                     <td class="px-4 py-3"><span class="px-2 py-1 bg-${statusColor}-100 text-${statusColor}-800 rounded text-xs font-bold">${statusText}</span></td>
                     <td class="px-4 py-3 text-gray-500">${submission.date}</td>
                 `;
                 tbody.appendChild(row);
             });
+        }
+
+        // Show notification (simple implementation)
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-bold z-50 ${
+                type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-blue-600'
+            }`;
+            notification.textContent = message;
+
+            // Add to page
+            document.body.appendChild(notification);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
         }
 
         function adminLogout() {

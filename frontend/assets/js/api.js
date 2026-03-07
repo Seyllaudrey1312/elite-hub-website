@@ -379,6 +379,29 @@ async function getAnnouncementById(announcementId) {
 
 // ==================== STUDENT ENDPOINTS ====================
 
+// Get all students (for admin)
+async function getAllStudents() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/students`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to fetch students');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Get students error:', error);
+        throw error;
+    }
+}
+
 // Update student profile
 async function updateStudentProfile(studentId, updates) {
     try {
