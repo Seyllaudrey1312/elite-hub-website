@@ -123,7 +123,7 @@ function startNotificationPolling() {
     if (notificationPolling) return;
 
     // Poll immediately
-    loadUn readBadgeAndPanel();
+    loadUnreadBadgeAndPanel();
 
     // Then every 30 seconds
     notificationPolling = setInterval(() => {

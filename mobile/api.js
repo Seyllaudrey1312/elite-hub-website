@@ -1,6 +1,6 @@
 // Edit these to match your local environment / device IP when testing on a phone or emulator.
 export const API_BASE = 'https://elite-hub-website.onrender.com/api'; // change to http://192.168.x.y:5000 for device
-export const WEB_BASE = 'https://seyllaudrey1312.github.io/elite-hub-website/frontend'; // frontend static server base
+export const WEB_BASE = 'https://elitehub.onrender.com'; // frontend static server base
 
 export async function fetchSubjects() {
   try {
