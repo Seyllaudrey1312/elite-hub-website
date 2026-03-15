@@ -7,6 +7,7 @@ const NAV_LINKS = [
     { key: 'subjects',      label: 'Subjects',        href: './subjects.html' },
     { key: 'resources',     label: 'Study Resources', href: './resources.html' },
     { key: 'quizzes',       label: 'Quizzes',         href: './quizzes.html' },
+    { key: 'past-papers',   label: 'Past Papers',     href: './past-papers.html' },
     { key: 'pricing',       label: 'Pricing',         href: './pricing.html' },
     { key: 'forums',        label: 'Forums',          href: './forums.html' },
     { key: 'announcements', label: 'Announcements',   href: './announcements.html' },
@@ -260,6 +261,8 @@ function renderFooter() {
                             <li><a href="./announcements.html" class="hover:text-yellow-400">Announcements</a></li>
                             <li><a href="./contact.html"       class="hover:text-yellow-400">Contact</a></li>
                             <li><a href="./partners.html"      class="hover:text-yellow-400">Partners</a></li>
+                            <li><a href="./past-papers.html"   class="hover:text-yellow-400">Past Papers</a></li>
+                            <li><a href="./grade-calculator.html" class="hover:text-yellow-400">Grade Calculator</a></li>
                         </ul>
                     </div>
                 </div>

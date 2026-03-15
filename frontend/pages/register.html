@@ -46,6 +46,25 @@
                             <option value="Form 4">Form 4</option>
                         </select>
                     </div>
+                    <div class="mb-6 studentField">
+                        <label class="block text-gray-700 font-bold mb-2">Curriculum</label>
+                        <div class="flex gap-3">
+                            <label class="flex-1 flex items-center gap-2 border-2 border-gray-200 rounded-lg px-4 py-3 cursor-pointer hover:border-blue-500 transition" id="cbc-label">
+                                <input type="radio" name="curriculum" id="curr-cbc" value="CBC" checked class="accent-blue-900">
+                                <div>
+                                    <p class="font-bold text-gray-800">CBC</p>
+                                    <p class="text-xs text-gray-500">Competency Based Curriculum</p>
+                                </div>
+                            </label>
+                            <label class="flex-1 flex items-center gap-2 border-2 border-gray-200 rounded-lg px-4 py-3 cursor-pointer hover:border-blue-500 transition" id="844-label">
+                                <input type="radio" name="curriculum" id="curr-844" value="8-4-4" class="accent-blue-900">
+                                <div>
+                                    <p class="font-bold text-gray-800">8-4-4</p>
+                                    <p class="text-xs text-gray-500">Traditional system</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                     <div class="mb-6 adminField hidden">
                         <label for="adminSubject" class="block text-gray-700 font-bold mb-2">Subject/Specialization</label>
                         <select id="adminSubject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200">
@@ -151,7 +170,8 @@
                 if (currentRole === 'student') {
                     const form = document.getElementById('registerFormClass').value;
                     if (!form) { showNotification('Please select a form', 'error'); return; }
-                    result = await registerStudent(name, email, password, form);
+                    const curriculum = document.querySelector('input[name="curriculum"]:checked')?.value || 'CBC';
+                    result = await registerStudent(name, email, password, form, curriculum);
                     showNotification('Registration received. Check your email to verify your account.', 'success');
                 } else {
                     const subject = document.getElementById('adminSubject').value;

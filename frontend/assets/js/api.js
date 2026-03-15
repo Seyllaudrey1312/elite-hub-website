@@ -15,14 +15,14 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
 // ==================== AUTH ENDPOINTS ====================
 
 // Register a new student
-async function registerStudent(name, email, password, form) {
+async function registerStudent(name, email, password, form, curriculum = 'CBC') {
     try {
         const response = await fetch(`${API_BASE_URL}/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, email, password, form })
+            body: JSON.stringify({ name, email, password, form, curriculum })
         });
 
         const data = await response.json();

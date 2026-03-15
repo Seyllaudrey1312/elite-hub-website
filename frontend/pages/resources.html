@@ -13,7 +13,6 @@
 <body class="bg-gray-50">
     <div id="main-nav"></div>
 
-    <!-- Page Header -->
     <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-4xl font-bold">Study Resources</h1>
@@ -21,71 +20,68 @@
         </div>
     </section>
 
-    <!-- Filters + Results -->
-    <section class="py-8 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-4">
-                <input id="resourceSearch" type="text" placeholder="Search resources..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                <p id="resourceCount" class="text-sm text-gray-600 mt-2"></p>
+    <!-- Curriculum Toggle -->
+    <section class="bg-white border-b sticky top-0 z-20 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-3 flex-wrap">
+            <span class="text-sm font-semibold text-gray-600">Curriculum:</span>
+            <div class="flex rounded-lg overflow-hidden border border-gray-300">
+                <button id="curr-cbc" onclick="setCurriculum('CBC')"
+                        class="px-5 py-2 text-sm font-bold bg-blue-900 text-white transition">CBC</button>
+                <button id="curr-844" onclick="setCurriculum('8-4-4')"
+                        class="px-5 py-2 text-sm font-bold bg-white text-gray-600 hover:bg-gray-50 transition">8-4-4</button>
             </div>
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <h2 class="text-xl font-bold text-blue-900">Filter by Subject</h2>
-                <div id="subjectFilters" class="space-x-2 overflow-x-auto">
-                    <button data-subject="All" class="subject-btn active px-3 py-2 bg-blue-900 text-white rounded">All Subjects</button>
-                    <button data-subject="Mathematics" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Mathematics</button>
-                    <button data-subject="Physics" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Physics</button>
-                    <button data-subject="Chemistry" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Chemistry</button>
-                    <button data-subject="Biology" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Biology</button>
-                    <button data-subject="CRE" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">CRE</button>
-                    <button data-subject="Geography" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Geography</button>
-                    <button data-subject="History" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">History</button>
-                    <button data-subject="Kiswahili" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Kiswahili</button>
-                    <button data-subject="Agriculture" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Agriculture</button>
-                    <button data-subject="Business Studies" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Business Studies</button>
-                    <button data-subject="Computer Studies" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Computer Studies</button>
-                    <button data-subject="Integrated Science" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Integrated Science</button>
-                    <button data-subject="Technical Drawing" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Technical Drawing</button>
-                    <button data-subject="Creative Arts" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Creative Arts</button>
-                </div>
-            </div>
-            <div class="mt-6 flex flex-wrap gap-4 items-center">
-                <label class="font-bold text-gray-700">Form/Grade:</label>
-                <select id="formFilter" class="px-4 py-2 border border-gray-300 rounded-lg">
-                    <option>All Forms</option>
-                    <option>Grade 6</option>
-                    <option>Grade 7</option>
-                    <option>Grade 8</option>
-                    <option>Grade 9</option>
-                    <option>Grade 10</option>
-                    <option>Grade 11</option>
-                    <option>Grade 12</option>
-                    <option>Form 3</option>
-                    <option>Form 4</option>
-                </select>
-            </div>
+            <select id="strandFilter" onchange="applyFilters()"
+                    class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">
+                <option value="">All Strands</option>
+            </select>
         </div>
     </section>
 
-    <!-- Resource Categories (dynamic) -->
-    <section class="py-12">
+    <!-- Filters -->
+    <section class="py-6 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-4 flex gap-3 flex-wrap">
+                <input id="resourceSearch" type="text" placeholder="Search resources..."
+                       class="flex-1 min-w-48 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                <select id="formFilter" class="px-4 py-2 border border-gray-300 rounded-lg text-sm">
+                    <option>All Forms</option>
+                    <option>Grade 7</option><option>Grade 8</option><option>Grade 9</option>
+                    <option>Grade 10</option><option>Grade 11</option><option>Grade 12</option>
+                    <option>Form 1</option><option>Form 2</option><option>Form 3</option><option>Form 4</option>
+                </select>
+            </div>
+            <div id="subjectFilters" class="flex flex-wrap gap-2">
+                <button data-subject="All" class="subject-btn px-3 py-1.5 bg-blue-900 text-white rounded-full text-sm font-semibold">All Subjects</button>
+                <button data-subject="Mathematics"       class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">Mathematics</button>
+                <button data-subject="Physics"           class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">Physics</button>
+                <button data-subject="Chemistry"         class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">Chemistry</button>
+                <button data-subject="Biology"           class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">Biology</button>
+                <button data-subject="English"           class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">English</button>
+                <button data-subject="Kiswahili"         class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">Kiswahili</button>
+                <button data-subject="History"           class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">History</button>
+                <button data-subject="Geography"         class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">Geography</button>
+                <button data-subject="Integrated Science"class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">Integrated Science</button>
+                <button data-subject="Creative Arts"     class="subject-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200">Creative Arts</button>
+            </div>
+            <p id="resourceCount" class="text-sm text-gray-500 mt-3"></p>
+        </div>
+    </section>
+
+    <!-- Resource Sections -->
+    <section class="py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10" id="resourcesContainer">
             <div id="notesSection">
-                <h2 class="text-3xl font-bold text-blue-900 mb-6">📑 Notes & Handouts</h2>
+                <h2 class="text-2xl font-bold text-blue-900 mb-5">📑 Notes &amp; Handouts</h2>
                 <div id="notesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 <div id="notesEmpty" class="hidden text-center py-6 text-gray-500 text-sm"></div>
             </div>
-            <div id="pastSection">
-                <h2 class="text-3xl font-bold text-blue-900 mb-6">📃 Past Papers</h2>
-                <div id="pastList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                <div id="pastEmpty" class="hidden text-center py-6 text-gray-500 text-sm"></div>
-            </div>
             <div id="workedSection">
-                <h2 class="text-3xl font-bold text-blue-900 mb-6">🧪 Worked Examples</h2>
+                <h2 class="text-2xl font-bold text-blue-900 mb-5">🧪 Worked Examples</h2>
                 <div id="workedList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 <div id="workedEmpty" class="hidden text-center py-6 text-gray-500 text-sm"></div>
             </div>
             <div id="revisionSection">
-                <h2 class="text-3xl font-bold text-blue-900 mb-6">🎓 Revision Guides</h2>
+                <h2 class="text-2xl font-bold text-blue-900 mb-5">🎓 Revision Guides</h2>
                 <div id="revisionList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 <div id="revisionEmpty" class="hidden text-center py-6 text-gray-500 text-sm"></div>
             </div>
@@ -97,7 +93,7 @@
         <div class="cs-modal">
             <span class="cs-emoji">🔒</span>
             <h3>Premium Resource</h3>
-            <p>This is a Premium resource. Paid plans with full access to all premium materials are coming soon. Register your interest below.</p>
+            <p>This is a Premium resource. Paid plans with full access are coming soon.</p>
             <input type="email" id="premiumEmail" placeholder="you@example.com" class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2">
             <button class="btn-primary" id="premiumNotify">Notify Me When Available</button>
             <button class="btn-close" id="premiumClose">Maybe later</button>
@@ -112,41 +108,81 @@
     <script src="../assets/js/components.js"></script>
     <script>initPage('student', 'resources');</script>
     <script>
-        let allResources = [];
+        let allResources  = [];
         let subjectFilter = 'All';
-        let formFilter = 'All Forms';
-        let searchTerm = '';
+        let formFilter    = 'All Forms';
+        let searchTerm    = '';
+        let strandFilter  = '';
+
+        // Default curriculum from student profile, allow override
+        const storedStudent = (() => { try { return JSON.parse(localStorage.getItem('student')); } catch { return null; } })();
+        let activeCurriculum = storedStudent?.curriculum || 'CBC';
 
         const groupConfig = [
-            { key: 'notes', label: 'Notes & Handouts', types: ['Notes', 'Note', 'Handout', 'Handouts', 'PDF'] , listId:'notesList', emptyId:'notesEmpty', sectionId:'notesSection'},
-            { key: 'past', label: 'Past Papers', types: ['Past Paper','Paper','Exam'] , listId:'pastList', emptyId:'pastEmpty', sectionId:'pastSection'},
-            { key: 'worked', label: 'Worked Examples', types: ['Worked Example','Example','Worked'] , listId:'workedList', emptyId:'workedEmpty', sectionId:'workedSection'},
-            { key: 'revision', label: 'Revision Guides', types: ['Revision Guide','Guide','Revision'] , listId:'revisionList', emptyId:'revisionEmpty', sectionId:'revisionSection'}
+            { key: 'notes',    types: ['notes','note','handout','pdf'],           listId: 'notesList',    emptyId: 'notesEmpty',    sectionId: 'notesSection' },
+            { key: 'worked',   types: ['worked-example','example','worked'],      listId: 'workedList',   emptyId: 'workedEmpty',   sectionId: 'workedSection' },
+            { key: 'revision', types: ['revision-guide','guide','revision'],      listId: 'revisionList', emptyId: 'revisionEmpty', sectionId: 'revisionSection' },
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
+            applyCurriculumUI();
             initFilters();
             fetchResources();
             setupPremiumModal();
         });
 
+        // ── Curriculum toggle ─────────────────────────────────────────────────
+        function setCurriculum(c) {
+            activeCurriculum = c;
+            applyCurriculumUI();
+            applyFilters();
+        }
+
+        function applyCurriculumUI() {
+            const cbcBtn = document.getElementById('curr-cbc');
+            const btn844 = document.getElementById('curr-844');
+            const strandSel = document.getElementById('strandFilter');
+            if (activeCurriculum === 'CBC') {
+                cbcBtn.classList.add('bg-blue-900','text-white');
+                cbcBtn.classList.remove('bg-white','text-gray-600');
+                btn844.classList.add('bg-white','text-gray-600');
+                btn844.classList.remove('bg-blue-900','text-white');
+                strandSel.classList.remove('hidden');
+            } else {
+                btn844.classList.add('bg-blue-900','text-white');
+                btn844.classList.remove('bg-white','text-gray-600');
+                cbcBtn.classList.add('bg-white','text-gray-600');
+                cbcBtn.classList.remove('bg-blue-900','text-white');
+                strandSel.classList.add('hidden');
+                strandFilter = '';
+            }
+        }
+
+        function populateStrandFilter(resources) {
+            const sel = document.getElementById('strandFilter');
+            const strands = [...new Set(resources.filter(r => r.cbcStrand).map(r => r.cbcStrand))].sort();
+            const current = sel.value;
+            sel.innerHTML = '<option value="">All Strands</option>' +
+                strands.map(s => `<option value="${s}" ${s === current ? 'selected' : ''}>${s}</option>`).join('');
+        }
+
+        // ── Filters ───────────────────────────────────────────────────────────
         function initFilters() {
             document.querySelectorAll('.subject-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('bg-blue-900','text-white','active'));
-                    btn.classList.add('bg-blue-900','text-white','active');
+                    document.querySelectorAll('.subject-btn').forEach(b => {
+                        b.classList.remove('bg-blue-900','text-white');
+                        b.classList.add('bg-gray-100','text-gray-700');
+                    });
+                    btn.classList.add('bg-blue-900','text-white');
+                    btn.classList.remove('bg-gray-100','text-gray-700');
                     subjectFilter = btn.dataset.subject;
                     applyFilters();
                 });
             });
-            document.getElementById('formFilter').addEventListener('change', (e) => {
-                formFilter = e.target.value;
-                applyFilters();
-            });
-            document.getElementById('resourceSearch').addEventListener('input', (e) => {
-                searchTerm = e.target.value.toLowerCase();
-                applyFilters();
-            });
+            document.getElementById('formFilter').addEventListener('change', e => { formFilter = e.target.value; applyFilters(); });
+            document.getElementById('resourceSearch').addEventListener('input', e => { searchTerm = e.target.value.toLowerCase(); applyFilters(); });
+            document.getElementById('strandFilter').addEventListener('change', e => { strandFilter = e.target.value; applyFilters(); });
         }
 
         async function fetchResources() {
@@ -154,170 +190,111 @@
             try {
                 const data = await getAllResources();
                 allResources = Array.isArray(data) ? data : (data.resources || []);
-                if (!allResources.length) {
-                    renderEmptyAll();
-                    return;
-                }
+                populateStrandFilter(allResources);
                 applyFilters();
             } catch (err) {
-                renderError(err.message || 'Failed to load resources');
+                document.getElementById('resourcesContainer').innerHTML =
+                    `<div class="text-center py-10"><p class="text-red-600 mb-3">${err.message || 'Failed to load'}</p><button class="bg-blue-900 text-white px-4 py-2 rounded" onclick="fetchResources()">Retry</button></div>`;
             }
-        }
-
-        function renderError(msg) {
-            const container = document.getElementById('resourcesContainer');
-            container.innerHTML = `
-                <div class="text-center py-10">
-                    <p class="text-red-600 font-semibold mb-3">${msg}</p>
-                    <button class="bg-blue-900 text-white px-4 py-2 rounded" onclick="fetchResources()">Retry</button>
-                </div>`;
-        }
-
-        function renderEmptyAll() {
-            const container = document.getElementById('resourcesContainer');
-            container.innerHTML = `<div class="text-center py-12 text-gray-500">No resources available yet. Check back soon.</div>`;
-        }
-
-        function showSkeletons() {
-            groupConfig.forEach(g => {
-                const list = document.getElementById(g.listId);
-                list.innerHTML = skeletonCards();
-            });
-        }
-
-        function skeletonCards() {
-            return Array.from({length:3}).map(()=>`
-                <div class="bg-white rounded-lg shadow-lg p-6 animate-pulse">
-                    <div class="h-4 bg-gray-200 rounded w-2/3 mb-3"></div>
-                    <div class="h-3 bg-gray-200 rounded w-1/3 mb-2"></div>
-                    <div class="h-3 bg-gray-200 rounded w-1/4 mb-4"></div>
-                    <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                    <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
-                    <div class="flex gap-2">
-                        <span class="h-6 bg-gray-200 rounded w-16"></span>
-                        <span class="h-6 bg-gray-200 rounded w-12"></span>
-                    </div>
-                </div>
-            `).join('');
         }
 
         function applyFilters() {
             let filtered = allResources.filter(r => {
-                const subjectMatch = subjectFilter === 'All' || (r.subject || '').toLowerCase() === subjectFilter.toLowerCase();
-                const formVal = (r.form || r.grade || '').toLowerCase();
-                const formMatch = formFilter === 'All Forms' || formVal === formFilter.toLowerCase();
-                const term = searchTerm.trim();
-                const searchMatch = !term || (r.title || '').toLowerCase().includes(term) || (r.subject || '').toLowerCase().includes(term) || (r.description || '').toLowerCase().includes(term);
-                return subjectMatch && formMatch && searchMatch;
+                // Curriculum filter — show 'both' always, otherwise match
+                const currMatch = r.curriculum === 'both' || !r.curriculum || r.curriculum === activeCurriculum;
+                const subjMatch = subjectFilter === 'All' || (r.subject || '').toLowerCase() === subjectFilter.toLowerCase();
+                const formVal   = (r.form || r.grade || '').toLowerCase();
+                const frmMatch  = formFilter === 'All Forms' || formVal === formFilter.toLowerCase();
+                const term      = searchTerm.trim();
+                const srchMatch = !term || (r.title||'').toLowerCase().includes(term) || (r.subject||'').toLowerCase().includes(term) || (r.description||'').toLowerCase().includes(term);
+                const strandMatch = !strandFilter || (r.cbcStrand || '') === strandFilter;
+                // Exclude past-papers (they have their own page)
+                const notPastPaper = (r.type || '') !== 'past-paper';
+                return currMatch && subjMatch && frmMatch && srchMatch && strandMatch && notPastPaper;
             });
-            document.getElementById('resourceCount').textContent = `${filtered.length} resources found`;
+            document.getElementById('resourceCount').textContent = `${filtered.length} resource${filtered.length !== 1 ? 's' : ''} found`;
             renderResources(filtered);
         }
 
         function renderResources(resources) {
             groupConfig.forEach(group => {
-                const listEl = document.getElementById(group.listId);
-                const emptyEl = document.getElementById(group.emptyId);
-                const sectionEl = document.getElementById(group.sectionId);
-                const matches = resources.filter(r => group.types.some(t => (r.type || '').toLowerCase().includes(t.toLowerCase())));
-
+                const listEl    = document.getElementById(group.listId);
+                const emptyEl   = document.getElementById(group.emptyId);
+                const matches   = resources.filter(r => group.types.some(t => (r.type||'').toLowerCase().includes(t)));
                 if (!matches.length) {
                     listEl.innerHTML = '';
-                    emptyEl.innerHTML = `No ${group.label} found for the selected filters. <button class="toast-action" onclick="clearFilters()">Clear filters</button>`;
+                    emptyEl.textContent = `No ${group.key} found for the selected filters.`;
                     emptyEl.classList.remove('hidden');
-                    sectionEl.classList.remove('hidden');
                     return;
                 }
-
                 emptyEl.classList.add('hidden');
                 listEl.innerHTML = matches.map(resourceCard).join('');
             });
         }
 
         function resourceCard(r) {
-            const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '';
-            const form = r.form || r.grade || 'All';
-            const downloadCount = r.downloadCount || 0;
-            const isPremium = !!r.isPremium;
-            const badge = (text, color) => `<span class="badge ${color}">${text}</span>`;
-            const type = r.type || 'Resource';
-            const dlButton = isPremium 
-                ? `<button class="bg-blue-900 text-white px-4 py-2 rounded flex items-center gap-2" data-premium="true" data-id="${r._id}" data-title="${r.title || ''}">🔒 Premium</button>`
-                : `<button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition" onclick="handleDownload('${r._id}', '${encodeURI(r.fileUrl || r.url || '')}', '${downloadCount}')">Download</button>`;
-
+            const dateStr     = r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+            const form        = r.form || r.grade || 'All';
+            const dlCount     = r.downloadCount || 0;
+            const isPremium   = !!r.isPremium;
+            const cbcBadges   = (r.cbcStrand || r.cbcSubStrand) ? `
+                <div class="flex flex-wrap gap-1 mt-1">
+                    ${r.cbcStrand    ? `<span class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">📌 ${r.cbcStrand}</span>` : ''}
+                    ${r.cbcSubStrand ? `<span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full">↳ ${r.cbcSubStrand}</span>` : ''}
+                </div>` : '';
+            const dlBtn = isPremium
+                ? `<button class="bg-blue-900 text-white px-4 py-2 rounded flex items-center gap-2" data-premium="true">🔒 Premium</button>`
+                : `<button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition text-sm" onclick="handleDownload('${r._id}','${encodeURI(r.fileUrl||r.url||'')}','${dlCount}')">Download</button>`;
             return `
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition ${isPremium ? 'locked-overlay' : ''}">
-                    <div class="flex items-start justify-between mb-3">
-                        <h3 class="text-lg font-bold text-blue-900">${isPremium ? '<span class="premium-badge">Premium</span>' : ''} ${r.title || 'Untitled Resource'}</h3>
-                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">${form}</span>
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="flex items-start justify-between mb-2">
+                        <h3 class="text-base font-bold text-blue-900 leading-snug">${r.title || 'Untitled'}</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full ml-2 whitespace-nowrap">${form}</span>
                     </div>
-                    <div class="flex flex-wrap gap-2 text-xs mb-3">
-                        ${badge(r.subject || 'Subject', 'badge-primary')}
-                        ${badge(type, 'badge-warning')}
+                    <div class="flex flex-wrap gap-1 text-xs mb-2">
+                        <span class="badge badge-primary">${r.subject || 'Subject'}</span>
+                        <span class="badge badge-warning">${r.type || 'Resource'}</span>
+                        ${r.curriculum && r.curriculum !== 'both' ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">${r.curriculum}</span>` : ''}
                     </div>
-                    <p class="text-gray-600 text-sm mb-3">${r.description || 'No description provided.'}</p>
-                    <p class="text-xs text-gray-500 mb-4">Uploaded ${dateStr}</p>
+                    ${cbcBadges}
+                    <p class="text-gray-600 text-sm my-2">${r.description || ''}</p>
+                    <p class="text-xs text-gray-400 mb-3">Uploaded ${dateStr}</p>
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Downloads: <span id="dl-${r._id}">${downloadCount}</span></span>
-                        ${dlButton}
+                        <span class="text-xs text-gray-500">Downloads: <span id="dl-${r._id}">${dlCount}</span></span>
+                        ${dlBtn}
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         async function handleDownload(id, url, currentCount) {
             try {
                 await downloadResource(id);
-                const countEl = document.getElementById(`dl-${id}`);
-                if (countEl) countEl.textContent = parseInt(countEl.textContent || currentCount, 10) + 1;
+                const el = document.getElementById(`dl-${id}`);
+                if (el) el.textContent = parseInt(el.textContent || currentCount, 10) + 1;
                 if (url) window.open(decodeURI(url), '_blank');
             } catch (err) {
-                if (err.message === 'auth_required') {
-                    window.location.href = './login.html?msg=' + encodeURIComponent('Please log in to download resources');
-                    return;
-                }
+                if (err.message === 'auth_required') { window.location.href = './login.html'; return; }
                 showNotification(err.message || 'Download failed', 'error');
             }
         }
 
-        function clearFilters() {
-            subjectFilter = 'All';
-            formFilter = 'All Forms';
-            searchTerm = '';
-            document.getElementById('resourceSearch').value = '';
-            document.getElementById('formFilter').value = 'All Forms';
-            document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('bg-blue-900','text-white','active'));
-            document.querySelector('.subject-btn[data-subject="All"]').classList.add('bg-blue-900','text-white','active');
-            applyFilters();
+        function showSkeletons() {
+            const skel = Array.from({length:3}).map(()=>`<div class="bg-white rounded-lg shadow p-6 animate-pulse"><div class="h-4 bg-gray-200 rounded w-2/3 mb-3"></div><div class="h-3 bg-gray-200 rounded w-1/3 mb-4"></div><div class="h-3 bg-gray-200 rounded w-full mb-2"></div><div class="h-8 bg-gray-200 rounded mt-4"></div></div>`).join('');
+            groupConfig.forEach(g => { document.getElementById(g.listId).innerHTML = skel; });
         }
 
         function setupPremiumModal() {
-            const modal = document.getElementById('premiumModal');
+            const modal    = document.getElementById('premiumModal');
             const closeBtn = document.getElementById('premiumClose');
-            const notifyBtn = document.getElementById('premiumNotify');
+            const notifyBtn= document.getElementById('premiumNotify');
             closeBtn.onclick = () => modal.classList.add('hidden');
             notifyBtn.onclick = async () => {
                 const email = document.getElementById('premiumEmail').value;
-                if (!email) {
-                    showNotification('Please enter your email', 'warning');
-                    return;
-                }
-                try {
-                    await joinWaitlist(email, 'premium_resource');
-                    showNotification('Thanks! We will notify you when Premium launches.', 'success');
-                    modal.classList.add('hidden');
-                } catch (err) {
-                    showNotification(err.message || 'Failed to save email', 'error');
-                }
+                if (!email) { showNotification('Please enter your email','warning'); return; }
+                try { await joinWaitlist(email,'premium_resource'); showNotification('We will notify you!','success'); modal.classList.add('hidden'); }
+                catch (err) { showNotification(err.message||'Failed','error'); }
             };
-
-            document.addEventListener('click', (e) => {
-                const btn = e.target.closest('[data-premium="true"]');
-                if (btn) {
-                    modal.classList.remove('hidden');
-                    document.getElementById('premiumEmail').focus();
-                }
-            });
+            document.addEventListener('click', e => { if (e.target.closest('[data-premium="true"]')) modal.classList.remove('hidden'); });
         }
     </script>
 </body>

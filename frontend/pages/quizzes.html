@@ -13,24 +13,38 @@
 <body class="bg-gray-50">
     <div id="main-nav"></div>
 
-    <!-- Page Header -->
     <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-bold">Quizzes & Assignments</h1>
+            <h1 class="text-4xl font-bold">Quizzes &amp; Assignments</h1>
             <p class="text-lg text-gray-100 mt-2">Practice and test your knowledge</p>
         </div>
     </section>
 
-    <section class="py-6 bg-white sticky top-0 z-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4 flex-wrap">
-            <button id="quizzesTab" class="tab-button active px-6 py-3 border-b-2 border-blue-900 text-blue-900 font-bold">Quizzes</button>
-            <button id="assignmentsTab" class="tab-button px-6 py-3 border-b-2 border-transparent text-gray-600 hover:text-blue-900">Assignments</button>
+    <!-- Curriculum Toggle + Tabs -->
+    <section class="bg-white border-b sticky top-0 z-20 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-3 flex-wrap">
+            <!-- Curriculum -->
+            <div class="flex rounded-lg overflow-hidden border border-gray-300">
+                <button id="curr-cbc" onclick="setCurriculum('CBC')"
+                        class="px-4 py-2 text-sm font-bold bg-blue-900 text-white transition">CBC</button>
+                <button id="curr-844" onclick="setCurriculum('8-4-4')"
+                        class="px-4 py-2 text-sm font-bold bg-white text-gray-600 hover:bg-gray-50 transition">8-4-4</button>
+            </div>
+            <!-- Strand filter (CBC only) -->
+            <select id="strandFilter" onchange="applyQuizFilters()"
+                    class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none hidden">
+                <option value="">All Strands</option>
+            </select>
+            <!-- Tabs -->
+            <button id="quizzesTab"     onclick="showQuizzes()"     class="px-5 py-2 border-b-2 border-blue-900 text-blue-900 font-bold text-sm">Quizzes</button>
+            <button id="assignmentsTab" onclick="showAssignments()" class="px-5 py-2 border-b-2 border-transparent text-gray-500 hover:text-blue-900 text-sm">Assignments</button>
             <div class="flex-1"></div>
-            <input id="quizSearch" type="text" placeholder="Search quizzes..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-            <select id="quizSubjectFilter" class="px-3 py-2 border border-gray-300 rounded-lg">
+            <input id="quizSearch" type="text" placeholder="Search quizzes..."
+                   class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 w-40">
+            <select id="quizSubjectFilter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
                 <option value="All">All Subjects</option>
             </select>
-            <select id="quizFormFilter" class="px-3 py-2 border border-gray-300 rounded-lg">
+            <select id="quizFormFilter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
                 <option value="All">All Forms</option>
             </select>
         </div>
@@ -75,13 +89,13 @@
     <script src="../assets/js/components.js"></script>
     <script>initPage('student', 'quizzes');</script>
     <script>
-        let allQuizzes = [];
-        let myResults = [];
-        let allAssignments = [];
-        let currentAssignmentId = null;
+        let allQuizzes = [], myResults = [], allAssignments = [], currentAssignmentId = null;
+
+        const storedStudent = (() => { try { return JSON.parse(localStorage.getItem('student')); } catch { return null; } })();
+        let activeCurriculum = storedStudent?.curriculum || 'CBC';
 
         document.addEventListener('DOMContentLoaded', () => {
-            bindTabs();
+            applyCurriculumUI();
             bindFilters();
             bindAssignmentModal();
             fetchQuizzes();
@@ -89,13 +103,37 @@
             if (window.location.hash === '#assignments') showAssignments();
         });
 
-        function bindTabs() {
-            const qTab = document.getElementById('quizzesTab');
-            const aTab = document.getElementById('assignmentsTab');
-            qTab.onclick = () => { showQuizzes(); window.location.hash=''; };
-            aTab.onclick = () => { showAssignments(); window.location.hash='#assignments'; };
+        // ── Curriculum ────────────────────────────────────────────────────────
+        function setCurriculum(c) {
+            activeCurriculum = c;
+            applyCurriculumUI();
+            applyQuizFilters();
         }
 
+        function applyCurriculumUI() {
+            const cbcBtn = document.getElementById('curr-cbc');
+            const btn844 = document.getElementById('curr-844');
+            const strandSel = document.getElementById('strandFilter');
+            if (activeCurriculum === 'CBC') {
+                cbcBtn.classList.add('bg-blue-900','text-white'); cbcBtn.classList.remove('bg-white','text-gray-600');
+                btn844.classList.add('bg-white','text-gray-600'); btn844.classList.remove('bg-blue-900','text-white');
+                strandSel.classList.remove('hidden');
+            } else {
+                btn844.classList.add('bg-blue-900','text-white'); btn844.classList.remove('bg-white','text-gray-600');
+                cbcBtn.classList.add('bg-white','text-gray-600'); cbcBtn.classList.remove('bg-blue-900','text-white');
+                strandSel.classList.add('hidden');
+            }
+        }
+
+        function populateStrandFilter(quizzes) {
+            const sel = document.getElementById('strandFilter');
+            const strands = [...new Set(quizzes.filter(q => q.cbcStrand).map(q => q.cbcStrand))].sort();
+            const current = sel.value;
+            sel.innerHTML = '<option value="">All Strands</option>' +
+                strands.map(s => `<option value="${s}" ${s === current ? 'selected' : ''}>${s}</option>`).join('');
+        }
+
+        // ── Tabs ──────────────────────────────────────────────────────────────
         function showQuizzes() {
             document.getElementById('quizzes-section').classList.remove('hidden');
             document.getElementById('assignments-section').classList.add('hidden');
@@ -109,10 +147,12 @@
             document.getElementById('quizzesTab').classList.remove('border-blue-900','text-blue-900','font-bold');
         }
 
+        // ── Filters ───────────────────────────────────────────────────────────
         function bindFilters() {
             document.getElementById('quizSearch').addEventListener('input', applyQuizFilters);
             document.getElementById('quizSubjectFilter').addEventListener('change', applyQuizFilters);
             document.getElementById('quizFormFilter').addEventListener('change', applyQuizFilters);
+            document.getElementById('strandFilter').addEventListener('change', applyQuizFilters);
         }
 
         async function fetchQuizzes() {
@@ -120,206 +160,161 @@
             try {
                 const quizzes = await getAllQuizzes();
                 allQuizzes = Array.isArray(quizzes) ? quizzes : (quizzes.quizzes || []);
-                try {
-                    myResults = await getQuizResultsForMe();
-                } catch (e) { myResults = []; }
+                try { myResults = await getQuizResultsForMe(); } catch { myResults = []; }
                 populateQuizFilters();
-                if (!allQuizzes.length) {
-                    document.getElementById('quizzesEmpty').textContent = 'No quizzes available yet. Check back soon.';
-                    document.getElementById('quizzesEmpty').classList.remove('hidden');
-                    return;
-                }
+                populateStrandFilter(allQuizzes);
                 applyQuizFilters();
             } catch (err) {
                 const el = document.getElementById('quizzesError');
-                el.innerHTML = `${err.message || 'Failed to load quizzes'} <br><button class="toast-action" onclick="fetchQuizzes()">Retry</button>`;
+                el.innerHTML = `${err.message || 'Failed to load quizzes'}<br><button class="toast-action" onclick="fetchQuizzes()">Retry</button>`;
                 el.classList.remove('hidden');
             }
         }
 
         function renderQuizSkeletons() {
-            const list = document.getElementById('quizzesList');
-            list.innerHTML = Array.from({length:3}).map(()=>`
+            document.getElementById('quizzesList').innerHTML = Array.from({length:3}).map(()=>`
                 <div class="bg-white rounded-lg shadow p-6 animate-pulse">
                     <div class="h-4 bg-gray-200 rounded w-2/3 mb-3"></div>
-                    <div class="h-3 bg-gray-200 rounded w-1/3 mb-2"></div>
-                    <div class="h-3 bg-gray-200 rounded w-1/4 mb-4"></div>
-                    <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                    <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
-                    <div class="h-8 bg-gray-200 rounded"></div>
-                </div>
-            `).join('');
+                    <div class="h-3 bg-gray-200 rounded w-1/3 mb-4"></div>
+                    <div class="h-8 bg-gray-200 rounded mt-4"></div>
+                </div>`).join('');
         }
 
         function populateQuizFilters() {
-            const subjectSelect = document.getElementById('quizSubjectFilter');
-            const formSelect = document.getElementById('quizFormFilter');
-            const subjects = Array.from(new Set(allQuizzes.map(q => q.subject).filter(Boolean))).sort();
-            subjects.forEach(s => {
-                const opt = document.createElement('option');
-                opt.value = s;
-                opt.textContent = s;
-                subjectSelect.appendChild(opt);
+            const subjectSel = document.getElementById('quizSubjectFilter');
+            const formSel    = document.getElementById('quizFormFilter');
+            [...new Set(allQuizzes.map(q => q.subject).filter(Boolean))].sort().forEach(s => {
+                const o = document.createElement('option'); o.value = s; o.textContent = s; subjectSel.appendChild(o);
             });
-            const forms = Array.from(new Set(allQuizzes.map(q => q.form).filter(Boolean))).sort();
-            forms.forEach(f => {
-                const opt = document.createElement('option');
-                opt.value = f;
-                opt.textContent = f;
-                formSelect.appendChild(opt);
+            [...new Set(allQuizzes.map(q => q.form).filter(Boolean))].sort().forEach(f => {
+                const o = document.createElement('option'); o.value = f; o.textContent = f; formSel.appendChild(o);
             });
         }
 
         function applyQuizFilters() {
-            const term = document.getElementById('quizSearch').value.toLowerCase();
-            const subj = document.getElementById('quizSubjectFilter').value;
-            const form = document.getElementById('quizFormFilter').value;
+            const term   = document.getElementById('quizSearch').value.toLowerCase();
+            const subj   = document.getElementById('quizSubjectFilter').value;
+            const form   = document.getElementById('quizFormFilter').value;
+            const strand = document.getElementById('strandFilter').value;
             const filtered = allQuizzes.filter(q => {
-                const sm = subj === 'All' || (q.subject || '').toLowerCase() === subj.toLowerCase();
-                const fm = form === 'All' || (q.form || '').toLowerCase() === form.toLowerCase();
-                const tm = !term || (q.title || '').toLowerCase().includes(term) || (q.topic || '').toLowerCase().includes(term);
-                return sm && fm && tm;
+                const currMatch   = q.curriculum === 'both' || !q.curriculum || q.curriculum === activeCurriculum;
+                const subjMatch   = subj === 'All' || (q.subject||'').toLowerCase() === subj.toLowerCase();
+                const formMatch   = form === 'All' || (q.form||'').toLowerCase() === form.toLowerCase();
+                const termMatch   = !term || (q.title||'').toLowerCase().includes(term) || (q.topic||'').toLowerCase().includes(term);
+                const strandMatch = !strand || (q.cbcStrand||'') === strand;
+                return currMatch && subjMatch && formMatch && termMatch && strandMatch;
             });
             renderQuizzes(filtered);
         }
 
         function renderQuizzes(list) {
             const container = document.getElementById('quizzesList');
+            const emptyEl   = document.getElementById('quizzesEmpty');
             if (!list.length) {
                 container.innerHTML = '';
-                document.getElementById('quizzesEmpty').textContent = 'No quizzes found for the selected filters.';
-                document.getElementById('quizzesEmpty').classList.remove('hidden');
+                emptyEl.textContent = 'No quizzes found for the selected filters.';
+                emptyEl.classList.remove('hidden');
                 return;
             }
-            document.getElementById('quizzesEmpty').classList.add('hidden');
+            emptyEl.classList.add('hidden');
             container.innerHTML = list.map(renderQuizCard).join('');
         }
 
         function renderQuizCard(q) {
-            const completed = myResults.find(r => r.quizId === q._id);
-            const statusBadge = completed ? '<span class="badge badge-success">Completed</span>' : '<span class="badge badge-warning">Not Started</span>';
-            const isPremium = !!q.isPremium;
+            const completed  = myResults.find(r => r.quizId === q._id || r.quiz === q._id);
+            const statusBadge= completed ? '<span class="badge badge-success">Completed</span>' : '<span class="badge badge-warning">Not Started</span>';
+            const isPremium  = !!q.isPremium;
+            const cbcBadges  = (q.cbcStrand || q.cbcSubStrand) ? `
+                <div class="flex flex-wrap gap-1 mt-1 mb-2">
+                    ${q.cbcStrand    ? `<span class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">📌 ${q.cbcStrand}</span>` : ''}
+                    ${q.cbcSubStrand ? `<span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full">↳ ${q.cbcSubStrand}</span>` : ''}
+                </div>` : '';
             const button = isPremium
                 ? `<button class="bg-blue-900 text-white px-4 py-2 rounded flex items-center gap-2" data-pro="true">🔒 Pro</button>`
-                : `<button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition" onclick="startQuiz('${q._id}', ${!!completed})">${completed ? 'Retake Quiz' : 'Start Quiz'}</button>`;
+                : `<button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition text-sm" onclick="window.location.href='take-quiz.html?id=${q._id}'">${completed ? 'Retake Quiz' : 'Start Quiz'}</button>`;
             return `
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition ${isPremium ? 'locked-overlay' : ''}">
-                    <div class="flex items-start justify-between mb-3">
-                        <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">${isPremium ? '<span class="pro-badge">Pro</span>' : ''}${q.title || 'Untitled Quiz'}</h3>
-                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">${q.form || 'All'}</span>
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="flex items-start justify-between mb-2">
+                        <h3 class="text-base font-bold text-blue-900">${q.title || 'Untitled Quiz'}</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full ml-2 whitespace-nowrap">${q.form || 'All'}</span>
                     </div>
-                    <div class="flex flex-wrap gap-2 text-xs mb-2">
+                    <div class="flex flex-wrap gap-1 text-xs mb-1">
                         <span class="badge badge-primary">${q.subject || 'Subject'}</span>
                         <span class="badge badge-warning">${q.topic || 'Topic'}</span>
+                        ${q.curriculum && q.curriculum !== 'both' ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">${q.curriculum}</span>` : ''}
                     </div>
+                    ${cbcBadges}
                     <p class="text-sm text-gray-600 mb-1">Questions: ${q.questions?.length || q.questionCount || 0}</p>
-                    <p class="text-sm text-gray-600 mb-2">Time limit: ${q.timeLimit || q.timeLimitMinutes || 0} mins</p>
+                    <p class="text-sm text-gray-600 mb-2">Time: ${q.timeLimit || 0} mins</p>
                     ${statusBadge}
                     <div class="mt-4 flex justify-between items-center">
-                        <span class="text-xs text-gray-500">${completed ? 'Completed' : 'Ready'}</span>
+                        <span class="text-xs text-gray-400">${completed ? 'Completed' : 'Ready'}</span>
                         ${button}
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
-        function startQuiz(id, completed) {
-            window.location.href = `take-quiz.html?id=${id}`;
-        }
-
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('[data-pro="true"]')) {
-                showComingSoon('This is a Pro quiz. Advanced quiz sets with detailed feedback and performance tracking are coming soon as part of our paid plans. You will be notified when Premium becomes available.', 'Pro Quiz', '🔒', 'premium_quiz');
-            }
-        });
-
+        // ── Assignments ───────────────────────────────────────────────────────
         async function fetchAssignments() {
-            renderAssignmentSkeletons();
             try {
                 const data = await getAllAssignments();
                 allAssignments = Array.isArray(data) ? data : (data.assignments || []);
                 if (!allAssignments.length) {
-                    const empty = document.getElementById('assignmentsEmpty');
-                    empty.textContent = 'No assignments available yet. Check back soon.';
-                    empty.classList.remove('hidden');
+                    document.getElementById('assignmentsEmpty').textContent = 'No assignments yet.';
+                    document.getElementById('assignmentsEmpty').classList.remove('hidden');
                     return;
                 }
                 renderAssignments(allAssignments);
             } catch (err) {
-                const el = document.getElementById('assignmentsError');
-                el.innerHTML = `${err.message || 'Failed to load assignments'} <br><button class="toast-action" onclick="fetchAssignments()">Retry</button>`;
-                el.classList.remove('hidden');
+                document.getElementById('assignmentsError').innerHTML = `${err.message || 'Failed'}<br><button class="toast-action" onclick="fetchAssignments()">Retry</button>`;
+                document.getElementById('assignmentsError').classList.remove('hidden');
             }
-        }
-
-        function renderAssignmentSkeletons() {
-            const list = document.getElementById('assignmentsList');
-            list.innerHTML = Array.from({length:3}).map(()=>`
-                <div class="bg-white rounded-lg shadow p-6 animate-pulse">
-                    <div class="h-4 bg-gray-200 w-2/3 rounded mb-3"></div>
-                    <div class="h-3 bg-gray-200 w-1/3 rounded mb-2"></div>
-                    <div class="h-3 bg-gray-200 w-full rounded mb-2"></div>
-                    <div class="h-8 bg-gray-200 rounded mt-3"></div>
-                </div>
-            `).join('');
         }
 
         function renderAssignments(list) {
-            const container = document.getElementById('assignmentsList');
-            container.innerHTML = list.map(renderAssignmentCard).join('');
-        }
-
-        function renderAssignmentCard(a) {
-            const dueDate = a.dueDate ? new Date(a.dueDate) : null;
-            const now = new Date();
-            const daysLeft = dueDate ? Math.ceil((dueDate - now) / 86400000) : null;
-            let badge = '';
-            if (daysLeft === null) {
-                badge = '<span class="badge badge-warning">No due date</span>';
-            } else if (daysLeft < 0) {
-                badge = '<span class="badge badge-danger">Overdue</span>';
-            } else if (daysLeft < 3) {
-                badge = '<span class="badge badge-danger">' + daysLeft + ' days left</span>';
-            } else if (daysLeft < 7) {
-                badge = '<span class="badge badge-warning">' + daysLeft + ' days left</span>';
-            } else {
-                badge = '<span class="badge badge-success">' + daysLeft + ' days left</span>';
-            }
-
-            return `
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition border-l-4 border-blue-900">
-                    <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <h3 class="text-xl font-bold text-blue-900 mb-1">${a.title || 'Assignment'}</h3>
-                            <div class="flex flex-wrap gap-2 text-xs mb-2">
-                                <span class="badge badge-primary">${a.subject || 'Subject'}</span>
-                                <span class="badge badge-warning">${a.form || 'Form'}</span>
+            document.getElementById('assignmentsList').innerHTML = list.map(a => {
+                const dueDate  = a.dueDate ? new Date(a.dueDate) : null;
+                const daysLeft = dueDate ? Math.ceil((dueDate - new Date()) / 86400000) : null;
+                const badge    = daysLeft === null ? '<span class="badge badge-warning">No due date</span>'
+                    : daysLeft < 0 ? '<span class="badge badge-danger">Overdue</span>'
+                    : daysLeft < 3 ? `<span class="badge badge-danger">${daysLeft}d left</span>`
+                    : `<span class="badge badge-success">${daysLeft}d left</span>`;
+                const currBadge = a.curriculum ? `<span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-semibold">${a.curriculum}</span>` : '';
+                return `
+                    <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-900">
+                        <div class="flex items-start justify-between mb-2">
+                            <div>
+                                <h3 class="text-lg font-bold text-blue-900">${a.title || 'Assignment'}</h3>
+                                <div class="flex flex-wrap gap-1 text-xs mt-1">
+                                    <span class="badge badge-primary">${a.subject || 'Subject'}</span>
+                                    <span class="badge badge-warning">${a.form || 'Form'}</span>
+                                    ${currBadge}
+                                </div>
                             </div>
-                            <p class="text-gray-600 mb-2">${a.description || ''}</p>
-                            <p class="text-xs text-gray-500">Due: ${dueDate ? dueDate.toDateString() : 'N/A'}</p>
+                            ${badge}
                         </div>
-                        ${badge}
-                    </div>
-                    <div class="flex justify-end">
-                        <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition" onclick="openAssignmentModal('${a._id}', '${(a.title || '').replace(/'/g,'\\'')}')">Submit Assignment</button>
-                    </div>
-                </div>
-            `;
+                        <p class="text-gray-600 text-sm mb-2">${a.description || ''}</p>
+                        <p class="text-xs text-gray-400 mb-3">Due: ${dueDate ? dueDate.toDateString() : 'N/A'}</p>
+                        <div class="flex justify-end">
+                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition text-sm"
+                                    onclick="openAssignmentModal('${a._id}','${(a.title||'').replace(/'/g,"\\'")}')">Submit</button>
+                        </div>
+                    </div>`;
+            }).join('');
         }
 
         function bindAssignmentModal() {
             document.getElementById('assignmentCloseBtn').onclick = closeAssignmentModal;
-            document.getElementById('assignmentComments').addEventListener('input', (e) => {
-                const val = e.target.value.slice(0,500);
-                e.target.value = val;
-                document.getElementById('commentCount').textContent = `${val.length} / 500`;
+            document.getElementById('assignmentComments').addEventListener('input', e => {
+                const v = e.target.value.slice(0,500); e.target.value = v;
+                document.getElementById('commentCount').textContent = `${v.length} / 500`;
             });
             document.getElementById('assignmentSubmitBtn').onclick = submitAssignment;
         }
 
         function openAssignmentModal(id, title) {
             currentAssignmentId = id;
-            document.getElementById('assignmentModalTitle').textContent = `Submit: ${title || 'Assignment'}`;
+            document.getElementById('assignmentModalTitle').textContent = `Submit: ${title}`;
             document.getElementById('assignmentModal').classList.remove('hidden');
         }
         function closeAssignmentModal() {
@@ -329,41 +324,24 @@
             document.getElementById('assignmentComments').value = '';
             document.getElementById('commentCount').textContent = '0 / 500';
             const btn = document.getElementById('assignmentSubmitBtn');
-            btn.disabled = false;
-            btn.textContent = 'Submit';
+            btn.disabled = false; btn.textContent = 'Submit';
         }
 
         async function submitAssignment() {
             if (!currentAssignmentId) return;
-            const btn = document.getElementById('assignmentSubmitBtn');
+            const btn  = document.getElementById('assignmentSubmitBtn');
             const file = document.getElementById('assignmentFile').files[0];
             const comments = document.getElementById('assignmentComments').value;
-            if (file && file.size > 10 * 1024 * 1024) {
-                showNotification('File must be under 10MB', 'error');
-                return;
-            }
-            btn.disabled = true;
-            btn.textContent = 'Uploading...';
+            if (file && file.size > 10 * 1024 * 1024) { showNotification('File must be under 10MB','error'); return; }
+            btn.disabled = true; btn.textContent = 'Uploading...';
             try {
                 await submitAssignmentFile(currentAssignmentId, file, comments);
-                showNotification('Assignment submitted', 'success');
+                showNotification('Assignment submitted','success');
                 closeAssignmentModal();
-                markAssignmentSubmitted(currentAssignmentId);
             } catch (err) {
-                btn.disabled = false;
-                btn.textContent = 'Submit';
-                showNotification(err.message || 'Submission failed', 'error');
+                btn.disabled = false; btn.textContent = 'Submit';
+                showNotification(err.message || 'Submission failed','error');
             }
-        }
-
-        function markAssignmentSubmitted(id) {
-            const list = document.getElementById('assignmentsList');
-            const cards = list.querySelectorAll('.bg-white');
-            cards.forEach(card => {
-                if (card.innerHTML.includes(id)) return;
-            });
-            // simple re-render
-            renderAssignments(allAssignments);
         }
     </script>
 </body>

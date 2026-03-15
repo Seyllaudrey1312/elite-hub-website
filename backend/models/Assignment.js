@@ -46,6 +46,7 @@ const assignmentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teacher'
     },
+    curriculum: { type: String, enum: ['CBC', '8-4-4', 'both'], default: 'both' },
     createdAt: {
         type: Date,
         default: Date.now

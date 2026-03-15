@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCSE Grade Calculator - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a5f">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+    <style>
+        @media print {
+            #main-nav, #main-footer, .no-print { display: none !important; }
+            body { background: white; }
+            #print-area { display: block !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="main-nav"></div>
+
+    <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-12">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold">🎓 KCSE Grade Calculator</h1>
+            <p class="text-lg text-gray-100 mt-2">Calculate your mean grade and cluster points instantly</p>
+        </div>
+    </section>
+
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- Calculator Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <h2 class="text-lg font-bold text-gray-800 mb-1">Enter Your Marks</h2>
+            <p class="text-sm text-gray-500 mb-5">Fill in marks (0–100) for each subject. Grades update in real time.</p>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="text-left py-2 pr-4 font-semibold text-gray-600 w-8">#</th>
+                            <th class="text-left py-2 pr-4 font-semibold text-gray-600">Subject</th>
+                            <th class="text-left py-2 pr-4 font-semibold text-gray-600 w-28">Marks (0–100)</th>
+                            <th class="text-left py-2 font-semibold text-gray-600 w-20">Grade</th>
+                            <th class="text-left py-2 font-semibold text-gray-600 w-16">Points</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subjects-table"></tbody>
+                </table>
+            </div>
+
+            <button onclick="addSubjectRow()"
+                    class="no-print mt-4 text-sm text-blue-700 hover:underline font-semibold">+ Add subject row</button>
+        </div>
+
+        <!-- Results Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6" id="results-card">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">📊 Results Summary</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
+                <div class="bg-blue-50 rounded-xl p-4 text-center">
+                    <p class="text-xs text-gray-500 font-semibold mb-1">MEAN GRADE</p>
+                    <p id="mean-grade" class="text-4xl font-bold text-blue-900">—</p>
+                </div>
+                <div class="bg-green-50 rounded-xl p-4 text-center">
+                    <p class="text-xs text-gray-500 font-semibold mb-1">MEAN POINTS</p>
+                    <p id="mean-points" class="text-4xl font-bold text-green-700">—</p>
+                </div>
+                <div class="bg-yellow-50 rounded-xl p-4 text-center col-span-2 sm:col-span-1">
+                    <p class="text-xs text-gray-500 font-semibold mb-1">CLUSTER POINTS</p>
+                    <p id="cluster-points" class="text-4xl font-bold text-yellow-700">—</p>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800 mb-4">
+                <strong>ℹ️ About Cluster Points:</strong> Cluster points are calculated from your best 4 subjects in a specific cluster relevant to your desired university course. They are used by KUCCPS (Kenya Universities and Colleges Central Placement Service) for university placement. The maximum cluster points is 84 (4 subjects × 12 points each × 1.75 weighting).
+            </div>
+
+            <div class="flex gap-3 no-print">
+                <button onclick="window.print()"
+                        class="flex-1 bg-blue-900 text-white py-2 rounded-lg hover:bg-blue-800 transition font-semibold text-sm">
+                    🖨️ Print / Save as PDF
+                </button>
+                <button onclick="resetAll()"
+                        class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-semibold text-sm">
+                    🔄 Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Grading Scale Reference -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 no-print">
+            <h2 class="text-lg font-bold text-gray-800 mb-3">📋 KNEC Grading Scale</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+                <div class="flex justify-between bg-green-100 rounded px-3 py-1.5"><span class="font-bold text-green-800">A</span><span class="text-gray-600">80–100</span><span class="text-green-700 font-semibold">12 pts</span></div>
+                <div class="flex justify-between bg-green-50 rounded px-3 py-1.5"><span class="font-bold text-green-700">A-</span><span class="text-gray-600">75–79</span><span class="text-green-600 font-semibold">11 pts</span></div>
+                <div class="flex justify-between bg-blue-50 rounded px-3 py-1.5"><span class="font-bold text-blue-700">B+</span><span class="text-gray-600">70–74</span><span class="text-blue-600 font-semibold">10 pts</span></div>
+                <div class="flex justify-between bg-blue-50 rounded px-3 py-1.5"><span class="font-bold text-blue-700">B</span><span class="text-gray-600">65–69</span><span class="text-blue-600 font-semibold">9 pts</span></div>
+                <div class="flex justify-between bg-blue-50 rounded px-3 py-1.5"><span class="font-bold text-blue-600">B-</span><span class="text-gray-600">60–64</span><span class="text-blue-500 font-semibold">8 pts</span></div>
+                <div class="flex justify-between bg-yellow-50 rounded px-3 py-1.5"><span class="font-bold text-yellow-700">C+</span><span class="text-gray-600">55–59</span><span class="text-yellow-600 font-semibold">7 pts</span></div>
+                <div class="flex justify-between bg-yellow-50 rounded px-3 py-1.5"><span class="font-bold text-yellow-700">C</span><span class="text-gray-600">50–54</span><span class="text-yellow-600 font-semibold">6 pts</span></div>
+                <div class="flex justify-between bg-yellow-50 rounded px-3 py-1.5"><span class="font-bold text-yellow-600">C-</span><span class="text-gray-600">45–49</span><span class="text-yellow-500 font-semibold">5 pts</span></div>
+                <div class="flex justify-between bg-orange-50 rounded px-3 py-1.5"><span class="font-bold text-orange-700">D+</span><span class="text-gray-600">40–44</span><span class="text-orange-600 font-semibold">4 pts</span></div>
+                <div class="flex justify-between bg-orange-50 rounded px-3 py-1.5"><span class="font-bold text-orange-700">D</span><span class="text-gray-600">35–39</span><span class="text-orange-600 font-semibold">3 pts</span></div>
+                <div class="flex justify-between bg-orange-50 rounded px-3 py-1.5"><span class="font-bold text-orange-600">D-</span><span class="text-gray-600">30–34</span><span class="text-orange-500 font-semibold">2 pts</span></div>
+                <div class="flex justify-between bg-red-50 rounded px-3 py-1.5"><span class="font-bold text-red-700">E</span><span class="text-gray-600">0–29</span><span class="text-red-600 font-semibold">1 pt</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-footer"></div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>
+        initPage('student', 'grade-calculator');
+
+        const SUBJECTS = [
+            'Mathematics', 'English', 'Kiswahili', 'Biology', 'Physics',
+            'Chemistry', 'History & Government', 'Geography', 'CRE', 'IRE',
+            'Business Studies', 'Agriculture', 'Computer Studies',
+            'Home Science', 'Art & Design', 'Music', 'French', 'German',
+            'Arabic', 'Aviation Technology', 'Drawing & Design'
+        ];
+
+        // Official KNEC grading scale
+        function getGrade(marks) {
+            if (marks === '' || marks === null || isNaN(marks)) return { grade: '—', points: 0, color: 'text-gray-400' };
+            const m = Number(marks);
+            if (m >= 80) return { grade: 'A',  points: 12, color: 'text-green-700 font-bold' };
+            if (m >= 75) return { grade: 'A-', points: 11, color: 'text-green-600 font-bold' };
+            if (m >= 70) return { grade: 'B+', points: 10, color: 'text-blue-700 font-bold' };
+            if (m >= 65) return { grade: 'B',  points: 9,  color: 'text-blue-600 font-bold' };
+            if (m >= 60) return { grade: 'B-', points: 8,  color: 'text-blue-500 font-bold' };
+            if (m >= 55) return { grade: 'C+', points: 7,  color: 'text-yellow-700 font-bold' };
+            if (m >= 50) return { grade: 'C',  points: 6,  color: 'text-yellow-600 font-bold' };
+            if (m >= 45) return { grade: 'C-', points: 5,  color: 'text-yellow-500 font-bold' };
+            if (m >= 40) return { grade: 'D+', points: 4,  color: 'text-orange-600 font-bold' };
+            if (m >= 35) return { grade: 'D',  points: 3,  color: 'text-orange-500 font-bold' };
+            if (m >= 30) return { grade: 'D-', points: 2,  color: 'text-orange-400 font-bold' };
+            return             { grade: 'E',  points: 1,  color: 'text-red-600 font-bold' };
+        }
+
+        function pointsToMeanGrade(pts) {
+            if (pts >= 11.5) return 'A';
+            if (pts >= 10.5) return 'A-';
+            if (pts >= 9.5)  return 'B+';
+            if (pts >= 8.5)  return 'B';
+            if (pts >= 7.5)  return 'B-';
+            if (pts >= 6.5)  return 'C+';
+            if (pts >= 5.5)  return 'C';
+            if (pts >= 4.5)  return 'C-';
+            if (pts >= 3.5)  return 'D+';
+            if (pts >= 2.5)  return 'D';
+            if (pts >= 1.5)  return 'D-';
+            return 'E';
+        }
+
+        let rowCount = 0;
+
+        function addSubjectRow(subjectName = '', marksVal = '') {
+            rowCount++;
+            const idx  = rowCount;
+            const tbody = document.getElementById('subjects-table');
+            const tr   = document.createElement('tr');
+            tr.id      = `row-${idx}`;
+            tr.className = 'border-b border-gray-100';
+            tr.innerHTML = `
+                <td class="py-2 pr-4 text-gray-400 text-xs">${idx}</td>
+                <td class="py-2 pr-4">
+                    <select id="subj-${idx}" onchange="recalculate()"
+                            class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <option value="">Select subject</option>
+                        ${SUBJECTS.map(s => `<option value="${s}" ${s === subjectName ? 'selected' : ''}>${s}</option>`).join('')}
+                    </select>
+                </td>
+                <td class="py-2 pr-4">
+                    <input type="number" id="marks-${idx}" min="0" max="100" value="${marksVal}"
+                           oninput="recalculate()"
+                           class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
+                           placeholder="0–100">
+                </td>
+                <td class="py-2 pr-4">
+                    <span id="grade-${idx}" class="text-lg text-gray-400">—</span>
+                </td>
+                <td class="py-2">
+                    <span id="pts-${idx}" class="text-sm text-gray-400">—</span>
+                </td>`;
+            tbody.appendChild(tr);
+            if (marksVal !== '') recalculate();
+        }
+
+        function recalculate() {
+            const allPoints = [];
+            for (let i = 1; i <= rowCount; i++) {
+                const marksEl = document.getElementById(`marks-${i}`);
+                const gradeEl = document.getElementById(`grade-${i}`);
+                const ptsEl   = document.getElementById(`pts-${i}`);
+                if (!marksEl) continue;
+                const val = marksEl.value.trim();
+                const { grade, points, color } = getGrade(val === '' ? '' : Number(val));
+                gradeEl.textContent = grade;
+                gradeEl.className   = `text-lg ${color}`;
+                ptsEl.textContent   = points > 0 ? points : '—';
+                if (val !== '' && !isNaN(Number(val))) allPoints.push(points);
+            }
+
+            if (!allPoints.length) {
+                document.getElementById('mean-grade').textContent   = '—';
+                document.getElementById('mean-points').textContent  = '—';
+                document.getElementById('cluster-points').textContent = '—';
+                return;
+            }
+
+            const meanPts   = allPoints.reduce((a,b) => a+b, 0) / allPoints.length;
+            const meanGrade = pointsToMeanGrade(meanPts);
+
+            // Cluster points = top 4 subjects × 1.75 (simplified KUCCPS formula)
+            const top4      = [...allPoints].sort((a,b) => b-a).slice(0,4);
+            const clusterPts= (top4.reduce((a,b) => a+b, 0) * 1.75).toFixed(2);
+
+            document.getElementById('mean-grade').textContent    = meanGrade;
+            document.getElementById('mean-points').textContent   = meanPts.toFixed(2);
+            document.getElementById('cluster-points').textContent = clusterPts;
+        }
+
+        function resetAll() {
+            document.getElementById('subjects-table').innerHTML = '';
+            rowCount = 0;
+            document.getElementById('mean-grade').textContent    = '—';
+            document.getElementById('mean-points').textContent   = '—';
+            document.getElementById('cluster-points').textContent = '—';
+            initRows();
+        }
+
+        function initRows() {
+            const defaults = ['Mathematics','English','Kiswahili','Biology','Physics','Chemistry','History & Government','Geography'];
+            defaults.forEach(s => addSubjectRow(s));
+        }
+
+        document.addEventListener('DOMContentLoaded', initRows);
+    </script>
+    <script src="../assets/js/pwa-register.js"></script>
+</body>
+</html>
