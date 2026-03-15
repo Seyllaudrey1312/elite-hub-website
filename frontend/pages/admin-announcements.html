@@ -9,42 +9,56 @@
     <meta name="theme-color" content="#0ea5a4">
 </head>
 <body class="bg-gray-100">
-    <div class="flex h-screen overflow-hidden">
-        <!-- Mobile Menu Overlay -->
-
-        <div id="mobileMenu" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden lg:hidden">
-        <div class="fixed top-0 left-0 w-80 max-w-[85vw] h-full bg-blue-900 text-white shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out" id="mobileMenuPanel">
-            <div class="p-6 border-b border-blue-800">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
-                        <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
-                    </div>
-                    <button onclick="closeMobileMenu()" class="text-white hover:text-gray-300">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
+    <div class="lg:flex lg:h-screen lg:overflow-hidden">
+        <aside id="sidebar" class="fixed top-0 left-0 h-full z-40 -translate-x-full lg:translate-x-0 lg:static lg:z-auto w-64 bg-blue-900 text-white flex flex-col transition-transform duration-300">
+            <div class="p-6 flex items-center justify-between lg:justify-start border-b border-blue-800">
+                <div>
+                    <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
+                    <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
                 </div>
+                <button onclick="closeSidebar()" class="lg:hidden text-white hover:text-gray-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
 
-            <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="admin-dashboard.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition" onclick="closeMobileMenu()">
-                    📊 Dashboard</a>
-                <a href="admin-quiz-builder.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-                    📝 Create Quiz</a>
-                <a href="admin-quiz-results.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition" onclick="closeMobileMenu()">
-                    📈 Quiz Results</a>
-				<a href="admin-resources.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition" onclick="closeMobileMenu()">
-                    📚 Resources</a>
-				<a href="admin-live-classes.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition" onclick="closeMobileMenu()">
-                    🎥 Live Classes</a>
-				<a href="admin-video-lessons.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition" onclick="closeMobileMenu()">
-                    🎬 Video Lessons</a>
-                <a href="admin-students.html" class="block px-4 py-2 rounded-lg hover:bg-blue-800 transition" onclick="closeMobileMenu()">
-                    👥 Students</a>
-                
+            <nav class="flex-1 px-4 py-6 space-y-1">
+                <a href="admin-dashboard.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    📊 Dashboard
+                </a>
+                <a href="admin-students.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    👥 Students
+                </a>
+                <a href="admin-resources.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    📚 Manage Resources
+                </a>
+                <a href="admin-quiz-builder.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    ✏️ Create Quizzes
+                </a>
+                <a href="admin-quiz-results.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    📈 Quiz Results
+                </a>
+                <a href="admin-announcements.html" class="block px-4 py-3 rounded-lg bg-blue-700 border-l-4 border-yellow-400 text-white font-semibold">
+                    📢 Announcements
+                </a>
+                <a href="admin-live-classes.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    🎙️ Live Classes
+                </a>
+                <a href="admin-video-lessons.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    🎬 Video Lessons
+                </a>
+                <a href="admin-payments.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    💳 Payments (Coming Soon)
+                </a>
+                <a href="admin-subscription-plans.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    🪙 Plans
+                </a>
+                <a href="admin-transaction-history.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">
+                    🧾 Transactions
+                </a>
             </nav>
+
             <div class="p-4 border-t border-blue-800">
                 <button onclick="adminLogout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
                     🚪 Logout
@@ -52,49 +66,19 @@
             </div>
         </aside>
 
-        <!-- Desktop Layout -->
-    <div class="flex h-screen overflow-hidden">
-        <!-- Desktop Sidebar -->
-        <div class="hidden lg:block w-64 bg-blue-900 text-white overflow-y-auto">
-            <div class="p-6">
-                <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
-                <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+        <main class="flex-1 overflow-y-auto">
+            <div class="lg:hidden bg-blue-900 text-yellow-400 px-4 py-3 flex items-center gap-3 shadow">
+                <button onclick="openSidebar()" class="text-white p-2 rounded hover:bg-blue-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <span class="font-semibold">Elite Hub Admin</span>
             </div>
 
-            <nav class="mt-8">
-                <a href="admin-dashboard.html" class="block px-6 py-3 bg-blue-800 border-l-4 border-yellow-400 text-white hover:bg-blue-700 transition">
-                    📊 Dashboard
-                </a>
-                <a href="admin-students.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    👥 Students
-                </a>
-                <a href="admin-resources.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📄 Manage Resources
-                </a>
-                <a href="admin-quiz-builder.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    ❓ Create Quizzes
-                </a>
-                <a href="admin-quiz-results.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📈 Quiz Results
-                </a>
-    
-                <a href="admin-live-classes.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📹 Live Classes
-                </a>
-                <a href="admin-video-lessons.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    🎥 Video Lessons
-                </a>
-                <hr class="my-4 border-blue-700">
-                <a href="#" onclick="adminLogout()" class="block px-6 py-3 text-gray-300 hover:bg-red-600 transition">
-                    🔓 Logout
-                </a>
-            </nav>
-        </div>
-
-        <!-- Main Content -->
-        <main class="flex-1 overflow-auto">
             <div class="p-8">
-                <!-- Header -->
                 <div class="mb-8 flex justify-between items-center">
                     <div>
                         <h2 class="text-3xl font-bold text-gray-800 mb-2">Announcements</h2>
@@ -105,9 +89,8 @@
                     </button>
                 </div>
 
-                <!-- Filter Section -->
                 <div class="bg-white rounded-lg shadow p-6 mb-8">
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Search</label>
                             <input type="text" id="search-input" placeholder="Search announcements..."
@@ -139,8 +122,7 @@
                     </div>
                 </div>
 
-                <!-- Statistics Cards -->
-                <div class="grid grid-cols-3 gap-4 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                     <div class="bg-white rounded-lg shadow p-6">
                         <p class="text-sm text-gray-600 mb-2">Total Announcements</p>
                         <p class="text-3xl font-bold text-blue-600" id="total-count">0</p>
@@ -155,12 +137,8 @@
                     </div>
                 </div>
 
-                <!-- Announcements List -->
-                <div id="announcements-container" class="space-y-4">
-                    <!-- Announcements will be inserted here -->
-                </div>
+                <div id="announcements-container" class="space-y-4"></div>
 
-                <!-- Empty State -->
                 <div id="empty-state" class="bg-white rounded-lg shadow p-12 text-center hidden">
                     <p class="text-gray-600 text-lg mb-4">📢 No announcements yet</p>
                     <button onclick="openCreateModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">
@@ -171,7 +149,6 @@
         </main>
     </div>
 
-    <!-- Create/Edit Modal -->
     <div id="announcement-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
             <div class="px-6 py-4 border-b border-gray-200 sticky top-0 bg-white">
@@ -240,17 +217,14 @@
 
     <script src="../assets/js/api.js"></script>
     <script>
-        // State
         let allAnnouncements = [];
         let filteredAnnouncements = [];
 
-        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
+
         async function init() {
             try {
-                // Check admin auth
                 checkAdminAuth();
-
-                // Load announcements
                 await loadAnnouncements();
             } catch (error) {
                 console.error('Error initializing:', error);
@@ -258,10 +232,17 @@
             }
         }
 
+        function checkAdminAuth() {
+            const isAdmin = localStorage.getItem('isAdmin');
+            const token = localStorage.getItem('adminToken');
+            if (!isAdmin || !token) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
         async function loadAnnouncements() {
             try {
                 const data = await getAllAnnouncements();
-                // Expecting an array from backend
                 if (Array.isArray(data)) {
                     allAnnouncements = data.map(a => ({
                         _id: a._id,
@@ -273,12 +254,10 @@
                         createdBy: (a.author && a.author.name) || 'Admin'
                     }));
                 } else {
-                    // Fallback to demo data
                     allAnnouncements = generateMockAnnouncements();
                 }
 
                 filteredAnnouncements = [...allAnnouncements];
-
                 updateStats();
                 displayAnnouncements();
             } catch (error) {
@@ -351,7 +330,7 @@
                 const statusColor = announcement.status === 'published' ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200';
                 const statusBadge = announcement.status === 'published' ? 
                     '<span class="text-green-700 font-bold">✅ Published</span>' : 
-                    '<span class="text-yellow-700 font-bold">📋 Draft</span>';
+                    '<span class="text-yellow-700 font-bold">📄 Draft</span>';
 
                 const formLabel = announcement.targetForm ? `Form ${announcement.targetForm}` : 'All Forms';
 
@@ -437,23 +416,26 @@
             const targetForm = document.getElementById('target-form').value;
             const status = document.getElementById('status-input').value;
 
+            const token = localStorage.getItem('adminToken');
+            const headers = {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            };
+
             if (id) {
-                // Try to update on server (if endpoint exists)
                 try {
                     const res = await fetch(`${API_BASE_URL}/announcements/${id}`, {
                         method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, content, targetForms: targetForm ? [targetForm] : [] })
+                        headers,
+                        body: JSON.stringify({ title, content, targetForms: targetForm ? [targetForm] : [], status })
                     });
 
                     if (res.ok) {
                         const updated = await res.json();
-                        // Update local list
                         const idx = allAnnouncements.findIndex(a => a._id === id);
-                        if (idx !== -1) allAnnouncements[idx] = { ...allAnnouncements[idx], title, content, targetForm, status };
+                        if (idx !== -1) allAnnouncements[idx] = { ...allAnnouncements[idx], ...updated };
                         showNotification('Announcement updated on server', 'success');
                     } else {
-                        // Server doesn't support update - fallback to local
                         const announcement = allAnnouncements.find(a => a._id === id);
                         if (announcement) {
                             announcement.title = title;
@@ -475,12 +457,11 @@
                     showNotification('Update failed — saved locally', 'warning');
                 }
             } else {
-                // Create new on server
                 try {
-                    const payload = { title, content, targetForms: targetForm ? [targetForm] : [] };
+                    const payload = { title, content, targetForms: targetForm ? [targetForm] : [], status };
                     const res = await fetch(`${API_BASE_URL}/announcements`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers,
                         body: JSON.stringify(payload)
                     });
 
@@ -492,7 +473,7 @@
                             title: created.title,
                             content: created.content,
                             targetForm: (created.targetForms && created.targetForms[0]) || targetForm || '',
-                            status: created.status || 'published',
+                            status: created.status || status,
                             createdAt: created.createdAt || new Date().toISOString(),
                             createdBy: (created.author && created.author.name) || 'Admin'
                         };
@@ -504,7 +485,6 @@
                     }
                 } catch (err) {
                     console.error('Create announcement failed', err);
-                    // Fallback to local-only
                     const newAnnouncement = {
                         _id: Date.now().toString(),
                         title,
@@ -519,7 +499,6 @@
                 }
             }
 
-            // If publish requested and send-email checked, call backend to email students
             const sendEmail = document.getElementById('send-email-checkbox').checked;
             if (status === 'published' && sendEmail) {
                 try {
@@ -541,8 +520,12 @@
             const confirmed = await confirmNotification('Delete this announcement?', 'Delete', 'Cancel');
             if (!confirmed) return;
 
+            const token = localStorage.getItem('adminToken');
             try {
-                const res = await fetch(`${API_BASE_URL}/announcements/${id}`, { method: 'DELETE' });
+                const res = await fetch(`${API_BASE_URL}/announcements/${id}`, { 
+                    method: 'DELETE',
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
                 if (res.ok) {
                     allAnnouncements = allAnnouncements.filter(a => a._id !== id);
                     filteredAnnouncements = [...allAnnouncements];
@@ -552,10 +535,9 @@
                     return;
                 }
             } catch (err) {
-                console.warn('Server delete failed or not supported', err);
+                console.error('Server delete failed or not supported', err);
             }
 
-            // Fallback: local delete
             allAnnouncements = allAnnouncements.filter(a => a._id !== id);
             filteredAnnouncements = [...allAnnouncements];
             updateStats();
@@ -565,10 +547,11 @@
 
         async function sendEmailNotification(subject, message, targetForm) {
             try {
+                const token = localStorage.getItem('adminToken');
                 const payload = { subject, message, targetForm };
                 const res = await fetch(`${API_BASE_URL}/notifications/send-email`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', ...(token ? { 'Authorization': `Bearer ${token}` } : {}) },
                     body: JSON.stringify(payload)
                 });
                 return await res.json();
@@ -578,22 +561,36 @@
             }
         }
 
-        function checkAdminAuth() {
-            const isAdmin = localStorage.getItem('isAdmin');
-            if (!isAdmin) {
-                window.location.href = 'admin-login.html';
-            }
-        }
-
         function adminLogout() {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('isAdmin');
             window.location.href = 'admin-login.html';
         }
 
-        // Initialize on load
-        window.addEventListener('load', init);
+        function openSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                document.body.style.overflow = 'auto';
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+                document.getElementById('sidebar').classList.remove('-translate-x-full');
+            }
+        });
     </script>
-        <script src="../assets/js/pwa-register.js"></script>
+    <script src="../assets/js/pwa-register.js"></script>
 </body>
 </html>

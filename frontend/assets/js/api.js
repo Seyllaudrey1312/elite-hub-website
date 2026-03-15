@@ -475,10 +475,12 @@ async function getResourceById(resourceId) {
 async function getAllAnnouncements(filters = {}) {
     try {
         const query = new URLSearchParams(filters).toString();
+        const token = localStorage.getItem('adminToken') || localStorage.getItem('authToken');
         const response = await fetch(`${API_BASE_URL}/announcements?${query}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             }
         });
 
