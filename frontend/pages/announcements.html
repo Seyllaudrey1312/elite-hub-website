@@ -20,9 +20,12 @@
                 </div>
                 
                 <div class="flex items-center md:hidden">
-                    <button id="mobile-menu-btn" class="text-white hover:text-yellow-400 focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-white hover:text-yellow-400 focus:outline-none flex items-center">
+                        <svg id="nav-icon-open" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="nav-icon-close" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
@@ -150,20 +153,12 @@
         const PAGE_SIZE = 5;
 
         document.addEventListener('DOMContentLoaded', () => {
-            bindMobileNav();
             bindFilters();
             document.getElementById('retry-btn').addEventListener('click', loadAnnouncements);
             document.getElementById('load-more-btn').addEventListener('click', () => renderAnnouncements(false));
+            window.addEventListener('resize', handleResize);
             loadAnnouncements();
         });
-
-        function bindMobileNav() {
-            const btn = document.getElementById('mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            btn.addEventListener('click', () => {
-                menu.classList.toggle('hidden');
-            });
-        }
 
         function bindFilters() {
             document.querySelectorAll('.filter-pill').forEach(btn => {
@@ -311,6 +306,33 @@
 
         function toTitleCase(str) {
             return (str || '').toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const openIcon = document.getElementById('nav-icon-open');
+            const closeIcon = document.getElementById('nav-icon-close');
+            const isOpen = !menu.classList.contains('hidden');
+            if (isOpen) {
+                menu.classList.add('hidden');
+                openIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            } else {
+                menu.classList.remove('hidden');
+                openIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            }
+        }
+
+        function handleResize() {
+            if (window.innerWidth >= 768) {
+                const menu = document.getElementById('mobile-menu');
+                const openIcon = document.getElementById('nav-icon-open');
+                const closeIcon = document.getElementById('nav-icon-close');
+                menu.classList.add('hidden');
+                openIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
         }
     </script>
 </body>
