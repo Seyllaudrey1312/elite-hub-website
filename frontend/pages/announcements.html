@@ -49,7 +49,7 @@
                 <a href="./announcements.html" class="block px-3 py-2 bg-blue-800 rounded">Announcements</a>
                 <a href="./contact.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Contact</a>
                 <a href="./login.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Login</a>
-                <a href="./register.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Register</a>
+                <a href="./register.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Register</a>
             </div>
         </div>
     </nav>
@@ -58,177 +58,260 @@
     <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-4xl font-bold">Announcements</h1>
-            <p class="text-lg text-gray-100 mt-2">Stay updated with latest news and important notices</p>
+            <p class="text-lg text-gray-100 mt-2">Stay updated with the latest news and important notices</p>
         </div>
     </section>
 
-    <!-- Announcements Feed -->
-    <section class="py-12">
+    <section class="py-10">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Important Notice Banner -->
-            <div class="mb-8 p-6 bg-red-50 border-l-4 border-red-500 rounded-lg">
-                <h3 class="text-lg font-bold text-red-800 mb-2">🔴 Important: Exam Schedule Change</h3>
-                <p class="text-red-700">Form 4 Final Exams have been rescheduled. Please check the detailed schedule below.</p>
+            <!-- Pinned Banner -->
+            <div id="pinned-banner" class="hidden mb-6 p-5 rounded-lg border-l-4 border-red-500 bg-red-50 text-red-800 flex items-start gap-3">
+                <span class="text-xl">⚠️</span>
+                <div>
+                    <p id="pinned-title" class="font-bold"></p>
+                    <p id="pinned-snippet" class="text-sm mt-1"></p>
+                </div>
             </div>
 
-            <!-- Announcement 1 -->
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-6 border-l-4 border-yellow-400">
-                <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-blue-900 mb-2">Form 4 Final Exam Schedule Released</h2>
-                        <p class="text-gray-600 text-sm">📅 Posted on February 4, 2026 at 10:30 AM</p>
+            <!-- Filter Bar -->
+            <div class="sticky top-0 z-10 bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg shadow-sm mb-6 px-4 py-3 flex flex-wrap items-center gap-2 justify-between">
+                <div class="flex flex-wrap gap-2">
+                    <button data-category="all" class="filter-pill active px-3 py-2 rounded-full border border-blue-200 bg-blue-900 text-white text-sm font-semibold shadow-sm">All</button>
+                    <button data-category="important" class="filter-pill px-3 py-2 rounded-full border border-blue-200 bg-gray-100 text-gray-700 text-sm font-semibold shadow-sm">Important</button>
+                    <button data-category="resource" class="filter-pill px-3 py-2 rounded-full border border-blue-200 bg-gray-100 text-gray-700 text-sm font-semibold shadow-sm">Resource</button>
+                    <button data-category="event" class="filter-pill px-3 py-2 rounded-full border border-blue-200 bg-gray-100 text-gray-700 text-sm font-semibold shadow-sm">Event</button>
+                    <button data-category="update" class="filter-pill px-3 py-2 rounded-full border border-blue-200 bg-gray-100 text-gray-700 text-sm font-semibold shadow-sm">Update</button>
+                    <button data-category="notice" class="filter-pill px-3 py-2 rounded-full border border-blue-200 bg-gray-100 text-gray-700 text-sm font-semibold shadow-sm">Notice</button>
+                </div>
+                <p id="result-count" class="text-sm text-gray-600">0 announcements</p>
+            </div>
+
+            <!-- Skeleton Loader -->
+            <div id="skeleton-loader" class="space-y-4">
+                <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-200 animate-pulse">
+                    <div class="h-4 bg-gray-200 rounded w-1/4 mb-3"></div>
+                    <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                    <div class="space-y-2">
+                        <div class="h-3 bg-gray-200 rounded w-full"></div>
+                        <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+                        <div class="h-3 bg-gray-200 rounded w-2/3"></div>
                     </div>
-                    <span class="mt-4 md:mt-0 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-semibold">Important</span>
                 </div>
-                <p class="text-gray-700 mb-4">Dear Students,</p>
-                <p class="text-gray-700 mb-4">
-                    The final examination schedule for Form 4 students has been finalized and released. All subjects will be examined in the coming weeks. 
-                    Please download the detailed schedule from the Study Resources section to plan your revision effectively.
-                </p>
-                <div class="bg-blue-50 p-4 rounded-lg mb-4">
-                    <h4 class="font-bold text-blue-900 mb-2">Exam Timetable:</h4>
-                    <ul class="text-gray-700 space-y-1">
-                        <li>• Mathematics: February 20-22, 2026</li>
-                        <li>• Physics: February 23-24, 2026</li>
-                        <li>• Chemistry: February 25-26, 2026</li>
-                        <li>• Biology: February 27, 2026</li>
-                        <li>• English: March 1-2, 2026</li>
-                    </ul>
-                </div>
-                <p class="text-gray-700">Remember to revise thoroughly and reach out if you need any help!</p>
-            </div>
-
-            <!-- Announcement 2 -->
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-6 border-l-4 border-green-500">
-                <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-blue-900 mb-2">New Physics Notes Available</h2>
-                        <p class="text-gray-600 text-sm">📅 Posted on February 2, 2026 at 2:15 PM</p>
+                <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-200 animate-pulse">
+                    <div class="h-4 bg-gray-200 rounded w-1/4 mb-3"></div>
+                    <div class="h-5 bg-gray-200 rounded w-2/3 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                    <div class="space-y-2">
+                        <div class="h-3 bg-gray-200 rounded w-full"></div>
+                        <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+                        <div class="h-3 bg-gray-200 rounded w-2/3"></div>
                     </div>
-                    <span class="mt-4 md:mt-0 bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold">Resource</span>
                 </div>
-                <p class="text-gray-700 mb-4">
-                    Comprehensive notes on Electricity and Magnetism have been uploaded to the Study Resources section. 
-                    These notes cover all Form 3 Physics topics and include worked examples and diagrams.
-                </p>
-                <p class="text-gray-700">
-                    <strong>What's Included:</strong>
-                </p>
-                <ul class="list-disc list-inside text-gray-700 mb-4">
-                    <li>Detailed theory on electric fields and potential</li>
-                    <li>Magnetic fields and electromagnetic induction</li>
-                    <li>Step-by-step solutions to practice problems</li>
-                    <li>MCQ quiz at the end</li>
-                </ul>
-                <a href="./resources.html" class="text-blue-900 font-bold hover:underline">Download the full notes →</a>
             </div>
 
-            <!-- Announcement 3 -->
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-6 border-l-4 border-blue-500">
-                <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-blue-900 mb-2">Tutor Office Hours Extended</h2>
-                        <p class="text-gray-600 text-sm">📅 Posted on February 1, 2026 at 11:00 AM</p>
-                    </div>
-                    <span class="mt-4 md:mt-0 bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold">Update</span>
-                </div>
-                <p class="text-gray-700 mb-4">
-                    Starting this week, tutor office hours have been extended to accommodate more students seeking academic support. 
-                    You can now schedule appointments for additional help with specific topics.
-                </p>
-                <div class="bg-green-50 p-4 rounded-lg mb-4">
-                    <h4 class="font-bold text-green-900 mb-2">New Office Hours:</h4>
-                    <p class="text-gray-700">
-                        <strong>Monday - Friday:</strong> 3:30 PM - 6:30 PM<br>
-                        <strong>Saturday:</strong> 10:00 AM - 1:00 PM<br>
-                        <strong>Location:</strong> School Office
-                    </p>
-                </div>
-                <p class="text-gray-700">To book a session, contact us via WhatsApp or email.</p>
+            <!-- Error State -->
+            <div id="error-state" class="hidden bg-red-50 border border-red-200 text-red-800 rounded-lg p-6 text-center">
+                <p class="font-semibold mb-2">Failed to load announcements.</p>
+                <button id="retry-btn" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Retry</button>
             </div>
 
-            <!-- Announcement 4 -->
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-6 border-l-4 border-purple-500">
-                <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-blue-900 mb-2">Mid-Year Quiz Challenge Launched</h2>
-                        <p class="text-gray-600 text-sm">📅 Posted on January 28, 2026 at 3:45 PM</p>
-                    </div>
-                    <span class="mt-4 md:mt-0 bg-purple-100 text-purple-800 px-4 py-2 rounded-full font-semibold">Event</span>
-                </div>
-                <p class="text-gray-700 mb-4">
-                    We're excited to announce a fun Mid-Year Quiz Challenge! Test your knowledge across all subjects and compete with your classmates. 
-                    Top performers will receive recognition and prizes!
-                </p>
-                <div class="bg-purple-50 p-4 rounded-lg mb-4">
-                    <h4 class="font-bold text-purple-900 mb-2">Challenge Details:</h4>
-                    <ul class="text-gray-700 space-y-1">
-                        <li>• <strong>Duration:</strong> February 5-12, 2026</li>
-                        <li>• <strong>Format:</strong> 5 quizzes with 20 questions each</li>
-                        <li>• <strong>Subjects:</strong> Math, Physics, Chemistry, Biology, English</li>
-                        <li>• <strong>Prizes:</strong> Study vouchers and certificates</li>
-                    </ul>
-                </div>
-                <a href="./quizzes.html" class="text-blue-900 font-bold hover:underline">Start the challenge →</a>
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden bg-white rounded-lg shadow p-10 text-center">
+                <p class="text-gray-700 text-lg mb-3">No announcements yet. Check back soon.</p>
             </div>
 
-            <!-- Announcement 5 -->
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-6 border-l-4 border-orange-500">
-                <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-blue-900 mb-2">Assignment Deadline Extension</h2>
-                        <p class="text-gray-600 text-sm">📅 Posted on January 25, 2026 at 9:20 AM</p>
-                    </div>
-                    <span class="mt-4 md:mt-0 bg-orange-100 text-orange-800 px-4 py-2 rounded-full font-semibold">Notice</span>
-                </div>
-                <p class="text-gray-700 mb-4">
-                    Due to the recent public holiday, the deadline for the Kiswahili essay assignment has been extended by one week. 
-                    The new deadline is now <strong>February 10, 2026</strong>.
-                </p>
-                <p class="text-gray-700">Make sure to submit your work on time. Late submissions may not be accepted.</p>
-            </div>
+            <!-- Announcements Container -->
+            <div id="announcements-container" class="space-y-4"></div>
 
-            <!-- Pagination or Load More -->
-            <div class="text-center mt-8">
-                <button class="bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">Load More Announcements</button>
+            <!-- Load More -->
+            <div class="text-center mt-6">
+                <button id="load-more-btn" class="hidden px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition">Load More</button>
+                <p id="all-loaded-text" class="hidden text-gray-600 text-sm mt-2">You have seen all announcements</p>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-blue-900 text-white py-8 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Elite Hub</h3>
-                    <p class="text-gray-300">Supporting your academic journey with quality education resources.</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
-                    <p class="text-gray-300">Email: seyllaudrey6@gmail.com</p>
-                    <p class="text-gray-300">WhatsApp: +254 792619341</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
-                    <ul class="space-y-2 text-gray-300">
-                        <li><a href="./resources.html" class="hover:text-yellow-400">Resources</a></li>
-                        <li><a href="./quizzes.html" class="hover:text-yellow-400">Quizzes</a></li>
-                        <li><a href="./contact.html" class="hover:text-yellow-400">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="border-blue-800 my-6">
-            <div class="flex justify-between items-center">
-                <p class="text-gray-400">&copy; 2026 Elite Hub. All rights reserved.</p>
-                <div class="flex gap-3">
-                    <img src="../assets/images/logos/EMG logo.jpg" alt="EMG logo.jpg" class="h-12 w-12">
-                    <img src="../assets/images/logos/TGV logo.jpg" alt="TGV logo.jpg" class="h-12 w-12">
-                </div>
-            </div>
-        </div>
-    </footer>
-
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/pwa-register.js"></script>
+    <script>
+        const categoryColors = {
+            important: { badge: 'bg-yellow-100 text-yellow-800', border: 'border-yellow-400' },
+            resource: { badge: 'bg-green-100 text-green-800', border: 'border-green-400' },
+            event: { badge: 'bg-purple-100 text-purple-800', border: 'border-purple-400' },
+            update: { badge: 'bg-blue-100 text-blue-800', border: 'border-blue-400' },
+            notice: { badge: 'bg-orange-100 text-orange-800', border: 'border-orange-400' },
+            default: { badge: 'bg-gray-100 text-gray-700', border: 'border-gray-300' }
+        };
+
+        let allAnnouncements = [];
+        let filteredAnnouncements = [];
+        let displayedCount = 0;
+        const PAGE_SIZE = 5;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            bindMobileNav();
+            bindFilters();
+            document.getElementById('retry-btn').addEventListener('click', loadAnnouncements);
+            document.getElementById('load-more-btn').addEventListener('click', () => renderAnnouncements(false));
+            loadAnnouncements();
+        });
+
+        function bindMobileNav() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+        }
+
+        function bindFilters() {
+            document.querySelectorAll('.filter-pill').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active', 'bg-blue-900', 'text-white'));
+                    document.querySelectorAll('.filter-pill').forEach(b => b.classList.add('bg-gray-100', 'text-gray-700'));
+                    btn.classList.remove('bg-gray-100', 'text-gray-700');
+                    btn.classList.add('active', 'bg-blue-900', 'text-white');
+                    applyFilter(btn.dataset.category);
+                });
+            });
+        }
+
+        async function loadAnnouncements() {
+            toggleState('skeleton-loader', true);
+            toggleState('error-state', false);
+            toggleState('empty-state', false);
+            toggleState('announcements-container', false);
+            try {
+                const data = await getAllAnnouncements();
+                allAnnouncements = Array.isArray(data) ? data.slice() : [];
+                allAnnouncements.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                filteredAnnouncements = [...allAnnouncements];
+                renderPinnedBanner();
+                renderAnnouncements(true);
+            } catch (error) {
+                console.error('Failed to fetch announcements', error);
+                toggleState('error-state', true);
+            } finally {
+                toggleState('skeleton-loader', false);
+            }
+        }
+
+        function applyFilter(category) {
+            if (category === 'all') {
+                filteredAnnouncements = [...allAnnouncements];
+            } else {
+                filteredAnnouncements = allAnnouncements.filter(a => (a.category || '').toLowerCase() === category);
+            }
+            renderAnnouncements(true);
+        }
+
+        function renderPinnedBanner() {
+            const banner = document.getElementById('pinned-banner');
+            const important = allAnnouncements
+                .filter(a => (a.category || '').toLowerCase() === 'important')
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+            if (!important) {
+                banner.classList.add('hidden');
+                return;
+            }
+            const snippet = (important.body || important.content || '').slice(0, 150);
+            document.getElementById('pinned-title').textContent = important.title || 'Important';
+            document.getElementById('pinned-snippet').textContent = snippet + (snippet.length === 150 ? '…' : '');
+            banner.classList.remove('hidden');
+        }
+
+        function renderAnnouncements(reset = false) {
+            const container = document.getElementById('announcements-container');
+            const emptyState = document.getElementById('empty-state');
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            const allLoadedText = document.getElementById('all-loaded-text');
+
+            if (reset) {
+                displayedCount = 0;
+                container.innerHTML = '';
+            }
+
+            if (filteredAnnouncements.length === 0) {
+                emptyState.classList.remove('hidden');
+                loadMoreBtn.classList.add('hidden');
+                allLoadedText.classList.add('hidden');
+                updateResultCount();
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            toggleState('announcements-container', true);
+
+            const nextEnd = Math.min(filteredAnnouncements.length, displayedCount + PAGE_SIZE);
+            const slice = filteredAnnouncements.slice(displayedCount, nextEnd);
+            slice.forEach(announcement => container.appendChild(createCard(announcement)));
+            displayedCount = nextEnd;
+
+            updateResultCount();
+
+            if (displayedCount < filteredAnnouncements.length) {
+                loadMoreBtn.classList.remove('hidden');
+                allLoadedText.classList.add('hidden');
+            } else {
+                loadMoreBtn.classList.add('hidden');
+                allLoadedText.classList.remove('hidden');
+            }
+        }
+
+        function createCard(announcement) {
+            const category = (announcement.category || 'notice').toLowerCase();
+            const colors = categoryColors[category] || categoryColors.default;
+            const dateStr = formatDate(announcement.createdAt);
+            const listItems = Array.isArray(announcement.items) ? announcement.items.map(item => `<li class="list-disc ml-5 text-gray-700">${item}</li>`).join('') : '';
+            const linkHtml = announcement.link ? `<a href="${announcement.link}" target="_blank" class="text-blue-700 font-semibold hover:underline mt-3 inline-block">Read more →</a>` : '';
+
+            const card = document.createElement('div');
+            card.className = `bg-white rounded-lg shadow p-6 border-l-4 ${colors.border}`;
+            card.innerHTML = `
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">${announcement.title || 'Untitled announcement'}</h3>
+                        <p class="text-sm text-gray-500">${dateStr}</p>
+                    </div>
+                    <span class="self-start px-3 py-1 rounded-full text-sm font-semibold ${colors.badge}">
+                        ${toTitleCase(announcement.category || 'Notice')}
+                    </span>
+                </div>
+                <p class="text-gray-700 leading-relaxed">${announcement.body || announcement.content || ''}</p>
+                ${listItems ? `<ul class="mt-3 space-y-1 text-gray-700">${listItems}</ul>` : ''}
+                ${linkHtml}
+            `;
+            return card;
+        }
+
+        function updateResultCount() {
+            const count = filteredAnnouncements.length;
+            document.getElementById('result-count').textContent = `${count} announcement${count === 1 ? '' : 's'}`;
+        }
+
+        function toggleState(id, show) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (show) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        }
+
+        function formatDate(value) {
+            if (!value) return '';
+            const date = new Date(value);
+            return date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        }
+
+        function toTitleCase(str) {
+            return (str || '').toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+        }
+    </script>
 </body>
 </html>
