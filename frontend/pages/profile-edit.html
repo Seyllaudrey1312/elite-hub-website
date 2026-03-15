@@ -130,11 +130,17 @@
                     document.getElementById('fullName').value = student.name || '';
                     document.getElementById('email').value = student.email || '';
                     document.getElementById('form').value = student.form || '';
-                    
-                    // Update initials
-                    const names = student.name.split(' ');
-                    const initials = names.map(n => n[0]).join('').toUpperCase();
-                    document.getElementById('initials').textContent = initials || 'JD';
+                    if (student.profileImage) {
+                        const container = document.getElementById('profileImageContainer');
+                        container.style.backgroundImage = `url(${student.profileImage})`;
+                        container.style.backgroundSize = 'cover';
+                        container.style.backgroundPosition = 'center';
+                        document.getElementById('initials').classList.add('hidden');
+                    } else {
+                        const names = student.name.split(' ');
+                        const initials = names.map(n => n[0]).join('').toUpperCase();
+                        document.getElementById('initials').textContent = initials || 'JD';
+                    }
                 }
             } catch (error) {
                 console.error('Error loading profile:', error);
@@ -164,6 +170,26 @@
             }
         }
 
+        let profileImageData = null;
+        document.getElementById('profileImage').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                showNotification('Please upload an image file', 'error');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                profileImageData = reader.result;
+                const container = document.getElementById('profileImageContainer');
+                container.style.backgroundImage = `url(${profileImageData})`;
+                container.style.backgroundSize = 'cover';
+                container.style.backgroundPosition = 'center';
+                document.getElementById('initials').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+
         // Handle form submission
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -171,6 +197,7 @@
             const student = getStoredStudent();
             const newPassword = document.getElementById('newPassword').value;
             const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            const currentPassword = document.getElementById('currentPassword').value;
 
             // Validate password change
             if (newPassword || confirmNewPassword) {
@@ -186,11 +213,17 @@
 
             const updates = {
                 name: document.getElementById('fullName').value,
-                form: document.getElementById('form').value
+                form: document.getElementById('form').value,
+                profileImage: profileImageData || (student && student.profileImage)
             };
 
             try {
                 await updateStudentProfile(student.id, updates);
+
+                if (newPassword) {
+                    await changePassword(currentPassword, newPassword);
+                }
+
                 showNotification('Profile updated successfully!', 'success');
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';

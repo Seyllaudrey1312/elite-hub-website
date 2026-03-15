@@ -51,11 +51,11 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await res.json();
-                alert(data.message || 'Saved');
+                showNotification(data.message || 'Saved', 'success');
                 document.getElementById('video-form').reset();
             } catch (err) {
                 console.error(err);
-                alert('Failed to save video lesson');
+                showNotification('Failed to save video lesson', 'error');
             }
         }
     </script>

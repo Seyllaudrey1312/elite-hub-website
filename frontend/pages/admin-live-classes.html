@@ -61,14 +61,14 @@
                 });
                 const data = await res.json();
                 if (data.class && data.class.joinLink) {
-                    alert((data.message || 'Scheduled') + '\nJoin link: ' + data.class.joinLink);
+                    showNotification((data.message || 'Scheduled') + '<br>Join link: ' + data.class.joinLink, 'success');
                 } else {
-                    alert(data.message || 'Scheduled');
+                    showNotification(data.message || 'Scheduled', 'success');
                 }
                 document.getElementById('live-class-form').reset();
             } catch (err) {
                 console.error(err);
-                alert('Failed to schedule live class');
+                showNotification('Failed to schedule live class', 'error');
             }
         }
     </script>

@@ -346,11 +346,12 @@
         });
 
         function adminLogout() {
-            if (confirm('Are you sure you want to logout?')) {
+            confirmNotification('Log out of Elite Hub?', 'Logout', 'Stay').then(ok => {
+                if (!ok) return;
                 localStorage.removeItem('isAdmin');
                 localStorage.removeItem('adminToken');
                 window.location.href = 'admin-login.html';
-            }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {

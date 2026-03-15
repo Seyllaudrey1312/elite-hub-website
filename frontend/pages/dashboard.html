@@ -516,11 +516,11 @@
 
         // Logout handler
         async function logoutHandler() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('student');
-                window.location.href = 'login.html';
-            }
+            const ok = await confirmNotification('Log out of Elite Hub?', 'Logout', 'Stay');
+            if (!ok) return;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('student');
+            window.location.href = 'login.html';
         }
     </script>
     <script src="../assets/js/pwa-register.js"></script>

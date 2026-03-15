@@ -253,23 +253,24 @@
         }
 
         async function deleteResource(resourceId) {
-            if (confirm('Delete this resource?')) {
-                try {
-                    // Would delete from server
-                    showNotification('Resource deleted', 'success');
-                    loadResources();
-                } catch (error) {
-                    showNotification('Failed to delete resource', 'error');
-                }
+            const confirmed = await confirmNotification('Delete this resource?', 'Delete', 'Cancel');
+            if (!confirmed) return;
+            try {
+                // Would delete from server
+                showNotification('Resource deleted', 'success');
+                loadResources();
+            } catch (error) {
+                showNotification('Failed to delete resource', 'error');
             }
         }
 
         function adminLogout() {
-            if (confirm('Are you sure you want to logout?')) {
+            confirmNotification('Log out of Elite Hub?', 'Logout', 'Stay').then(ok => {
+                if (!ok) return;
                 localStorage.removeItem('isAdmin');
                 localStorage.removeItem('adminToken');
                 window.location.href = 'admin-login.html';
-            }
+            });
         }
 
         // Initialize

@@ -192,10 +192,7 @@
                         return;
                     }
                     result = await registerStudent(name, email, password, form);
-                    showNotification('Student registration successful! Redirecting...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 1500);
+                    showNotification('Registration received. Check your email to verify your account.', 'success');
                 } else {
                     const subject = document.getElementById('adminSubject').value;
                     const tutorCode = document.getElementById('adminCode').value;

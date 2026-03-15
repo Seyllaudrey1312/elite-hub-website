@@ -76,7 +76,7 @@
             const password = document.getElementById('adminPassword').value;
 
             try {
-                const result = await loginStudent(email, password);
+                const result = await loginStudent(email, password, true);
                 // Store admin flag in localStorage
                 localStorage.setItem('isAdmin', 'true');
                 localStorage.setItem('adminToken', result.token);

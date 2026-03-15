@@ -45,6 +45,19 @@ const studentSchema = new mongoose.Schema({
         ref: 'Assignment'
     }],
     profileImage: String,
+    provider: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local'
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationToken: String,
+    verificationExpires: Date,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     createdAt: {
         type: Date,
         default: Date.now

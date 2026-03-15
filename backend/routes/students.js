@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
 // Update student
 router.put('/:id', async (req, res) => {
     try {
-        const { name, form, enrolledSubjects } = req.body;
+        const { name, form, enrolledSubjects, profileImage } = req.body;
         
         const student = await Student.findByIdAndUpdate(
             req.params.id,
@@ -39,6 +39,7 @@ router.put('/:id', async (req, res) => {
                 name, 
                 form, 
                 enrolledSubjects,
+                profileImage,
                 updatedAt: new Date()
             },
             { new: true }

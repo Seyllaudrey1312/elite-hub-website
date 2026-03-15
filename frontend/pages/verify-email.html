@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0ea5a4">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="w-full max-w-md bg-white shadow-xl rounded-xl p-8 text-center">
+            <h1 class="text-3xl font-bold text-blue-900 mb-3">Verify your email</h1>
+            <p class="text-gray-600 mb-6">Click the button below to activate your account.</p>
+            <button id="verifyBtn" class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition">Verify Email</button>
+            <p class="text-sm text-gray-600 mt-4">Didn't get the email? <button id="resendBtn" class="text-blue-900 font-semibold underline">Resend link</button></p>
+            <p class="text-sm text-gray-500 mt-4">After verification you'll be redirected to login.</p>
+        </div>
+    </div>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const email = params.get('email');
+
+        document.getElementById('verifyBtn').addEventListener('click', async () => {
+            if (!token) return showNotification('Missing token', 'error');
+            try {
+                await verifyEmail(token);
+                showNotification('Email verified. You can log in now.', 'success');
+                setTimeout(() => window.location.href = './login.html', 1200);
+            } catch (err) {
+                showNotification(err.message || 'Verification failed', 'error');
+            }
+        });
+
+        document.getElementById('resendBtn').addEventListener('click', async () => {
+            if (!email) {
+                showNotification('Enter your email on the login page to resend.', 'info');
+                return;
+            }
+            try {
+                const res = await resendVerification(email);
+                showNotification(res.message || 'Verification email sent', 'success');
+            } catch (err) {
+                showNotification(err.message || 'Resend failed', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

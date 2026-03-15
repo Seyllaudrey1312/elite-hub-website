@@ -41,14 +41,17 @@
                     <!-- Remember Me & Forgot Password -->
                     <div class="flex items-center justify-between mb-6">
                         <label class="flex items-center">
-                            <input type="checkbox" class="w-4 h-4 text-blue-900">
+                            <input id="rememberMe" type="checkbox" class="w-4 h-4 text-blue-900">
                             <span class="ml-2 text-gray-600">Remember me</span>
                         </label>
-                        <a href="#" class="text-blue-900 hover:underline text-sm">Forgot password?</a>
+                        <a href="./forgot-password.html" class="text-blue-900 hover:underline text-sm">Forgot password?</a>
                     </div>
 
                     <!-- Login Button -->
                     <button type="submit" class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition mb-4">Login to Dashboard</button>
+
+                    <div class="text-center text-sm text-gray-500 mb-3">or continue with</div>
+                    <div id="googleSignInBtn" class="w-full flex justify-center"></div>
                 </form>
 
                 <!-- Sign Up Link -->
@@ -68,8 +71,35 @@
         </div>
     </div>
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/pwa-register.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            if (window.google && google.accounts) {
+                google.accounts.id.initialize({
+                    client_id: 'YOUR_GOOGLE_CLIENT_ID',
+                    callback: handleGoogleCredential
+                });
+                google.accounts.id.renderButton(
+                    document.getElementById('googleSignInBtn'),
+                    { theme: 'outline', size: 'large', shape: 'pill', width: 320 }
+                );
+            } else {
+                document.getElementById('googleSignInBtn').innerHTML = '<button class="w-full bg-white border border-gray-300 rounded-lg py-3 font-semibold text-gray-700">Google Sign-In unavailable</button>';
+            }
+        });
+
+        async function handleGoogleCredential(response) {
+            try {
+                await loginWithGoogle(response.credential);
+                showNotification('Logged in with Google', 'success');
+                setTimeout(() => window.location.href = 'dashboard.html', 900);
+            } catch (err) {
+                showNotification(err.message || 'Google sign-in failed', 'error');
+            }
+        }
+    </script>
 </body>
 </html>

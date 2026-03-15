@@ -337,7 +337,8 @@
             clearInterval(timerInterval);
 
             // Confirm submission
-            if (!confirm('Are you sure you want to submit? You cannot change your answers after submission.')) {
+            const ok = await confirmNotification('Submit quiz? You cannot change your answers after submission.', 'Submit', 'Review');
+            if (!ok) {
                 return;
             }
 

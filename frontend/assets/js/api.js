@@ -31,10 +31,6 @@ async function registerStudent(name, email, password, form) {
             throw new Error(data.error || 'Registration failed');
         }
 
-        // Store token in localStorage
-        localStorage.setItem('authToken', data.token);
-        localStorage.setItem('student', JSON.stringify(data.student));
-
         return data;
     } catch (error) {
         console.error('Registration error:', error);
@@ -73,25 +69,35 @@ async function registerAdmin(name, email, password, subject, tutorCode = '') {
 }
 
 // Login student
-async function loginStudent(email, password) {
+async function loginStudent(email, password, remember = false) {
     try {
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password, remember })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Login failed');
+            const err = new Error(data.error || 'Login failed');
+            if (data.verificationNeeded) {
+                err.verificationNeeded = true;
+                err.verificationLink = data.verificationLink;
+            }
+            throw err;
         }
 
         // Store token and student info in localStorage
         localStorage.setItem('authToken', data.token);
-        localStorage.setItem('student', JSON.stringify(data.student));
+        if (data.expiresIn) {
+            localStorage.setItem('authTokenExp', (Date.now() + data.expiresIn * 1000).toString());
+        }
+        if (data.student) {
+            localStorage.setItem('student', JSON.stringify(data.student));
+        }
 
         return data;
     } catch (error) {
@@ -128,9 +134,90 @@ async function getCurrentUser() {
     }
 }
 
+// Request password reset
+async function requestPasswordReset(email) {
+    const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    });
+    return res.json();
+}
+
+// Reset password
+async function resetPassword(token, password) {
+    const res = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Reset failed');
+    return data;
+}
+
+async function changePassword(currentPassword, newPassword) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Not authenticated');
+    const res = await fetch(`${API_BASE_URL}/auth/change-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ currentPassword, newPassword })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Change password failed');
+    return data;
+}
+
+// Verify email
+async function verifyEmail(token) {
+    const res = await fetch(`${API_BASE_URL}/auth/verify-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Verification failed');
+    return data;
+}
+
+async function resendVerification(email) {
+    const res = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Resend failed');
+    return data;
+}
+
+// Google sign-in
+async function loginWithGoogle(idToken) {
+    const res = await fetch(`${API_BASE_URL}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Google login failed');
+    localStorage.setItem('authToken', data.token);
+    if (data.expiresIn) {
+        localStorage.setItem('authTokenExp', (Date.now() + data.expiresIn * 1000).toString());
+    }
+    if (data.student) {
+        localStorage.setItem('student', JSON.stringify(data.student));
+    }
+    return data;
+}
+
 // Logout student
 function logoutStudent() {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('authTokenExp');
     localStorage.removeItem('student');
     window.location.href = 'pages/login.html';
 }
@@ -426,9 +513,11 @@ async function updateStudentProfile(studentId, updates) {
         }
 
         // Update localStorage
-        localStorage.setItem('student', JSON.stringify(data));
+        if (data.student) {
+            localStorage.setItem('student', JSON.stringify(data.student));
+        }
 
-        return data;
+        return data.student || data;
     } catch (error) {
         console.error('Update profile error:', error);
         throw error;
