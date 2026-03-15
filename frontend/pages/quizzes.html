@@ -32,8 +32,8 @@
                     <a href="./subjects.html" class="hover:text-yellow-400 transition">Subjects</a>
                     <a href="./resources.html" class="hover:text-yellow-400 transition">Study Resources</a>
                     <a href="./quizzes.html" class="text-yellow-400">Quizzes</a>
-                    <a href="./announcements.html" class="hover:text-yellow-400 transition">Announcements</a>
                     <a href="./pricing.html" class="hover:text-yellow-400 transition">Pricing</a>
+                    <a href="./announcements.html" class="hover:text-yellow-400 transition">Announcements</a>
                     <a href="./contact.html" class="hover:text-yellow-400 transition">Contact</a>
                     <a href="./login.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Login</a>
                     <a href="./register.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Register</a>
@@ -45,11 +45,11 @@
                 <a href="./subjects.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Subjects</a>
                 <a href="./resources.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Study Resources</a>
                 <a href="./quizzes.html" class="block px-3 py-2 bg-blue-800 rounded">Quizzes</a>
-                <a href="./announcements.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Announcements</a>
                 <a href="./pricing.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Pricing</a>
+                <a href="./announcements.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Announcements</a>
                 <a href="./contact.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Contact</a>
                 <a href="./login.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Login</a>
-                <a href="./register.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Register</a>
+                <a href="./register.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Register</a>
             </div>
         </div>
     </nav>
@@ -62,185 +62,52 @@
         </div>
     </section>
 
-    <!-- Tabs -->
-    <section class="py-8 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex space-x-4 border-b border-gray-200">
-                <button class="tab-button active px-6 py-3 border-b-2 border-blue-900 text-blue-900 font-bold" onclick="switchTab('quizzes')">Quizzes</button>
-                <button class="tab-button px-6 py-3 border-b-2 border-transparent text-gray-600 hover:text-blue-900" onclick="switchTab('assignments')">Assignments</button>
-            </div>
+    <section class="py-6 bg-white sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4 flex-wrap">
+            <button id="quizzesTab" class="tab-button active px-6 py-3 border-b-2 border-blue-900 text-blue-900 font-bold">Quizzes</button>
+            <button id="assignmentsTab" class="tab-button px-6 py-3 border-b-2 border-transparent text-gray-600 hover:text-blue-900">Assignments</button>
+            <div class="flex-1"></div>
+            <input id="quizSearch" type="text" placeholder="Search quizzes..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+            <select id="quizSubjectFilter" class="px-3 py-2 border border-gray-300 rounded-lg">
+                <option value="All">All Subjects</option>
+            </select>
+            <select id="quizFormFilter" class="px-3 py-2 border border-gray-300 rounded-lg">
+                <option value="All">All Forms</option>
+            </select>
         </div>
     </section>
 
-    <!-- Quizzes Section -->
-    <section id="quizzes-section" class="py-12">
+    <!-- Quizzes -->
+    <section id="quizzes-section" class="py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-blue-900 mb-8">Topic-Based Quizzes</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Quiz Card -->
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition locked-overlay">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2"><span class="pro-badge">Pro</span>Algebra Basics Quiz</h3>
-                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Form 1</span>
-                    </div>
-                    <p class="text-gray-600 mb-2">10 multiple-choice questions</p>
-                    <p class="text-gray-600 mb-4">Topic: Linear Equations</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Mathematics</span>
-                        <button data-coming-soon="true" class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition flex items-center gap-2">🔒 Start (Pro)</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-lg font-bold text-blue-900">Motion & Forces</h3>
-                        <span class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full">Form 2</span>
-                    </div>
-                    <p class="text-gray-600 mb-2">15 multiple-choice questions</p>
-                    <p class="text-gray-600 mb-4">Topic: Newton's Laws</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Physics</span>
-                        <button onclick="startQuiz()" class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Start Quiz</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-lg font-bold text-blue-900">Atomic Structure</h3>
-                        <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">Form 2</span>
-                    </div>
-                    <p class="text-gray-600 mb-2">12 multiple-choice questions</p>
-                    <p class="text-gray-600 mb-4">Topic: Atoms & Molecules</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Chemistry</span>
-                        <button onclick="startQuiz()" class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Start Quiz</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-lg font-bold text-blue-900">Cell Biology</h3>
-                        <span class="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full">Form 1</span>
-                    </div>
-                    <p class="text-gray-600 mb-2">10 multiple-choice questions</p>
-                    <p class="text-gray-600 mb-4">Topic: Cell Structure & Function</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Biology</span>
-                        <button onclick="startQuiz()" class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Start Quiz</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-lg font-bold text-blue-900">Shakespeare's Works</h3>
-                        <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">Form 3</span>
-                    </div>
-                    <p class="text-gray-600 mb-2">20 multiple-choice questions</p>
-                    <p class="text-gray-600 mb-4">Topic: Literature Analysis</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">English</span>
-                        <button onclick="startQuiz()" class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Start Quiz</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                    <div class="flex items-start justify-between mb-4">
-                        <h3 class="text-lg font-bold text-blue-900">World History</h3>
-                        <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full">Form 2</span>
-                    </div>
-                    <p class="text-gray-600 mb-2">15 multiple-choice questions</p>
-                    <p class="text-gray-600 mb-4">Topic: 20th Century Events</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">History</span>
-                        <button onclick="startQuiz()" class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Start Quiz</button>
-                    </div>
-                </div>
-            </div>
+            <div id="quizzesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="quizzesEmpty" class="hidden text-center py-10 text-gray-500"></div>
+            <div id="quizzesError" class="hidden text-center py-10 text-red-600"></div>
         </div>
     </section>
 
-    <!-- Assignments Section -->
-    <section id="assignments-section" class="py-12 hidden">
+    <!-- Assignments -->
+    <section id="assignments-section" class="py-10 hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-blue-900 mb-8">Active Assignments</h2>
-            <div class="space-y-6">
-                <!-- Assignment Card -->
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition border-l-4 border-blue-900">
-                    <div class="flex flex-col md:flex-row md:items-start md:justify-between">
-                        <div class="mb-4 md:mb-0">
-                            <h3 class="text-xl font-bold text-blue-900 mb-2">Mathematics Problem Set - Chapter 5</h3>
-                            <p class="text-gray-600 mb-2">Solve 20 complex algebra problems and write explanations.</p>
-                            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
-                                <span>📚 Form 2 Mathematics</span>
-                                <span>📅 Due: Feb 15, 2026</span>
-                                <span class="text-orange-600 font-bold">⚠️ 11 days remaining</span>
-                            </div>
-                        </div>
-                        <button class="bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 transition">Submit Assignment</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition border-l-4 border-yellow-500">
-                    <div class="flex flex-col md:flex-row md:items-start md:justify-between">
-                        <div class="mb-4 md:mb-0">
-                            <h3 class="text-xl font-bold text-blue-900 mb-2">Physics Experiment Report</h3>
-                            <p class="text-gray-600 mb-2">Document your findings from the motion experiment with graphs and analysis.</p>
-                            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
-                                <span>🔬 Form 3 Physics</span>
-                                <span>📅 Due: Feb 18, 2026</span>
-                                <span class="text-orange-600 font-bold">⚠️ 14 days remaining</span>
-                            </div>
-                        </div>
-                        <button class="bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 transition">Submit Assignment</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition border-l-4 border-green-500">
-                    <div class="flex flex-col md:flex-row md:items-start md:justify-between">
-                        <div class="mb-4 md:mb-0">
-                            <h3 class="text-xl font-bold text-blue-900 mb-2">Essay: The Renaissance Period</h3>
-                            <p class="text-gray-600 mb-2">Write a 1500-word essay on the cultural and intellectual impact of the Renaissance.</p>
-                            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
-                                <span>📖 Form 4 History</span>
-                                <span>📅 Due: Feb 12, 2026</span>
-                                <span class="text-red-600 font-bold">🔴 8 days remaining</span>
-                            </div>
-                        </div>
-                        <button class="bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 transition">Submit Assignment</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition border-l-4 border-purple-500">
-                    <div class="flex flex-col md:flex-row md:items-start md:justify-between">
-                        <div class="mb-4 md:mb-0">
-                            <h3 class="text-xl font-bold text-blue-900 mb-2">Chemistry Lab Report</h3>
-                            <p class="text-gray-600 mb-2">Document chemical reactions observed and theoretical explanations.</p>
-                            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
-                                <span>🧪 Form 2 Chemistry</span>
-                                <span>📅 Due: Feb 20, 2026</span>
-                                <span class="text-green-600 font-bold">✓ 16 days remaining</span>
-                            </div>
-                        </div>
-                        <button class="bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 transition">Submit Assignment</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submission Info -->
-            <div class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 class="text-lg font-bold text-blue-900 mb-2">📤 How to Submit</h3>
-                <ol class="list-decimal list-inside space-y-2 text-gray-700">
-                    <li>Click "Submit Assignment" on the assignment card</li>
-                    <li>Upload your file (PDF, Word Document, or Image)</li>
-                    <li>Add any comments or notes</li>
-                    <li>Submit before the deadline</li>
-                    <li>You'll receive feedback from the tutor within 5-7 days</li>
-                </ol>
-            </div>
+            <div id="assignmentsList" class="space-y-6"></div>
+            <div id="assignmentsEmpty" class="hidden text-center py-10 text-gray-500"></div>
+            <div id="assignmentsError" class="hidden text-center py-10 text-red-600"></div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Assignment Submission Modal -->
+    <div id="assignmentModal" class="cs-modal-backdrop hidden">
+        <div class="cs-modal max-w-xl w-full">
+            <span class="cs-emoji">📤</span>
+            <h3 id="assignmentModalTitle">Submit Assignment</h3>
+            <input type="file" id="assignmentFile" accept=".pdf,.doc,.docx,image/*" class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-3">
+            <textarea id="assignmentComments" rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2" placeholder="Add comments (optional)"></textarea>
+            <p id="commentCount" class="text-xs text-gray-500 mb-2 text-left">0 / 500</p>
+            <button id="assignmentSubmitBtn" class="btn-primary">Submit</button>
+            <button class="btn-close" id="assignmentCloseBtn">Cancel</button>
+        </div>
+    </div>
+
     <footer class="bg-blue-900 text-white py-8 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -273,7 +140,300 @@
         </div>
     </footer>
 
-    <script src="../assets/js/main.js" defer></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script src="../assets/js/pwa-register.js"></script>
+    <script>
+        let allQuizzes = [];
+        let myResults = [];
+        let allAssignments = [];
+        let currentAssignmentId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            bindTabs();
+            bindFilters();
+            bindAssignmentModal();
+            fetchQuizzes();
+            fetchAssignments();
+            if (window.location.hash === '#assignments') showAssignments();
+        });
+
+        function bindTabs() {
+            const qTab = document.getElementById('quizzesTab');
+            const aTab = document.getElementById('assignmentsTab');
+            qTab.onclick = () => { showQuizzes(); window.location.hash=''; };
+            aTab.onclick = () => { showAssignments(); window.location.hash='#assignments'; };
+        }
+
+        function showQuizzes() {
+            document.getElementById('quizzes-section').classList.remove('hidden');
+            document.getElementById('assignments-section').classList.add('hidden');
+            document.getElementById('quizzesTab').classList.add('border-blue-900','text-blue-900','font-bold');
+            document.getElementById('assignmentsTab').classList.remove('border-blue-900','text-blue-900','font-bold');
+        }
+        function showAssignments() {
+            document.getElementById('assignments-section').classList.remove('hidden');
+            document.getElementById('quizzes-section').classList.add('hidden');
+            document.getElementById('assignmentsTab').classList.add('border-blue-900','text-blue-900','font-bold');
+            document.getElementById('quizzesTab').classList.remove('border-blue-900','text-blue-900','font-bold');
+        }
+
+        function bindFilters() {
+            document.getElementById('quizSearch').addEventListener('input', applyQuizFilters);
+            document.getElementById('quizSubjectFilter').addEventListener('change', applyQuizFilters);
+            document.getElementById('quizFormFilter').addEventListener('change', applyQuizFilters);
+        }
+
+        async function fetchQuizzes() {
+            renderQuizSkeletons();
+            try {
+                const quizzes = await getAllQuizzes();
+                allQuizzes = Array.isArray(quizzes) ? quizzes : (quizzes.quizzes || []);
+                try {
+                    myResults = await getQuizResultsForMe();
+                } catch (e) { myResults = []; }
+                populateQuizFilters();
+                if (!allQuizzes.length) {
+                    document.getElementById('quizzesEmpty').textContent = 'No quizzes available yet. Check back soon.';
+                    document.getElementById('quizzesEmpty').classList.remove('hidden');
+                    return;
+                }
+                applyQuizFilters();
+            } catch (err) {
+                const el = document.getElementById('quizzesError');
+                el.innerHTML = `${err.message || 'Failed to load quizzes'} <br><button class="toast-action" onclick="fetchQuizzes()">Retry</button>`;
+                el.classList.remove('hidden');
+            }
+        }
+
+        function renderQuizSkeletons() {
+            const list = document.getElementById('quizzesList');
+            list.innerHTML = Array.from({length:3}).map(()=>`
+                <div class="bg-white rounded-lg shadow p-6 animate-pulse">
+                    <div class="h-4 bg-gray-200 rounded w-2/3 mb-3"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/3 mb-2"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/4 mb-4"></div>
+                    <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                    <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
+                    <div class="h-8 bg-gray-200 rounded"></div>
+                </div>
+            `).join('');
+        }
+
+        function populateQuizFilters() {
+            const subjectSelect = document.getElementById('quizSubjectFilter');
+            const formSelect = document.getElementById('quizFormFilter');
+            const subjects = Array.from(new Set(allQuizzes.map(q => q.subject).filter(Boolean))).sort();
+            subjects.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s;
+                opt.textContent = s;
+                subjectSelect.appendChild(opt);
+            });
+            const forms = Array.from(new Set(allQuizzes.map(q => q.form).filter(Boolean))).sort();
+            forms.forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f;
+                opt.textContent = f;
+                formSelect.appendChild(opt);
+            });
+        }
+
+        function applyQuizFilters() {
+            const term = document.getElementById('quizSearch').value.toLowerCase();
+            const subj = document.getElementById('quizSubjectFilter').value;
+            const form = document.getElementById('quizFormFilter').value;
+            const filtered = allQuizzes.filter(q => {
+                const sm = subj === 'All' || (q.subject || '').toLowerCase() === subj.toLowerCase();
+                const fm = form === 'All' || (q.form || '').toLowerCase() === form.toLowerCase();
+                const tm = !term || (q.title || '').toLowerCase().includes(term) || (q.topic || '').toLowerCase().includes(term);
+                return sm && fm && tm;
+            });
+            renderQuizzes(filtered);
+        }
+
+        function renderQuizzes(list) {
+            const container = document.getElementById('quizzesList');
+            if (!list.length) {
+                container.innerHTML = '';
+                document.getElementById('quizzesEmpty').textContent = 'No quizzes found for the selected filters.';
+                document.getElementById('quizzesEmpty').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('quizzesEmpty').classList.add('hidden');
+            container.innerHTML = list.map(renderQuizCard).join('');
+        }
+
+        function renderQuizCard(q) {
+            const completed = myResults.find(r => r.quizId === q._id);
+            const statusBadge = completed ? '<span class="badge badge-success">Completed</span>' : '<span class="badge badge-warning">Not Started</span>';
+            const isPremium = !!q.isPremium;
+            const button = isPremium
+                ? `<button class="bg-blue-900 text-white px-4 py-2 rounded flex items-center gap-2" data-pro="true">🔒 Pro</button>`
+                : `<button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition" onclick="startQuiz('${q._id}', ${!!completed})">${completed ? 'Retake Quiz' : 'Start Quiz'}</button>`;
+            return `
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition ${isPremium ? 'locked-overlay' : ''}">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">${isPremium ? '<span class="pro-badge">Pro</span>' : ''}${q.title || 'Untitled Quiz'}</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">${q.form || 'All'}</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs mb-2">
+                        <span class="badge badge-primary">${q.subject || 'Subject'}</span>
+                        <span class="badge badge-warning">${q.topic || 'Topic'}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-1">Questions: ${q.questions?.length || q.questionCount || 0}</p>
+                    <p class="text-sm text-gray-600 mb-2">Time limit: ${q.timeLimit || q.timeLimitMinutes || 0} mins</p>
+                    ${statusBadge}
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-xs text-gray-500">${completed ? 'Completed' : 'Ready'}</span>
+                        ${button}
+                    </div>
+                </div>
+            `;
+        }
+
+        function startQuiz(id, completed) {
+            window.location.href = `take-quiz.html?id=${id}`;
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('[data-pro="true"]')) {
+                showComingSoon('This is a Pro quiz. Advanced quiz sets with detailed feedback and performance tracking are coming soon as part of our paid plans. You will be notified when Premium becomes available.', 'Pro Quiz', '🔒', 'premium_quiz');
+            }
+        });
+
+        async function fetchAssignments() {
+            renderAssignmentSkeletons();
+            try {
+                const data = await getAllAssignments();
+                allAssignments = Array.isArray(data) ? data : (data.assignments || []);
+                if (!allAssignments.length) {
+                    const empty = document.getElementById('assignmentsEmpty');
+                    empty.textContent = 'No assignments available yet. Check back soon.';
+                    empty.classList.remove('hidden');
+                    return;
+                }
+                renderAssignments(allAssignments);
+            } catch (err) {
+                const el = document.getElementById('assignmentsError');
+                el.innerHTML = `${err.message || 'Failed to load assignments'} <br><button class="toast-action" onclick="fetchAssignments()">Retry</button>`;
+                el.classList.remove('hidden');
+            }
+        }
+
+        function renderAssignmentSkeletons() {
+            const list = document.getElementById('assignmentsList');
+            list.innerHTML = Array.from({length:3}).map(()=>`
+                <div class="bg-white rounded-lg shadow p-6 animate-pulse">
+                    <div class="h-4 bg-gray-200 w-2/3 rounded mb-3"></div>
+                    <div class="h-3 bg-gray-200 w-1/3 rounded mb-2"></div>
+                    <div class="h-3 bg-gray-200 w-full rounded mb-2"></div>
+                    <div class="h-8 bg-gray-200 rounded mt-3"></div>
+                </div>
+            `).join('');
+        }
+
+        function renderAssignments(list) {
+            const container = document.getElementById('assignmentsList');
+            container.innerHTML = list.map(renderAssignmentCard).join('');
+        }
+
+        function renderAssignmentCard(a) {
+            const dueDate = a.dueDate ? new Date(a.dueDate) : null;
+            const now = new Date();
+            const daysLeft = dueDate ? Math.ceil((dueDate - now) / 86400000) : null;
+            let badge = '';
+            if (daysLeft === null) {
+                badge = '<span class="badge badge-warning">No due date</span>';
+            } else if (daysLeft < 0) {
+                badge = '<span class="badge badge-danger">Overdue</span>';
+            } else if (daysLeft < 3) {
+                badge = '<span class="badge badge-danger">' + daysLeft + ' days left</span>';
+            } else if (daysLeft < 7) {
+                badge = '<span class="badge badge-warning">' + daysLeft + ' days left</span>';
+            } else {
+                badge = '<span class="badge badge-success">' + daysLeft + ' days left</span>';
+            }
+
+            return `
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition border-l-4 border-blue-900">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-900 mb-1">${a.title || 'Assignment'}</h3>
+                            <div class="flex flex-wrap gap-2 text-xs mb-2">
+                                <span class="badge badge-primary">${a.subject || 'Subject'}</span>
+                                <span class="badge badge-warning">${a.form || 'Form'}</span>
+                            </div>
+                            <p class="text-gray-600 mb-2">${a.description || ''}</p>
+                            <p class="text-xs text-gray-500">Due: ${dueDate ? dueDate.toDateString() : 'N/A'}</p>
+                        </div>
+                        ${badge}
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition" onclick="openAssignmentModal('${a._id}', '${(a.title || '').replace(/'/g,'\\'')}')">Submit Assignment</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function bindAssignmentModal() {
+            document.getElementById('assignmentCloseBtn').onclick = closeAssignmentModal;
+            document.getElementById('assignmentComments').addEventListener('input', (e) => {
+                const val = e.target.value.slice(0,500);
+                e.target.value = val;
+                document.getElementById('commentCount').textContent = `${val.length} / 500`;
+            });
+            document.getElementById('assignmentSubmitBtn').onclick = submitAssignment;
+        }
+
+        function openAssignmentModal(id, title) {
+            currentAssignmentId = id;
+            document.getElementById('assignmentModalTitle').textContent = `Submit: ${title || 'Assignment'}`;
+            document.getElementById('assignmentModal').classList.remove('hidden');
+        }
+        function closeAssignmentModal() {
+            currentAssignmentId = null;
+            document.getElementById('assignmentModal').classList.add('hidden');
+            document.getElementById('assignmentFile').value = '';
+            document.getElementById('assignmentComments').value = '';
+            document.getElementById('commentCount').textContent = '0 / 500';
+            const btn = document.getElementById('assignmentSubmitBtn');
+            btn.disabled = false;
+            btn.textContent = 'Submit';
+        }
+
+        async function submitAssignment() {
+            if (!currentAssignmentId) return;
+            const btn = document.getElementById('assignmentSubmitBtn');
+            const file = document.getElementById('assignmentFile').files[0];
+            const comments = document.getElementById('assignmentComments').value;
+            if (file && file.size > 10 * 1024 * 1024) {
+                showNotification('File must be under 10MB', 'error');
+                return;
+            }
+            btn.disabled = true;
+            btn.textContent = 'Uploading...';
+            try {
+                await submitAssignmentFile(currentAssignmentId, file, comments);
+                showNotification('Assignment submitted', 'success');
+                closeAssignmentModal();
+                markAssignmentSubmitted(currentAssignmentId);
+            } catch (err) {
+                btn.disabled = false;
+                btn.textContent = 'Submit';
+                showNotification(err.message || 'Submission failed', 'error');
+            }
+        }
+
+        function markAssignmentSubmitted(id) {
+            const list = document.getElementById('assignmentsList');
+            const cards = list.querySelectorAll('.bg-white');
+            cards.forEach(card => {
+                if (card.innerHTML.includes(id)) return;
+            });
+            // simple re-render
+            renderAssignments(allAssignments);
+        }
+    </script>
 </body>
 </html>

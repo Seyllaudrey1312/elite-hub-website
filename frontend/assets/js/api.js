@@ -156,6 +156,60 @@ async function resetPassword(token, password) {
     return data;
 }
 
+// Waitlist signup
+async function joinWaitlist(email, context = 'general') {
+    const res = await fetch(`${API_BASE_URL}/waitlist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, context })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to save waitlist');
+    return data;
+}
+
+// Quiz data helpers
+async function getQuizResultsForMe() {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('No token found');
+    const res = await fetch(`${API_BASE_URL}/students/me/quiz-results`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to load quiz results');
+    return data;
+}
+
+// Download resource (increments)
+async function downloadResource(resourceId) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('auth_required');
+    const res = await fetch(`${API_BASE_URL}/resources/${resourceId}/download`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Download failed');
+    return data;
+}
+
+// Assignment submission
+async function submitAssignmentFile(id, file, comments) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('auth_required');
+    const formData = new FormData();
+    if (file) formData.append('file', file);
+    formData.append('comments', comments || '');
+    const res = await fetch(`${API_BASE_URL}/assignments/${id}/submit`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Submission failed');
+    return data;
+}
+
 async function changePassword(currentPassword, newPassword) {
     const token = localStorage.getItem('authToken');
     if (!token) throw new Error('Not authenticated');

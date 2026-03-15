@@ -62,29 +62,36 @@
         </div>
     </section>
 
-    <!-- Search and Filter -->
+    <!-- Filters + Results -->
     <section class="py-8 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" placeholder="Search resources..." class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                <select class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                    <option>All Subjects</option>
-                    <option>Mathematics</option>
-                    <option>Physics</option>
-                    <option>Chemistry</option>
-                    <option>Biology</option>
-                    <option>C.R.E</option>
-                    <option>Geography</option>
-                    <option>History</option>
-                    <option>Kiswahili</option>
-                    <option>Agriculture</option>
-                    <option>Business Studies</option>
-                    <option>Computer Studies</option>
-                    <option>Intergrated Science</option>
-                    <option>Technical Drawing</option>
-                    <option>Creative Arts</option>
-                </select>
-                <select class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+            <div class="mb-4">
+                <input id="resourceSearch" type="text" placeholder="Search resources..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                <p id="resourceCount" class="text-sm text-gray-600 mt-2"></p>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <h2 class="text-xl font-bold text-blue-900">Filter by Subject</h2>
+                <div id="subjectFilters" class="space-x-2 overflow-x-auto">
+                    <button data-subject="All" class="subject-btn active px-3 py-2 bg-blue-900 text-white rounded">All Subjects</button>
+                    <button data-subject="Mathematics" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Mathematics</button>
+                    <button data-subject="Physics" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Physics</button>
+                    <button data-subject="Chemistry" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Chemistry</button>
+                    <button data-subject="Biology" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Biology</button>
+                    <button data-subject="CRE" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">CRE</button>
+                    <button data-subject="Geography" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Geography</button>
+                    <button data-subject="History" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">History</button>
+                    <button data-subject="Kiswahili" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Kiswahili</button>
+                    <button data-subject="Agriculture" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Agriculture</button>
+                    <button data-subject="Business Studies" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Business Studies</button>
+                    <button data-subject="Computer Studies" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Computer Studies</button>
+                    <button data-subject="Integrated Science" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Integrated Science</button>
+                    <button data-subject="Technical Drawing" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Technical Drawing</button>
+                    <button data-subject="Creative Arts" class="subject-btn px-3 py-2 bg-gray-100 text-gray-700 rounded">Creative Arts</button>
+                </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-4 items-center">
+                <label class="font-bold text-gray-700">Form/Grade:</label>
+                <select id="formFilter" class="px-4 py-2 border border-gray-300 rounded-lg">
                     <option>All Forms</option>
                     <option>Grade 6</option>
                     <option>Grade 7</option>
@@ -100,179 +107,43 @@
         </div>
     </section>
 
-    <!-- Resource Categories -->
+    <!-- Resource Categories (dynamic) -->
     <section class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Notes & Handouts -->
-            <div class="mb-12">
-                <h2 class="text-3xl font-bold text-blue-900 mb-6">📝 Notes & Handouts</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Resource Card -->
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Algebra Fundamentals</h3>
-                            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Form 1</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Comprehensive guide to algebra basics including equations and expressions.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Mathematics</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download PDF</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Forces and Motion</h3>
-                            <span class="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full">Form 2</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Detailed notes on Newton's laws and motion concepts.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Physics</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download PDF</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Organic Chemistry</h3>
-                            <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Form 3</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Complete guide to organic compounds and reactions.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Chemistry</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download PDF</button>
-                        </div>
-                    </div>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10" id="resourcesContainer">
+            <div id="notesSection">
+                <h2 class="text-3xl font-bold text-blue-900 mb-6">📑 Notes & Handouts</h2>
+                <div id="notesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="notesEmpty" class="hidden text-center py-6 text-gray-500 text-sm"></div>
             </div>
-
-            <!-- Past Papers -->
-            <div class="mb-12">
-                <h2 class="text-3xl font-bold text-blue-900 mb-6">📋 Past Papers</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Mathematics 2025</h3>
-                            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Form 4</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Full past paper with solutions.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Mathematics</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Physics 2025</h3>
-                            <span class="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full">Form 4</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Full past paper with solutions.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Physics</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Chemistry 2025</h3>
-                            <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Form 4</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Full past paper with solutions.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Chemistry</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
-                        </div>
-                    </div>
-                </div>
+            <div id="pastSection">
+                <h2 class="text-3xl font-bold text-blue-900 mb-6">📃 Past Papers</h2>
+                <div id="pastList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="pastEmpty" class="hidden text-center py-6 text-gray-500 text-sm"></div>
             </div>
-
-            <!-- Worked Examples -->
-            <div class="mb-12">
-                <h2 class="text-3xl font-bold text-blue-900 mb-6">✏️ Worked Examples</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Quadratic Equations</h3>
-                            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">Form 2</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Step-by-step solutions to common quadratic problems.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Mathematics</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">View</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Electricity Circuits</h3>
-                            <span class="bg-yellow-100 text-yellow-800 text-sm px-3 py-1 rounded-full">Form 3</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Detailed circuit analysis and calculations.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Physics</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">View</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Chemical Reactions</h3>
-                            <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">Form 3</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Balancing and solving chemistry equations.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Chemistry</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">View</button>
-                        </div>
-                    </div>
-                </div>
+            <div id="workedSection">
+                <h2 class="text-3xl font-bold text-blue-900 mb-6">🧪 Worked Examples</h2>
+                <div id="workedList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="workedEmpty" class="hidden text-center py-6 text-gray-500 text-sm"></div>
             </div>
-
-            <!-- Revision Guides -->
-            <div>
+            <div id="revisionSection">
                 <h2 class="text-3xl font-bold text-blue-900 mb-6">🎓 Revision Guides</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition locked-overlay">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2"><span class="premium-badge">Premium</span>Final Exam Revision</h3>
-                            <span class="bg-red-100 text-red-800 text-sm px-3 py-1 rounded-full">All Forms</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Comprehensive revision guide for final exams.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Multi-subject</span>
-                            <button data-coming-soon="true" class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition flex items-center gap-2">🔒 Preview</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition locked-overlay">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2"><span class="premium-badge">Premium</span>Mid-term Review</h3>
-                            <span class="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full">All Forms</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Review materials for mid-term assessments.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Multi-subject</span>
-                            <button data-coming-soon="true" class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition flex items-center gap-2">🔒 Preview</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex items-start justify-between mb-4">
-                            <h3 class="text-lg font-bold text-blue-900">Topics Summary</h3>
-                            <span class="bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded-full">Quick Ref</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Quick reference summaries of key topics.</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500">Multi-subject</span>
-                            <button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Download</button>
-                        </div>
-                    </div>
-                </div>
+                <div id="revisionList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="revisionEmpty" class="hidden text-center py-6 text-gray-500 text-sm"></div>
             </div>
         </div>
     </section>
+
+    <!-- Premium Modal -->
+    <div id="premiumModal" class="cs-modal-backdrop hidden">
+        <div class="cs-modal">
+            <span class="cs-emoji">🔒</span>
+            <h3>Premium Resource</h3>
+            <p>This is a Premium resource. Paid plans with full access to all premium materials are coming soon. Register your interest below.</p>
+            <input type="email" id="premiumEmail" placeholder="you@example.com" class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2">
+            <button class="btn-primary" id="premiumNotify">Notify Me When Available</button>
+            <button class="btn-close" id="premiumClose">Maybe later</button>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-blue-900 text-white py-8 mt-12">
@@ -307,7 +178,217 @@
         </div>
     </footer>
 
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/pwa-register.js"></script>
+    <script>
+        let allResources = [];
+        let subjectFilter = 'All';
+        let formFilter = 'All Forms';
+        let searchTerm = '';
+
+        const groupConfig = [
+            { key: 'notes', label: 'Notes & Handouts', types: ['Notes', 'Note', 'Handout', 'Handouts', 'PDF'] , listId:'notesList', emptyId:'notesEmpty', sectionId:'notesSection'},
+            { key: 'past', label: 'Past Papers', types: ['Past Paper','Paper','Exam'] , listId:'pastList', emptyId:'pastEmpty', sectionId:'pastSection'},
+            { key: 'worked', label: 'Worked Examples', types: ['Worked Example','Example','Worked'] , listId:'workedList', emptyId:'workedEmpty', sectionId:'workedSection'},
+            { key: 'revision', label: 'Revision Guides', types: ['Revision Guide','Guide','Revision'] , listId:'revisionList', emptyId:'revisionEmpty', sectionId:'revisionSection'}
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initFilters();
+            fetchResources();
+            setupPremiumModal();
+        });
+
+        function initFilters() {
+            document.querySelectorAll('.subject-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('bg-blue-900','text-white','active'));
+                    btn.classList.add('bg-blue-900','text-white','active');
+                    subjectFilter = btn.dataset.subject;
+                    applyFilters();
+                });
+            });
+            document.getElementById('formFilter').addEventListener('change', (e) => {
+                formFilter = e.target.value;
+                applyFilters();
+            });
+            document.getElementById('resourceSearch').addEventListener('input', (e) => {
+                searchTerm = e.target.value.toLowerCase();
+                applyFilters();
+            });
+        }
+
+        async function fetchResources() {
+            showSkeletons();
+            try {
+                const data = await getAllResources();
+                allResources = Array.isArray(data) ? data : (data.resources || []);
+                if (!allResources.length) {
+                    renderEmptyAll();
+                    return;
+                }
+                applyFilters();
+            } catch (err) {
+                renderError(err.message || 'Failed to load resources');
+            }
+        }
+
+        function renderError(msg) {
+            const container = document.getElementById('resourcesContainer');
+            container.innerHTML = `
+                <div class="text-center py-10">
+                    <p class="text-red-600 font-semibold mb-3">${msg}</p>
+                    <button class="bg-blue-900 text-white px-4 py-2 rounded" onclick="fetchResources()">Retry</button>
+                </div>`;
+        }
+
+        function renderEmptyAll() {
+            const container = document.getElementById('resourcesContainer');
+            container.innerHTML = `<div class="text-center py-12 text-gray-500">No resources available yet. Check back soon.</div>`;
+        }
+
+        function showSkeletons() {
+            groupConfig.forEach(g => {
+                const list = document.getElementById(g.listId);
+                list.innerHTML = skeletonCards();
+            });
+        }
+
+        function skeletonCards() {
+            return Array.from({length:3}).map(()=>`
+                <div class="bg-white rounded-lg shadow-lg p-6 animate-pulse">
+                    <div class="h-4 bg-gray-200 rounded w-2/3 mb-3"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/3 mb-2"></div>
+                    <div class="h-3 bg-gray-200 rounded w-1/4 mb-4"></div>
+                    <div class="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                    <div class="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
+                    <div class="flex gap-2">
+                        <span class="h-6 bg-gray-200 rounded w-16"></span>
+                        <span class="h-6 bg-gray-200 rounded w-12"></span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function applyFilters() {
+            let filtered = allResources.filter(r => {
+                const subjectMatch = subjectFilter === 'All' || (r.subject || '').toLowerCase() === subjectFilter.toLowerCase();
+                const formVal = (r.form || r.grade || '').toLowerCase();
+                const formMatch = formFilter === 'All Forms' || formVal === formFilter.toLowerCase();
+                const term = searchTerm.trim();
+                const searchMatch = !term || (r.title || '').toLowerCase().includes(term) || (r.subject || '').toLowerCase().includes(term) || (r.description || '').toLowerCase().includes(term);
+                return subjectMatch && formMatch && searchMatch;
+            });
+            document.getElementById('resourceCount').textContent = `${filtered.length} resources found`;
+            renderResources(filtered);
+        }
+
+        function renderResources(resources) {
+            groupConfig.forEach(group => {
+                const listEl = document.getElementById(group.listId);
+                const emptyEl = document.getElementById(group.emptyId);
+                const sectionEl = document.getElementById(group.sectionId);
+                const matches = resources.filter(r => group.types.some(t => (r.type || '').toLowerCase().includes(t.toLowerCase())));
+
+                if (!matches.length) {
+                    listEl.innerHTML = '';
+                    emptyEl.innerHTML = `No ${group.label} found for the selected filters. <button class="toast-action" onclick="clearFilters()">Clear filters</button>`;
+                    emptyEl.classList.remove('hidden');
+                    sectionEl.classList.remove('hidden');
+                    return;
+                }
+
+                emptyEl.classList.add('hidden');
+                listEl.innerHTML = matches.map(resourceCard).join('');
+            });
+        }
+
+        function resourceCard(r) {
+            const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '';
+            const form = r.form || r.grade || 'All';
+            const downloadCount = r.downloadCount || 0;
+            const isPremium = !!r.isPremium;
+            const badge = (text, color) => `<span class="badge ${color}">${text}</span>`;
+            const type = r.type || 'Resource';
+            const dlButton = isPremium 
+                ? `<button class="bg-blue-900 text-white px-4 py-2 rounded flex items-center gap-2" data-premium="true" data-id="${r._id}" data-title="${r.title || ''}">🔒 Premium</button>`
+                : `<button class="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition" onclick="handleDownload('${r._id}', '${encodeURI(r.fileUrl || r.url || '')}', '${downloadCount}')">Download</button>`;
+
+            return `
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition ${isPremium ? 'locked-overlay' : ''}">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="text-lg font-bold text-blue-900">${isPremium ? '<span class="premium-badge">Premium</span>' : ''} ${r.title || 'Untitled Resource'}</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">${form}</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs mb-3">
+                        ${badge(r.subject || 'Subject', 'badge-primary')}
+                        ${badge(type, 'badge-warning')}
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">${r.description || 'No description provided.'}</p>
+                    <p class="text-xs text-gray-500 mb-4">Uploaded ${dateStr}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">Downloads: <span id="dl-${r._id}">${downloadCount}</span></span>
+                        ${dlButton}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function handleDownload(id, url, currentCount) {
+            try {
+                await downloadResource(id);
+                const countEl = document.getElementById(`dl-${id}`);
+                if (countEl) countEl.textContent = parseInt(countEl.textContent || currentCount, 10) + 1;
+                if (url) window.open(decodeURI(url), '_blank');
+            } catch (err) {
+                if (err.message === 'auth_required') {
+                    window.location.href = './login.html?msg=' + encodeURIComponent('Please log in to download resources');
+                    return;
+                }
+                showNotification(err.message || 'Download failed', 'error');
+            }
+        }
+
+        function clearFilters() {
+            subjectFilter = 'All';
+            formFilter = 'All Forms';
+            searchTerm = '';
+            document.getElementById('resourceSearch').value = '';
+            document.getElementById('formFilter').value = 'All Forms';
+            document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('bg-blue-900','text-white','active'));
+            document.querySelector('.subject-btn[data-subject="All"]').classList.add('bg-blue-900','text-white','active');
+            applyFilters();
+        }
+
+        function setupPremiumModal() {
+            const modal = document.getElementById('premiumModal');
+            const closeBtn = document.getElementById('premiumClose');
+            const notifyBtn = document.getElementById('premiumNotify');
+            closeBtn.onclick = () => modal.classList.add('hidden');
+            notifyBtn.onclick = async () => {
+                const email = document.getElementById('premiumEmail').value;
+                if (!email) {
+                    showNotification('Please enter your email', 'warning');
+                    return;
+                }
+                try {
+                    await joinWaitlist(email, 'premium_resource');
+                    showNotification('Thanks! We will notify you when Premium launches.', 'success');
+                    modal.classList.add('hidden');
+                } catch (err) {
+                    showNotification(err.message || 'Failed to save email', 'error');
+                }
+            };
+
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-premium="true"]');
+                if (btn) {
+                    modal.classList.remove('hidden');
+                    document.getElementById('premiumEmail').focus();
+                }
+            });
+        }
+    </script>
 </body>
 </html>

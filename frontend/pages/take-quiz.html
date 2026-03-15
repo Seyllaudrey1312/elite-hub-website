@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Take Quiz - Elite Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0ea5a4">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex gap-6 flex-col lg:flex-row">
+    <div class="flex-1 bg-white rounded-lg shadow p-6">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <p class="text-sm text-gray-500">Time Remaining</p>
+          <p id="timer" class="text-2xl font-bold text-blue-900">--:--</p>
+        </div>
+        <div class="w-2/3">
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div id="timeBar" class="h-2 bg-green-500 rounded-full" style="width:100%"></div>
+          </div>
+        </div>
+      </div>
+      <div id="questionContainer" class="space-y-4"></div>
+      <div class="flex justify-between items-center mt-6">
+        <button id="prevBtn" class="bg-gray-200 px-4 py-2 rounded" disabled>Previous</button>
+        <button id="nextBtn" class="bg-blue-900 text-white px-4 py-2 rounded">Next</button>
+        <button id="submitBtn" class="bg-green-600 text-white px-4 py-2 rounded hidden">Submit Quiz</button>
+      </div>
+    </div>
+    <aside class="w-full lg:w-64 bg-white rounded-lg shadow p-4 h-fit">
+      <h3 class="font-bold text-blue-900 mb-3">Questions</h3>
+      <div id="navigator" class="grid grid-cols-5 gap-2"></div>
+    </aside>
+  </div>
+
+  <div id="resultsPanel" class="max-w-6xl mx-auto px-4 py-6 hidden">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-2xl font-bold text-blue-900 mb-4">Results</h2>
+      <p id="scoreLine" class="text-lg font-semibold mb-4"></p>
+      <div id="resultsDetails" class="space-y-3"></div>
+      <button class="mt-4 bg-blue-900 text-white px-4 py-2 rounded" onclick="window.location.href='quizzes.html'">Back to Quizzes</button>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    let quiz = null;
+    let answers = [];
+    let currentIndex = 0;
+    let timerInterval = null;
+    let timeRemaining = 0;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) {
+        showNotification('Missing quiz id', 'error');
+        return;
+      }
+      loadQuiz(id);
+      document.getElementById('prevBtn').onclick = () => showQuestion(currentIndex - 1);
+      document.getElementById('nextBtn').onclick = () => showQuestion(currentIndex + 1);
+      document.getElementById('submitBtn').onclick = submitQuiz;
+    });
+
+    async function loadQuiz(id) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/quizzes/${id}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to load quiz');
+        quiz = data;
+        answers = Array(quiz.questions.length).fill(null);
+        timeRemaining = (quiz.timeLimit || quiz.timeLimitMinutes || 0) * 60;
+        renderNavigator();
+        renderQuestion();
+        startTimer();
+      } catch (err) {
+        showNotification(err.message || 'Quiz load failed', 'error');
+      }
+    }
+
+    function renderQuestion() {
+      const q = quiz.questions[currentIndex];
+      const container = document.getElementById('questionContainer');
+      container.innerHTML = `
+        <p class="text-sm text-gray-500 mb-1">Question ${currentIndex + 1} of ${quiz.questions.length}</p>
+        <h2 class="text-xl font-bold text-blue-900 mb-3">${q.questionText}</h2>
+        <div class="space-y-3">
+          ${renderOptions(q, currentIndex)}
+        </div>
+      `;
+      toggleButtons();
+      updateNavigator();
+    }
+
+    function renderOptions(q, idx) {
+      if (q.type === 'multiple') {
+        const opts = ['A','B','C','D'];
+        return opts.map(opt => {
+          const val = q['option' + opt];
+          return `
+            <label class="flex items-center p-3 border-2 rounded-lg cursor-pointer transition ${answers[idx]===opt.toLowerCase() ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}">
+              <input type="radio" name="q${idx}" value="${opt.toLowerCase()}" class="hidden" ${answers[idx]===opt.toLowerCase()?'checked':''} onchange="setAnswer(${idx}, '${opt.toLowerCase()}')">
+              <span class="font-bold mr-2">${opt}.</span> <span>${val || ''}</span>
+            </label>
+          `;
+        }).join('');
+      }
+      return `<input class="w-full border px-3 py-2 rounded" placeholder="Your answer" value="${answers[idx] || ''}" oninput="setAnswer(${idx}, this.value)">`;
+    }
+
+    function setAnswer(idx, val) {
+      answers[idx] = val;
+      updateNavigator();
+      toggleSubmitVisibility();
+    }
+
+    function showQuestion(idx) {
+      if (idx < 0 || idx >= quiz.questions.length) return;
+      currentIndex = idx;
+      renderQuestion();
+    }
+
+    function toggleButtons() {
+      document.getElementById('prevBtn').disabled = currentIndex === 0;
+      document.getElementById('nextBtn').disabled = currentIndex === quiz.questions.length -1;
+    }
+
+    function toggleSubmitVisibility() {
+      const allAnswered = answers.every(a => a !== null && a !== '');
+      if (allAnswered) {
+        document.getElementById('submitBtn').classList.remove('hidden');
+      }
+    }
+
+    function renderNavigator() {
+      const nav = document.getElementById('navigator');
+      nav.innerHTML = quiz.questions.map((_, i) => `
+        <button class="w-10 h-10 rounded ${answers[i] ? 'bg-green-500 text-white' : 'bg-gray-200'}" onclick="showQuestion(${i})">${i+1}</button>
+      `).join('');
+    }
+
+    function updateNavigator() {
+      const nav = document.getElementById('navigator').children;
+      Array.from(nav).forEach((btn, idx) => {
+        btn.className = `w-10 h-10 rounded ${answers[idx] ? 'bg-green-500 text-white' : 'bg-gray-200'}`;
+        if (idx === currentIndex) btn.classList.add('ring', 'ring-blue-500');
+      });
+    }
+
+    function startTimer() {
+      if (!timeRemaining) return;
+      updateTimerUi();
+      timerInterval = setInterval(() => {
+        timeRemaining -= 1;
+        updateTimerUi();
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          submitQuiz();
+        }
+      }, 1000);
+    }
+
+    function updateTimerUi() {
+      const min = Math.max(0, Math.floor(timeRemaining / 60)).toString().padStart(2,'0');
+      const sec = Math.max(0, timeRemaining % 60).toString().padStart(2,'0');
+      document.getElementById('timer').textContent = `${min}:${sec}`;
+      const pct = quiz.timeLimit ? Math.max(0, (timeRemaining / (quiz.timeLimit*60)) * 100) : 100;
+      document.getElementById('timeBar').style.width = pct + '%';
+    }
+
+    async function submitQuiz() {
+      try {
+        const res = await fetch(`${API_BASE_URL}/quizzes/${quiz._id}/submit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
+          },
+          body: JSON.stringify({ answers })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Submission failed');
+        renderResults(data);
+      } catch (err) {
+        showNotification(err.message || 'Submit failed', 'error');
+      } finally {
+        clearInterval(timerInterval);
+      }
+    }
+
+    function renderResults(result) {
+      document.querySelector('.max-w-6xl').style.display = 'none';
+      const panel = document.getElementById('resultsPanel');
+      panel.classList.remove('hidden');
+      const percent = result.percentage || result.score || 0;
+      document.getElementById('scoreLine').textContent = `Score: ${percent}% (${result.score || ''} / ${result.totalPoints || quiz.questions.length})`;
+      const details = result.feedback || result.itemAnalysis || [];
+      document.getElementById('resultsDetails').innerHTML = details.map((item, idx) => `
+        <div class="p-3 border border-gray-200 rounded">
+          <p class="font-bold">Q${idx+1}: ${quiz.questions[idx]?.questionText || ''}</p>
+          <p class="text-sm text-green-700">Correct: ${item.correctAnswer || ''}</p>
+          <p class="text-sm text-gray-700">Your answer: ${item.studentAnswer || 'N/A'}</p>
+          ${item.feedback ? `<p class="text-xs text-gray-500">${item.feedback}</p>` : ''}
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

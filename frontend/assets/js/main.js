@@ -228,7 +228,7 @@ function confirmNotification(message, confirmText = 'Yes', cancelText = 'Cancel'
 }
 
 // Coming soon modal
-function showComingSoon(message = 'This feature is coming soon. Enter your email to be notified.', title = 'Coming Soon', emoji = '🚀') {
+function showComingSoon(message = 'This feature is coming soon. Enter your email to be notified.', title = 'Coming Soon', emoji = '🚀', context = 'general') {
     let backdrop = document.getElementById('cs-backdrop');
     if (!backdrop) {
         backdrop = document.createElement('div');
@@ -255,8 +255,12 @@ function showComingSoon(message = 'This feature is coming soon. Enter your email
             showNotification('Please enter your email to be notified.', 'warning');
             return;
         }
-        showNotification('Got it! We will email you when it goes live.', 'success');
-        backdrop.classList.add('hidden');
+        joinWaitlist(email, context).then(() => {
+            showNotification('Got it! We will email you when it goes live.', 'success');
+            backdrop.classList.add('hidden');
+        }).catch(err => {
+            showNotification(err.message || 'Failed to save email', 'error');
+        });
     };
 }
 
