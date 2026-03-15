@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing & Plans - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0ea5a4">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-blue-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="../index.html" class="text-2xl font-bold text-yellow-400">Elite Hub</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="../index.html" class="hover:text-yellow-400 transition">Home</a>
+                    <a href="./resources.html" class="hover:text-yellow-400 transition">Resources</a>
+                    <a href="./quizzes.html" class="hover:text-yellow-400 transition">Quizzes</a>
+                    <a href="./pricing.html" class="text-yellow-400 font-bold">Pricing</a>
+                    <a href="./login.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-14">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <p class="uppercase tracking-widest text-yellow-200 font-semibold mb-2">Plans & Pricing</p>
+            <h1 class="text-4xl font-extrabold mb-3">Pick the plan that fits your study journey</h1>
+            <p class="text-gray-100 text-lg">Payments are coming soon. Preview the tiers and save your spot.</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-8">
+        <div class="flex items-center justify-center gap-3">
+            <span class="text-sm font-semibold text-gray-600">Billing:</span>
+            <div class="flex bg-white rounded-full shadow border border-gray-200">
+                <button id="toggleMonthly" class="px-4 py-2 text-sm font-bold rounded-full bg-blue-900 text-white">Monthly</button>
+                <button id="toggleAnnual" class="px-4 py-2 text-sm font-bold rounded-full text-gray-700 hover:bg-gray-100">Annual (save 15%)</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Free -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                <h3 class="text-xl font-bold text-blue-900 mb-1">Free</h3>
+                <p class="text-gray-500 mb-4">For getting started</p>
+                <p class="text-4xl font-extrabold text-blue-900" id="price-free">$0</p>
+                <p class="text-gray-500 text-sm mb-4">per month</p>
+                <ul class="space-y-2 text-gray-700 text-sm mb-6">
+                    <li>✔️ Access to free resources</li>
+                    <li>✔️ Basic quizzes</li>
+                    <li>✔️ Dashboard & reminders</li>
+                    <li>➖ Community forums</li>
+                </ul>
+                <button data-coming-soon="true" class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition">Get Started</button>
+            </div>
+
+            <!-- Standard -->
+            <div class="bg-white rounded-xl shadow-xl p-6 border-2 border-yellow-400 relative">
+                <span class="absolute -top-3 right-4 bg-yellow-400 text-blue-900 text-xs font-bold px-3 py-1 rounded-full shadow">Most Popular</span>
+                <h3 class="text-xl font-bold text-blue-900 mb-1">Standard</h3>
+                <p class="text-gray-500 mb-4">For serious learners</p>
+                <p class="text-4xl font-extrabold text-blue-900"><span id="price-standard">$9</span><span class="text-lg font-semibold text-gray-500">/mo</span></p>
+                <p class="text-gray-500 text-sm mb-4">billed monthly</p>
+                <ul class="space-y-2 text-gray-700 text-sm mb-6">
+                    <li>✔️ Everything in Free</li>
+                    <li>✔️ Premium resources</li>
+                    <li>✔️ Full-length quizzes & explanations</li>
+                    <li>✔️ Live class replays</li>
+                    <li>➖ Priority support</li>
+                </ul>
+                <button data-coming-soon="true" class="w-full bg-yellow-400 text-blue-900 font-bold py-3 rounded-lg hover:bg-yellow-300 transition">Get Started</button>
+            </div>
+
+            <!-- Premium -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                <h3 class="text-xl font-bold text-blue-900 mb-1">Premium</h3>
+                <p class="text-gray-500 mb-4">For top performance</p>
+                <p class="text-4xl font-extrabold text-blue-900"><span id="price-premium">$19</span><span class="text-lg font-semibold text-gray-500">/mo</span></p>
+                <p class="text-gray-500 text-sm mb-4">billed monthly</p>
+                <ul class="space-y-2 text-gray-700 text-sm mb-6">
+                    <li>✔️ Everything in Standard</li>
+                    <li>✔️ Live classes & tutoring</li>
+                    <li>✔️ Downloadable report cards</li>
+                    <li>✔️ Offline access</li>
+                    <li>✔️ Priority email support</li>
+                </ul>
+                <button data-coming-soon="true" class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition">Get Started</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        const monthlyPrices = { standard: 9, premium: 19 };
+        const annualPrices = { standard: 90, premium: 190 };
+        const priceStd = document.getElementById('price-standard');
+        const pricePrem = document.getElementById('price-premium');
+        const btnMonthly = document.getElementById('toggleMonthly');
+        const btnAnnual = document.getElementById('toggleAnnual');
+
+        function setBilling(mode) {
+            if (mode === 'annual') {
+                priceStd.textContent = `$${annualPrices.standard}`;
+                pricePrem.textContent = `$${annualPrices.premium}`;
+                btnAnnual.classList.add('bg-blue-900','text-white');
+                btnMonthly.classList.remove('bg-blue-900','text-white');
+                btnMonthly.classList.add('text-gray-700');
+            } else {
+                priceStd.textContent = `$${monthlyPrices.standard}`;
+                pricePrem.textContent = `$${monthlyPrices.premium}`;
+                btnMonthly.classList.add('bg-blue-900','text-white');
+                btnAnnual.classList.remove('bg-blue-900','text-white');
+                btnAnnual.classList.add('text-gray-700');
+            }
+        }
+
+        btnMonthly.onclick = () => setBilling('monthly');
+        btnAnnual.onclick = () => setBilling('annual');
+    </script>
+</body>
+</html>

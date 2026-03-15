@@ -267,6 +267,7 @@
 
         function updateAnswer(questionIndex, answer) {
             studentAnswers[questionIndex] = answer;
+            persistQuizProgress();
         }
 
         function showQuestion(index) {
@@ -295,6 +296,8 @@
                 document.getElementById('next-btn').classList.remove('hidden');
                 document.getElementById('submit-btn').classList.add('hidden');
             }
+
+            persistQuizProgress();
         }
 
         function previousQuestion() {
@@ -379,6 +382,18 @@
                 document.getElementById('quiz-results').classList.add('hidden');
                 document.getElementById('quiz-container').classList.remove('hidden');
             }
+        }
+
+        function persistQuizProgress() {
+            if (!currentQuiz) return;
+            const payload = {
+                quizId: currentQuiz._id,
+                title: currentQuiz.title || 'Quiz',
+                currentQuestion: currentQuestionIndex + 1,
+                totalQuestions: currentQuiz.questions.length,
+                savedAt: Date.now()
+            };
+            localStorage.setItem('elitehub_lastQuiz', JSON.stringify(payload));
         }
 
         function displayResults(feedback) {

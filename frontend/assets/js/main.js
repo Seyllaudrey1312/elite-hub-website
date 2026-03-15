@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupPageTransitions();
     setupGlobalLoader();
     startSessionWatcher();
+    bindComingSoonTriggers();
 });
 
 // ==================== AUTHENTICATION ====================
@@ -222,6 +223,49 @@ function confirmNotification(message, confirmText = 'Yes', cancelText = 'Cancel'
                 { label: confirmText, onClick: () => resolve(true) },
                 { label: cancelText, onClick: () => resolve(false) }
             ]
+        });
+    });
+}
+
+// Coming soon modal
+function showComingSoon(message = 'This feature is coming soon. Enter your email to be notified.', title = 'Coming Soon', emoji = '🚀') {
+    let backdrop = document.getElementById('cs-backdrop');
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'cs-backdrop';
+        backdrop.className = 'cs-modal-backdrop';
+        document.body.appendChild(backdrop);
+    }
+    backdrop.innerHTML = `
+        <div class="cs-modal">
+            <span class="cs-emoji">${emoji}</span>
+            <h3>${title}</h3>
+            <p>${message}</p>
+            <input type="email" id="cs-email" placeholder="you@example.com" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+            <button class="btn-primary" id="cs-submit">Notify Me</button>
+            <button class="btn-close" id="cs-close">Maybe later</button>
+        </div>
+    `;
+    backdrop.classList.remove('hidden');
+
+    document.getElementById('cs-close').onclick = () => backdrop.classList.add('hidden');
+    document.getElementById('cs-submit').onclick = () => {
+        const email = document.getElementById('cs-email').value;
+        if (!email) {
+            showNotification('Please enter your email to be notified.', 'warning');
+            return;
+        }
+        showNotification('Got it! We will email you when it goes live.', 'success');
+        backdrop.classList.add('hidden');
+    };
+}
+
+function bindComingSoonTriggers() {
+    document.querySelectorAll('[data-coming-soon="true"]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            const msg = el.getAttribute('data-coming-message') || undefined;
+            showComingSoon(msg);
         });
     });
 }
