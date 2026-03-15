@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate Tutor Account - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gradient-to-br from-blue-900 to-green-700 min-h-screen flex items-center justify-center px-4">
+
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-yellow-400">Elite Hub</h1>
+            <p class="text-white mt-1">Tutor Account Activation</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-2xl p-8">
+            <div class="text-center mb-6">
+                <div class="text-5xl mb-3">🔑</div>
+                <h2 class="text-2xl font-bold text-blue-900">Activate Your Account</h2>
+                <p class="text-gray-500 text-sm mt-2">Enter the activation code sent to your email after approval.</p>
+            </div>
+
+            <form id="activate-form" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
+                    <input type="email" id="a-email" required
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="your@email.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Activation Code</label>
+                    <input type="text" id="a-code" required
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 font-mono text-lg tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="EH-XXXX-XXXX"
+                           maxlength="12">
+                </div>
+
+                <p id="activate-error" class="hidden text-red-600 text-sm text-center bg-red-50 rounded-lg px-3 py-2"></p>
+
+                <button type="submit"
+                        class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition">
+                    Activate Account
+                </button>
+            </form>
+
+            <div class="mt-6 text-center space-y-2">
+                <p class="text-sm text-gray-500">Don't have a code yet?</p>
+                <a href="./tutor-register.html" class="text-blue-700 text-sm font-semibold hover:underline">Apply as a tutor</a>
+                <span class="text-gray-300 mx-2">|</span>
+                <a href="./login.html" class="text-blue-700 text-sm font-semibold hover:underline">Student login</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script>
+        document.getElementById('activate-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errEl = document.getElementById('activate-error');
+            errEl.classList.add('hidden');
+
+            const email          = document.getElementById('a-email').value.trim();
+            const activationCode = document.getElementById('a-code').value.trim().toUpperCase();
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Activating…';
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/tutors/activate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, activationCode })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Activation failed');
+
+                // Store tutor token and redirect
+                localStorage.setItem('tutorToken', data.token);
+                localStorage.setItem('tutor', JSON.stringify(data.tutor));
+                window.location.href = './tutor-dashboard.html';
+            } catch (err) {
+                errEl.textContent = err.message;
+                errEl.classList.remove('hidden');
+                btn.disabled = false;
+                btn.textContent = 'Activate Account';
+            }
+        });
+
+        // Auto-format code input to uppercase
+        document.getElementById('a-code').addEventListener('input', function () {
+            this.value = this.value.toUpperCase();
+        });
+    </script>
+</body>
+</html>

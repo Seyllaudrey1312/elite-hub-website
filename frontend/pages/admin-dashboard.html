@@ -3,615 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Elite Hub</title>
+    <title>Dashboard - Elite Hub Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0ea5a4">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a5f">
     <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gray-100">
-    <!-- Desktop Layout -->
-    <div class="lg:flex lg:h-screen lg:overflow-hidden">
-        <!-- Desktop Sidebar -->
-        <aside id="sidebar" class="fixed top-0 left-0 h-full z-40 -translate-x-full lg:translate-x-0 lg:static lg:z-auto w-64 bg-blue-900 text-white flex flex-col transition-transform duration-300">
-            <div class="p-6 flex items-center justify-between lg:justify-start border-b border-blue-800">
+
+<!-- Maintenance Banner -->
+<div id="maintenance-banner" class="hidden fixed top-0 left-0 right-0 z-50 bg-red-600 text-white text-center py-2 text-sm font-bold">
+    ⚠️ MAINTENANCE MODE IS ON — The site is currently unavailable to students.
+</div>
+
+<div class="lg:flex lg:h-screen lg:overflow-hidden" id="page-wrapper">
+    <div id="admin-sidebar"></div>
+
+    <main class="flex-1 overflow-y-auto lg:pt-0 pt-14" id="main-content">
+
+        <!-- Top Bar -->
+        <div class="bg-white shadow sticky top-0 z-10">
+            <div class="px-4 lg:px-8 py-4 flex justify-between items-center flex-wrap gap-3">
                 <div>
-                    <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
-                    <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
+                    <h2 class="text-xl lg:text-2xl font-bold text-gray-800">📊 Super Admin Dashboard</h2>
+                    <p class="text-xs text-gray-500" id="last-updated">Loading stats…</p>
                 </div>
-                <button onclick="closeSidebar()" class="lg:hidden text-white hover:text-gray-300">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <nav class="flex-1 px-4 py-6 space-y-1">
-                <a href="admin-dashboard.html" class="block px-4 py-3 rounded-lg bg-blue-700 border-l-4 border-yellow-400 text-white font-semibold">?? Dashboard</a>
-                <a href="admin-students.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Students</a>
-                <a href="admin-resources.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Manage Resources</a>
-                <a href="admin-quiz-builder.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Create Quizzes</a>
-                <a href="admin-quiz-results.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Quiz Results</a>
-                <a href="admin-announcements.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Announcements</a>
-                <a href="admin-live-classes.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">??? Live Classes</a>
-                <a href="admin-video-lessons.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Video Lessons</a>
-                <a href="admin-payments.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Payments (Coming Soon)</a>
-                <a href="admin-subscription-plans.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Plans</a>
-                <a href="admin-transaction-history.html" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition border-l-4 border-transparent text-gray-200">?? Transactions</a>
-            </nav>
-            <div class="p-4 border-t border-blue-800">
-                <button onclick="adminLogout()" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition">
-                    🚪 Logout
-                </button>
-            </div>
-        </aside>
-
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
-
-        <!-- Main Content -->
-        <div class="flex-1 overflow-y-auto">
-            <!-- Top Navigation -->
-            <div class="bg-white shadow">
-                <div class="px-4 lg:px-8 py-4 flex justify-between items-center">
-                    <div class="flex items-center">
-                        <!-- Mobile Menu Button -->
-                        <button onclick="openSidebar()" class="lg:hidden mr-4 p-2 rounded-lg hover:bg-gray-100 transition">
-                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
+                <div class="flex items-center gap-4 flex-wrap">
+                    <!-- Maintenance Toggle -->
+                    <div class="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2">
+                        <span class="text-sm font-semibold text-gray-700">Maintenance Mode</span>
+                        <button id="maintenance-toggle"
+                                onclick="toggleMaintenance()"
+                                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none bg-gray-300"
+                                role="switch" aria-checked="false">
+                            <span id="maintenance-knob" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform translate-x-1"></span>
                         </button>
-                        <h2 class="text-xl lg:text-2xl font-bold text-gray-800">Admin Dashboard</h2>
+                        <span id="maintenance-label" class="text-xs font-bold text-gray-500">OFF</span>
                     </div>
-                    <div class="flex items-center space-x-4">
-                        <span id="adminWelcome" class="hidden sm:block text-sm text-gray-600">Welcome, Admin!</span>
-                        <input type="text" id="searchInput" placeholder="Search..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <div class="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">👤</div>
-                    </div>
+                    <span id="admin-welcome" class="text-sm text-gray-600 hidden sm:block"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 lg:p-8">
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-xl shadow p-5 flex items-center gap-4 hover:shadow-md transition">
+                    <span class="text-3xl">👥</span>
+                    <div><p class="text-xs text-gray-500 font-medium">Total Students</p><p id="stat-students" class="text-3xl font-bold text-blue-900">—</p></div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-5 flex items-center gap-4 hover:shadow-md transition">
+                    <span class="text-3xl">🎓</span>
+                    <div><p class="text-xs text-gray-500 font-medium">Active Tutors</p><p id="stat-tutors" class="text-3xl font-bold text-green-600">—</p></div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-5 flex items-center gap-4 hover:shadow-md transition">
+                    <span class="text-3xl">📄</span>
+                    <div><p class="text-xs text-gray-500 font-medium">Total Resources</p><p id="stat-resources" class="text-3xl font-bold text-purple-600">—</p></div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-5 flex items-center gap-4 hover:shadow-md transition">
+                    <span class="text-3xl">❓</span>
+                    <div><p class="text-xs text-gray-500 font-medium">Quizzes Today</p><p id="stat-quizzes" class="text-3xl font-bold text-yellow-600">—</p></div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-5 flex items-center gap-4 hover:shadow-md transition">
+                    <span class="text-3xl">📢</span>
+                    <div><p class="text-xs text-gray-500 font-medium">Live Announcements</p><p id="stat-announcements" class="text-3xl font-bold text-orange-600">—</p></div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-5 flex items-center gap-4 hover:shadow-md transition">
+                    <span class="text-3xl">⏳</span>
+                    <div><p class="text-xs text-gray-500 font-medium">Pending Tutors</p><p id="stat-pending-tutors" class="text-3xl font-bold text-red-600">—</p></div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-5 flex items-center gap-4 hover:shadow-md transition col-span-2 lg:col-span-2">
+                    <span class="text-3xl">💰</span>
+                    <div><p class="text-xs text-gray-500 font-medium">Total Revenue</p><p id="stat-revenue" class="text-3xl font-bold text-emerald-600">—</p></div>
                 </div>
             </div>
 
-            <!-- Dashboard Content -->
-            <div class="p-4 lg:p-8">
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
-                    <!-- Total Students -->
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-gray-600 text-sm font-bold">Total Students</p>
-                                <p id="totalStudents" class="text-4xl font-bold text-blue-900 mt-2">0</p>
-                            </div>
-                            <span class="text-3xl">👥</span>
-                        </div>
-                        <p class="text-gray-500 text-xs mt-4">Active enrollments</p>
-                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
-                    <!-- Total Quizzes -->
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-gray-600 text-sm font-bold">Total Quizzes</p>
-                                <p id="totalQuizzes" class="text-4xl font-bold text-green-600 mt-2">0</p>
-                            </div>
-                            <span class="text-3xl">❓</span>
-                        </div>
-                        <p class="text-gray-500 text-xs mt-4">Created quizzes</p>
+                <!-- Live Activity Feed -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">🔴 Live Activity Feed</h3>
+                        <button onclick="loadStats()" class="text-xs text-blue-600 hover:underline">Refresh</button>
                     </div>
-
-                    <!-- Avg Score -->
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-gray-600 text-sm font-bold">Avg Score</p>
-                                <p id="avgScore" class="text-4xl font-bold text-yellow-500 mt-2">0%</p>
-                            </div>
-                            <span class="text-3xl">📊</span>
-                        </div>
-                        <p class="text-gray-500 text-xs mt-4">Across all quizzes</p>
-                    </div>
-
-                    <!-- Revenue Placeholder -->
-                    <div class="revenue-card shadow-lg hover:shadow-xl transition p-6">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-gray-800 text-sm font-bold">Revenue</p>
-                                <p class="text-3xl font-bold text-yellow-700 mt-2">KES 0</p>
-                            </div>
-                            <span class="text-3xl">💰</span>
-                        </div>
-                        <p class="text-yellow-900 text-sm mt-3">Payment system coming soon</p>
-                    </div>
-
-                    <!-- Resources -->
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-gray-600 text-sm font-bold">Resources</p>
-                                <p id="totalResources" class="text-4xl font-bold text-purple-600 mt-2">0</p>
-                            </div>
-                            <span class="text-3xl">📄</span>
-                        </div>
-                        <p class="text-gray-500 text-xs mt-4">Uploaded materials</p>
-                    </div>
-                </div>
-
-                <!-- Additional Stats Row -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
-                    <!-- Total Announcements -->
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-gray-600 text-sm font-bold">Announcements</p>
-                                <p id="totalAnnouncements" class="text-4xl font-bold text-orange-600 mt-2">0</p>
-                            </div>
-                            <span class="text-3xl">📢</span>
-                        </div>
-                        <p class="text-gray-500 text-xs mt-4">Posted announcements</p>
-                    </div>
-
-                    <!-- Total Assignments -->
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-gray-600 text-sm font-bold">Assignments</p>
-                                <p id="totalAssignments" class="text-4xl font-bold text-red-600 mt-2">0</p>
-                            </div>
-                            <span class="text-3xl">📋</span>
-                        </div>
-                        <p class="text-gray-500 text-xs mt-4">Created assignments</p>
-                    </div>
-
-                    <!-- Active Students (30 days) -->
-                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-gray-600 text-sm font-bold">Active Students</p>
-                                <p id="activeStudents" class="text-4xl font-bold text-indigo-600 mt-2">0</p>
-                            </div>
-                            <span class="text-3xl">📈</span>
-                        </div>
-                        <p class="text-gray-500 text-xs mt-4">Last 30 days</p>
+                    <div id="activity-feed" class="space-y-2 max-h-96 overflow-y-auto pr-1">
+                        <p class="text-gray-400 text-sm text-center py-8">Loading activity…</p>
                     </div>
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-6 lg:mb-8">
-                    <!-- Recent Activity -->
-                    <div class="bg-white rounded-lg shadow-lg p-6">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6">📝 Recent Activity</h3>
-                        <div id="recentActivityContainer" class="space-y-4"></div>
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="bg-white rounded-lg shadow-lg p-6">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6">⚡ Quick Actions</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <a href="admin-quiz-builder.html" class="block w-full p-3 lg:p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-bold text-center text-sm lg:text-base">
-                                ➕ Create New Quiz
-                            </a>
-                            <a href="admin-resources.html" class="block w-full p-3 lg:p-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold text-center text-sm lg:text-base">
-                                📤 Upload Resource
-                            </a>
-                            <a href="admin-announcements.html" class="block w-full p-3 lg:p-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition font-bold text-center text-sm lg:text-base">
-                                📢 Post Announcement
-                            </a>
-                            <a href="admin-students.html" class="block w-full p-3 lg:p-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition font-bold text-center text-sm lg:text-base">
-                                👥 View All Students
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Quiz Submissions -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-6">📊 Recent Quiz Submissions</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-gray-700">
-                            <thead class="bg-gray-50 border-b-2 border-gray-200">
-                                <tr>
-                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Student</th>
-                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Quiz</th>
-                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Score</th>
-                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">%</th>
-                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Status</th>
-                                    <th class="px-2 lg:px-4 py-3 font-bold text-xs lg:text-sm">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="submissionsTableBody">
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td colspan="6" class="px-2 lg:px-4 py-3 text-center text-gray-500 text-sm">Loading submissions...</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="bg-white rounded-xl shadow p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">⚡ Quick Actions</h3>
+                    <div class="space-y-3">
+                        <a href="admin-announcements.html"
+                           class="flex items-center gap-3 w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold transition text-sm">
+                            <span class="text-lg">📢</span> Post Announcement
+                        </a>
+                        <a href="admin-content.html"
+                           class="flex items-center gap-3 w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition text-sm">
+                            <span class="text-lg">📤</span> Upload Resource
+                        </a>
+                        <a href="admin-quiz-builder.html"
+                           class="flex items-center gap-3 w-full px-4 py-3 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-semibold transition text-sm">
+                            <span class="text-lg">✏️</span> Create Quiz
+                        </a>
+                        <a href="admin-tutor-applications.html"
+                           class="flex items-center gap-3 w-full px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition text-sm">
+                            <span class="text-lg">✅</span> Approve Tutors
+                            <span id="qa-pending-badge" class="ml-auto bg-white text-red-600 text-xs font-bold px-2 py-0.5 rounded-full hidden"></span>
+                        </a>
+                        <a href="admin-users.html"
+                           class="flex items-center gap-3 w-full px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm">
+                            <span class="text-lg">👥</span> Manage Users
+                        </a>
+                        <a href="admin-pricing.html"
+                           class="flex items-center gap-3 w-full px-4 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition text-sm">
+                            <span class="text-lg">💳</span> Pricing & Plans
+                        </a>
                     </div>
                 </div>
             </div>
+
         </div>
-    </div>
+    </main>
+</div>
 
-    <script src="../assets/js/api.js"></script>
-    <script src="../assets/js/main.js"></script>
-    <script>
-        // Check admin authentication and load admin info
-        function checkAdminAuth() {
-            if (!localStorage.getItem('isAdmin') || !localStorage.getItem('adminToken')) {
-                window.location.href = 'admin-login.html';
-                return;
-            }
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+    initPage('admin', 'dashboard');
 
-            // Load admin info
-            const admin = JSON.parse(localStorage.getItem('admin') || '{}');
-            if (admin.name) {
-                document.getElementById('adminWelcome').textContent = `Welcome, ${admin.name}!`;
-            }
+    const TOKEN = () => localStorage.getItem('adminToken');
+    const BASE  = () => (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '/api');
+
+    // ── Auth guard ────────────────────────────────────────────────────────────
+    (function checkAuth() {
+        if (!localStorage.getItem('isAdmin') || !TOKEN()) {
+            window.location.href = 'admin-login.html';
+            return;
         }
+        const admin = (() => { try { return JSON.parse(localStorage.getItem('admin') || '{}'); } catch { return {}; } })();
+        const el = document.getElementById('admin-welcome');
+        if (el && admin.name) { el.textContent = `Welcome, ${admin.name}`; el.classList.remove('hidden'); }
+    })();
 
-        // Load dashboard data
-        async function loadDashboardData() {
-            try {
-                // Load students
-                const students = await getAllStudents();
-                document.getElementById('totalStudents').textContent = students.length || 0;
+    // ── Load stats ────────────────────────────────────────────────────────────
+    async function loadStats() {
+        try {
+            const res = await fetch(`${BASE()}/admin/stats`, {
+                headers: { 'Authorization': `Bearer ${TOKEN()}` }
+            });
+            if (!res.ok) throw new Error('stats fetch failed');
+            const d = await res.json();
 
-                // Load quizzes
-                const quizzes = await getAllQuizzes();
-                document.getElementById('totalQuizzes').textContent = quizzes.length || 0;
+            setText('stat-students',      d.totalStudents           ?? '—');
+            setText('stat-tutors',        d.activeTutors            ?? '—');
+            setText('stat-resources',     d.totalResources          ?? '—');
+            setText('stat-quizzes',       d.quizzesToday            ?? '—');
+            setText('stat-announcements', d.liveAnnouncements       ?? '—');
+            setText('stat-pending-tutors',d.pendingTutorApplications ?? '—');
+            setText('stat-revenue',       d.totalRevenue != null ? `KES ${Number(d.totalRevenue).toLocaleString()}` : '—');
 
-                // Load resources
-                const resources = await getAllResources();
-                document.getElementById('totalResources').textContent = resources.length || 0;
+            document.getElementById('last-updated').textContent =
+                `Last updated: ${new Date().toLocaleTimeString()}`;
 
-                // Load announcements
-                const announcements = await getAllAnnouncements();
-                document.getElementById('totalAnnouncements').textContent = announcements.length || 0;
-
-                // Load assignments
-                const assignments = await getAllAssignments();
-                document.getElementById('totalAssignments').textContent = assignments.length || 0;
-
-                // Calculate average score from all student quiz results
-                let totalScore = 0;
-                let totalCount = 0;
-                students.forEach(student => {
-                    if (student.quizResults && student.quizResults.length > 0) {
-                        student.quizResults.forEach(result => {
-                            totalScore += result.percentage || 0;
-                            totalCount++;
-                        });
-                    }
-                });
-                const avgScore = totalCount > 0 ? Math.round(totalScore / totalCount) : 0;
-                document.getElementById('avgScore').textContent = avgScore + '%';
-
-                // Calculate active students (with activity in last 30 days)
-                const activeCount = getActiveStudentsCount(students);
-                document.getElementById('activeStudents').textContent = activeCount;
-
-                // Load recent activity
-                loadRecentActivity(students, quizzes, resources, announcements, assignments);
-
-                // Load recent submissions
-                loadRecentSubmissions(students);
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-                showNotification('Failed to load dashboard data', 'error');
+            // Pending badge on quick action
+            const badge = document.getElementById('qa-pending-badge');
+            if (d.pendingTutorApplications > 0) {
+                badge.textContent = d.pendingTutorApplications;
+                badge.classList.remove('hidden');
             }
+
+            renderActivityFeed(d.recentActivity || []);
+
+            // Sync maintenance toggle
+            if (d.maintenanceMode !== undefined) applyMaintenanceUI(d.maintenanceMode);
+
+        } catch (err) {
+            console.error('Stats error:', err);
+            document.getElementById('last-updated').textContent = 'Could not load stats — check API';
+            renderActivityFeed([]);
         }
+    }
 
-        function loadRecentActivity(students, quizzes, resources, announcements, assignments) {
-            const container = document.getElementById('recentActivityContainer');
-            container.innerHTML = '';
+    function setText(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    }
 
-            const activities = [
-                { type: 'student', count: students.length, label: 'Total registered students', icon: '👥' },
-                { type: 'quiz', count: quizzes.length, label: 'Quizzes created', icon: '❓' },
-                { type: 'resource', count: resources.length, label: 'Resources uploaded', icon: '📄' },
-                { type: 'announcement', count: announcements.length, label: 'Announcements posted', icon: '📢' },
-                { type: 'assignment', count: assignments.length, label: 'Assignments created', icon: '📋' },
-                { type: 'activity', count: getActiveStudentsCount(students), label: 'Students with recent activity', icon: '📈' }
-            ];
+    // ── Activity Feed ─────────────────────────────────────────────────────────
+    const ACTIVITY_ICONS = {
+        student_registered: '👤', quiz_submitted: '✅', resource_uploaded: '📄',
+        announcement_posted: '📢', tutor_applied: '🎓', payment_received: '💰',
+        login: '🔑', default: '🔔'
+    };
 
-            activities.forEach(activity => {
-                const activityDiv = document.createElement('div');
-                activityDiv.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
-                activityDiv.innerHTML = `
-                    <div class="flex items-center">
-                        <span class="text-lg mr-3">${activity.icon}</span>
-                        <span class="text-gray-700">${activity.label}</span>
+    function renderActivityFeed(activities) {
+        const feed = document.getElementById('activity-feed');
+        if (!activities.length) {
+            feed.innerHTML = '<p class="text-gray-400 text-sm text-center py-8">No recent activity</p>';
+            return;
+        }
+        feed.innerHTML = activities.slice(0, 20).map(a => {
+            const icon = ACTIVITY_ICONS[a.type] || ACTIVITY_ICONS.default;
+            const time = a.timestamp ? new Date(a.timestamp).toLocaleString() : '';
+            return `
+                <div class="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 border-b border-gray-100 last:border-0">
+                    <span class="text-xl mt-0.5">${icon}</span>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-800 font-medium">${escHtml(a.message || a.action || 'Activity recorded')}</p>
+                        ${a.user ? `<p class="text-xs text-gray-500">${escHtml(a.user)}</p>` : ''}
                     </div>
-                    <span class="bg-blue-900 text-white px-3 py-1 rounded-full font-bold">${activity.count}</span>
-                `;
-                container.appendChild(activityDiv);
+                    <span class="text-xs text-gray-400 whitespace-nowrap">${time}</span>
+                </div>`;
+        }).join('');
+    }
+
+    function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Maintenance Toggle ────────────────────────────────────────────────────
+    let maintenanceOn = false;
+
+    async function toggleMaintenance() {
+        const next = !maintenanceOn;
+        try {
+            const res = await fetch(`${BASE()}/admin/settings`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${TOKEN()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ maintenanceMode: next })
             });
+            if (!res.ok) throw new Error();
+            applyMaintenanceUI(next);
+        } catch {
+            alert('Failed to update maintenance mode. Check your connection.');
         }
+    }
 
-        function getActiveStudentsCount(students) {
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    function applyMaintenanceUI(on) {
+        maintenanceOn = on;
+        const toggle  = document.getElementById('maintenance-toggle');
+        const knob    = document.getElementById('maintenance-knob');
+        const label   = document.getElementById('maintenance-label');
+        const banner  = document.getElementById('maintenance-banner');
+        const wrapper = document.getElementById('page-wrapper');
+        const main    = document.getElementById('main-content');
 
-            return students.filter(student => {
-                if (student.quizResults && student.quizResults.length > 0) {
-                    return student.quizResults.some(result =>
-                        new Date(result.completedAt) > thirtyDaysAgo
-                    );
-                }
-                return false;
-            }).length;
+        toggle.setAttribute('aria-checked', String(on));
+        toggle.classList.toggle('bg-red-500', on);
+        toggle.classList.toggle('bg-gray-300', !on);
+        knob.classList.toggle('translate-x-6', on);
+        knob.classList.toggle('translate-x-1', !on);
+        label.textContent = on ? 'ON' : 'OFF';
+        label.classList.toggle('text-red-600', on);
+        label.classList.toggle('text-gray-500', !on);
+
+        if (on) {
+            banner.classList.remove('hidden');
+            wrapper.classList.add('mt-8');
+            if (main) main.classList.add('lg:pt-8');
+        } else {
+            banner.classList.add('hidden');
+            wrapper.classList.remove('mt-8');
+            if (main) main.classList.remove('lg:pt-8');
         }
+    }
 
-        function loadRecentSubmissions(students) {
-            const tbody = document.getElementById('submissionsTableBody');
-            tbody.innerHTML = '';
+    function adminLogout() {
+        if (!confirm('Log out of Elite Hub Admin?')) return;
+        localStorage.removeItem('isAdmin');
+        localStorage.removeItem('adminToken');
+        window.location.href = 'admin-login.html';
+    }
 
-            let submissions = [];
-            students.forEach(student => {
-                if (student.quizResults && student.quizResults.length > 0) {
-                    student.quizResults.forEach(result => {
-                        submissions.push({
-                            studentName: student.name || 'Unknown',
-                            quizTitle: result.quiz?.title || 'Unknown Quiz',
-                            score: result.score || 0,
-                            totalQuestions: result.totalQuestions || 1,
-                            percentage: result.percentage || 0,
-                            date: new Date(result.completedAt).toLocaleDateString()
-                        });
-                    });
-                }
-            });
-
-            if (submissions.length === 0) {
-                tbody.innerHTML = '<tr class="border-b"><td colspan="6" class="px-2 lg:px-4 py-3 text-center text-gray-500 text-sm">No quiz submissions yet</td></tr>';
-                return;
-            }
-
-            // Sort by date (most recent first) and take top 10
-            submissions.sort((a, b) => new Date(b.date) - new Date(a.date));
-            submissions.slice(0, 10).forEach(submission => {
-                const percentage = submission.percentage;
-                const statusColor = percentage >= 70 ? 'green' : percentage >= 50 ? 'yellow' : 'red';
-                const statusText = percentage >= 70 ? 'Passed' : percentage >= 50 ? 'Fair' : 'Failed';
-
-                const row = document.createElement('tr');
-                row.className = 'border-b hover:bg-gray-50';
-                row.innerHTML = `
-                    <td class="px-2 lg:px-4 py-3 text-sm">${submission.studentName}</td>
-                    <td class="px-2 lg:px-4 py-3 text-sm">${submission.quizTitle}</td>
-                    <td class="px-2 lg:px-4 py-3 text-sm">${submission.score}/${submission.totalQuestions}</td>
-                    <td class="px-2 lg:px-4 py-3 text-sm"><strong>${percentage}%</strong></td>
-                    <td class="px-2 lg:px-4 py-3"><span class="px-2 py-1 bg-${statusColor}-100 text-${statusColor}-800 rounded text-xs font-bold">${statusText}</span></td>
-                    <td class="px-2 lg:px-4 py-3 text-sm text-gray-500">${submission.date}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Show notification (simple implementation)
-        function showNotification(message, type = 'info') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-bold z-50 ${
-                type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-blue-600'
-            }`;
-            notification.textContent = message;
-
-            // Add to page
-            document.body.appendChild(notification);
-
-            // Remove after 3 seconds
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 3000);
-        }
-
-        // Sidebar Controls
-        function openSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024) {
-                document.body.style.overflow = 'auto';
-                const overlay = document.getElementById('sidebar-overlay');
-                if (overlay) overlay.classList.add('hidden');
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar) sidebar.classList.remove('-translate-x-full');
-            }
-        });
-
-        // Search functionality
-        async function performSearch(query) {
-            if (!query.trim()) {
-                // Reset to show all data
-                await loadDashboardData();
-                return;
-            }
-
-            try {
-                const [students, quizzes, resources, announcements] = await Promise.all([
-                    getAllStudents(),
-                    getAllQuizzes(),
-                    getAllResources(),
-                    getAllAnnouncements()
-                ]);
-
-                const queryLower = query.toLowerCase();
-
-                // Filter results
-                const filteredStudents = students.filter(student =>
-                    student.name?.toLowerCase().includes(queryLower) ||
-                    student.email?.toLowerCase().includes(queryLower) ||
-                    student.form?.toLowerCase().includes(queryLower)
-                );
-
-                const filteredQuizzes = quizzes.filter(quiz =>
-                    quiz.title?.toLowerCase().includes(queryLower) ||
-                    quiz.description?.toLowerCase().includes(queryLower) ||
-                    quiz.subject?.name?.toLowerCase().includes(queryLower)
-                );
-
-                const filteredResources = resources.filter(resource =>
-                    resource.title?.toLowerCase().includes(queryLower) ||
-                    resource.description?.toLowerCase().includes(queryLower) ||
-                    resource.subject?.name?.toLowerCase().includes(queryLower)
-                );
-
-                const filteredAnnouncements = announcements.filter(announcement =>
-                    announcement.title?.toLowerCase().includes(queryLower) ||
-                    announcement.content?.toLowerCase().includes(queryLower)
-                );
-
-                // Update dashboard with filtered results
-                updateDashboardWithSearchResults({
-                    students: filteredStudents,
-                    quizzes: filteredQuizzes,
-                    resources: filteredResources,
-                    announcements: filteredAnnouncements,
-                    query: query
-                });
-
-            } catch (error) {
-                console.error('Search error:', error);
-                showNotification('Search failed', 'error');
-            }
-        }
-
-        function updateDashboardWithSearchResults(results) {
-            const { students, quizzes, resources, announcements, query } = results;
-
-            // Update stats
-            document.getElementById('totalStudents').textContent = students.length;
-            document.getElementById('totalQuizzes').textContent = quizzes.length;
-            document.getElementById('totalResources').textContent = resources.length;
-            document.getElementById('totalAnnouncements').textContent = announcements.length;
-
-            // Calculate average score from filtered students
-            let totalScore = 0;
-            let totalCount = 0;
-            students.forEach(student => {
-                if (student.quizResults && student.quizResults.length > 0) {
-                    student.quizResults.forEach(result => {
-                        totalScore += result.percentage || 0;
-                        totalCount++;
-                    });
-                }
-            });
-            const avgScore = totalCount > 0 ? Math.round(totalScore / totalCount) : 0;
-            document.getElementById('avgScore').textContent = avgScore + '%';
-
-            // Update active students count
-            const activeCount = getActiveStudentsCount(students);
-            document.getElementById('activeStudents').textContent = activeCount;
-
-            // Update recent activity with search context
-            loadRecentActivity(students, quizzes, resources, announcements, []);
-
-            // Update submissions table with filtered data
-            loadRecentSubmissions(students);
-
-            // Show search results summary
-            showSearchResultsSummary(results);
-        }
-
-        function showSearchResultsSummary(results) {
-            const { students, quizzes, resources, announcements, query } = results;
-            const totalResults = students.length + quizzes.length + resources.length + announcements.length;
-
-            let summaryHtml = `
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
-                    <h3 class="text-lg font-bold text-blue-900 mb-2">🔍 Search Results for "${query}"</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-blue-600">${students.length}</div>
-                            <div class="text-gray-600">Students</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-green-600">${quizzes.length}</div>
-                            <div class="text-gray-600">Quizzes</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-purple-600">${resources.length}</div>
-                            <div class="text-gray-600">Resources</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-orange-600">${announcements.length}</div>
-                            <div class="text-gray-600">Announcements</div>
-                        </div>
-                    </div>
-                    <div class="mt-3 text-center">
-                        <button onclick="clearSearch()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                            Clear Search
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            // Insert summary at the top of dashboard content
-            const dashboardContent = document.querySelector('.p-4.lg\\:p-8');
-            const existingSummary = dashboardContent.querySelector('.bg-blue-50');
-            if (existingSummary) {
-                existingSummary.remove();
-            }
-            dashboardContent.insertAdjacentHTML('afterbegin', summaryHtml);
-        }
-
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            loadDashboardData();
-        }
-
-        function adminLogout() {
-            confirmNotification('Log out of Elite Hub?', 'Logout', 'Stay').then(ok => {
-                if (!ok) return;
-                localStorage.removeItem('isAdmin');
-                localStorage.removeItem('adminToken');
-                window.location.href = 'admin-login.html';
-            });
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAdminAuth();
-            loadDashboardData();
-
-            // Add search functionality
-            const searchInput = document.getElementById('searchInput');
-            let searchTimeout;
-
-            searchInput.addEventListener('input', function(e) {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    performSearch(e.target.value);
-                }, 300); // Debounce search by 300ms
-            });
-
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    performSearch(e.target.value);
-                }
-                if (e.key === 'Escape') {
-                    clearSearch();
-                }
-            });
-        });
-    </script>
-    <script src="../assets/js/pwa-register.js"></script>
+    // ── Init ──────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        loadStats();
+        // Auto-refresh every 60 s
+        setInterval(loadStats, 60000);
+    });
+</script>
+<script src="../assets/js/pwa-register.js"></script>
 </body>
 </html>
-
-

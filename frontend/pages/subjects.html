@@ -8,49 +8,10 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0ea5a4">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="icon" type="image/png" href="./Favicon.png">
+    <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-blue-900 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="../index.html" class="text-2xl font-bold text-yellow-400">Elite Hub</a>
-                </div>
-                
-                <div class="flex items-center md:hidden">
-                    <button id="mobile-menu-btn" class="text-white hover:text-yellow-400 focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="../index.html" class="hover:text-yellow-400 transition">Home</a>
-                    <a href="./subjects.html" class="text-yellow-400">Subjects</a>
-                    <a href="./resources.html" class="hover:text-yellow-400 transition">Study Resources</a>
-                    <a href="./quizzes.html" class="hover:text-yellow-400 transition">Quizzes</a>
-                    <a href="./announcements.html" class="hover:text-yellow-400 transition">Announcements</a>
-                    <a href="./contact.html" class="hover:text-yellow-400 transition">Contact</a>
-                    <a href="./login.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Login</a>
-                    <a href="./register.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Register</a>
-                </div>
-            </div>
-
-            <div id="mobile-menu" class="hidden md:hidden pb-3 space-y-1">
-                <a href="../index.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Home</a>
-                <a href="./subjects.html" class="block px-3 py-2 bg-blue-800 rounded">Subjects</a>
-                <a href="./resources.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Study Resources</a>
-                <a href="./quizzes.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Quizzes</a>
-                <a href="./announcements.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Announcements</a>
-                <a href="./contact.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Contact</a>
-                <a href="./login.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Login</a>
-                <a href="./register.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Register</a>
-            </div>
-        </div>
-    </nav>
+    <div id="main-nav"></div>
 
     <!-- Page Header -->
     <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-12">
@@ -208,7 +169,7 @@
                     </div>
                 </div>
 
-                <!-- Subject Card: Intergrated Science -->
+                <!-- Subject Card: Integrated Science -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition cursor-pointer" onclick="toggleSubject(this)">
                     <div class="bg-fuchsia-500 text-white p-6">
                         <h3 class="text-2xl font-bold">🔬 Integrated Science</h3>
@@ -291,42 +252,8 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-blue-900 text-white py-8 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Elite Hub</h3>
-                    <p class="text-gray-300">Supporting your academic journey with quality education resources.</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
-                    <p class="text-gray-300">Email: seyllaudrey6@gmail.com</p>
-                    <p class="text-gray-300">WhatsApp: +254 792619341</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
-                    <ul class="space-y-2 text-gray-300">
-                        <li><a href="./resources.html" class="hover:text-yellow-400">Resources</a></li>
-                        <li><a href="./quizzes.html" class="hover:text-yellow-400">Quizzes</a></li>
-                        <li><a href="./contact.html" class="hover:text-yellow-400">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="border-blue-800 my-6">
-            <div class="flex justify-between items-center">
-                <p class="text-gray-400">&copy; 2026 Elite Hub. All rights reserved.</p>
-                <div class="flex gap-3">
-                    <img src="../assets/images/logos/EMG logo.jpg" alt="EMG logo.jpg" class="h-12 w-12">
-                    <img src="../assets/images/logos/TGV logo.jpg" alt="TGV logo.jpg" class="h-12 w-12">
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="main-footer"></div>
 
-    <script src="../assets/js/api.js"></script>
-    <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/pwa-register.js"></script>
     <!-- PDF viewer modal -->
     <div id="doc-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white w-11/12 md:w-3/4 lg:w-2/3 h-4/5 rounded shadow-lg overflow-hidden flex flex-col">
@@ -342,98 +269,30 @@
             </div>
         </div>
     </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/pwa-register.js"></script>
+    <script src="../assets/js/components.js"></script>
     <script>
-        // Load subjects dynamically from API
-        document.addEventListener('DOMContentLoaded', async function() {
-            try {
-                const subjects = await getAllSubjects();
-                const subjectsGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
-                
-                if (subjects && subjects.length > 0) {
-                    // Clear existing hardcoded subjects
-                    subjectsGrid.innerHTML = '';
-                    
-                    // Create subject cards from API data
-                    subjects.forEach(subject => {
-                        const colors = ['blue', 'yellow', 'green', 'red', 'purple', 'orange', 'indigo', 'teal'];
-                        const color = colors[Math.floor(Math.random() * colors.length)];
+        initPage('student', 'subjects');
 
-                        // For Mathematics, use specific notes files if available in assets/docs/maths/
-                        const mathFiles = {
-                            1: 'Maths-Form-1-Notes-Updated-Teacher.co_.ke_.pdf',
-                            2: 'Maths-Form-2-Notes-Updated-Teacher.co_.ke_.pdf',
-                            3: 'Maths-Form-3-Notes-Teacher.co_.ke_.pdf',
-                            4: 'Math-Form-4-Notes-Teacher.co_.ke_.pdf'
-                        };
-
-                        const subjectCard = document.createElement('div');
-                        subjectCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition cursor-pointer';
-                        subjectCard.onclick = function() { toggleSubject(this); };
-
-                        // Build forms links; if subject is Mathematics, link to actual PDF files (download)
-                        let formsHtml = '';
-                        if (subject.name && subject.name.toLowerCase().includes('math')) {
-                            [1,2,3,4].forEach(f => {
-                                const fileName = mathFiles[f];
-                                const href = fileName ? `../assets/docs/maths/${fileName}` : '#';
-                                formsHtml += `<a href="#" onclick="openDoc('${href}','${subject.name} Form ${f}')" class="block px-4 py-2 bg-${color}-50 text-${color}-900 rounded hover:bg-${color}-100 transition">Form ${f}</a>`;
-                            });
-                        } else {
-                            [1,2,3,4].forEach(f => {
-                                formsHtml += `<a href="#" class="block px-4 py-2 bg-${color}-50 text-${color}-900 rounded hover:bg-${color}-100 transition">Form ${f}</a>`;
-                            });
-                        }
-
-                        subjectCard.innerHTML = `
-                            <div class="bg-${color}-500 text-white p-6">
-                                <h3 class="text-2xl font-bold">${subject.name}</h3>
-                            </div>
-                            <div class="p-6">
-                                <div class="space-y-2 form-list hidden">
-                                    ${formsHtml}
-                                </div>
-                                <p class="text-gray-600 form-prompt">Click to expand</p>
-                            </div>
-                        `;
-                        subjectsGrid.appendChild(subjectCard);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading subjects:', error);
-                showNotification('Failed to load subjects from server', 'warning');
-                // Keep existing hardcoded subjects as fallback
-            }
-        });
-
-        // PDF viewer functions
         function openDoc(href, title) {
-            if (!href || href === '#') {
-                showNotification('Document not available', 'warning');
-                return;
-            }
+            if (!href || href === '#') { showNotification('Document not available', 'warning'); return; }
             const modal = document.getElementById('doc-modal');
-            const frame = document.getElementById('doc-frame');
-            const docTitle = document.getElementById('doc-title');
-            const download = document.getElementById('doc-download');
-            frame.src = href;
-            docTitle.textContent = title || 'Document';
-            download.href = href;
+            document.getElementById('doc-frame').src = href;
+            document.getElementById('doc-title').textContent = title || 'Document';
+            document.getElementById('doc-download').href = href;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
-
         function closeDoc() {
             const modal = document.getElementById('doc-modal');
-            const frame = document.getElementById('doc-frame');
-            frame.src = '';
+            document.getElementById('doc-frame').src = '';
             modal.classList.remove('flex');
             modal.classList.add('hidden');
         }
-
-        // close on ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeDoc();
-        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDoc(); });
     </script>
 </body>
 </html>

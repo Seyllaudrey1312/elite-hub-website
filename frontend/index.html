@@ -11,51 +11,7 @@
     <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-blue-900 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="./index.html" class="text-2xl font-bold text-yellow-400">Elite Hub</a>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="flex items-center md:hidden">
-                    <button id="mobile-menu-btn" class="text-white hover:text-yellow-400 focus:outline-none">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Desktop menu -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="./index.html" class="hover:text-yellow-400 transition">Home</a>
-                    <a href="./pages/subjects.html" class="hover:text-yellow-400 transition">Subjects</a>
-                    <a href="./pages/resources.html" class="hover:text-yellow-400 transition">Study Resources</a>
-                    <a href="./pages/quizzes.html" class="hover:text-yellow-400 transition">Quizzes</a>
-                    <a href="./pages/pricing.html" class="hover:text-yellow-400 transition">Pricing</a>
-                    <a href="./pages/announcements.html" class="hover:text-yellow-400 transition">Announcements</a>
-                    <a href="./pages/contact.html" class="hover:text-yellow-400 transition">Contact</a>
-                    <a href="./pages/login.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Login</a>
-                    <a href="./pages/register.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Register</a>
-                </div>
-            </div>
-
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="hidden md:hidden pb-3 space-y-1">
-                <a href="./index.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Home</a>
-                <a href="./pages/subjects.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Subjects</a>
-                <a href="./pages/resources.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Study Resources</a>
-                <a href="./pages/quizzes.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Quizzes</a>
-                <a href="./pages/pricing.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Pricing</a>
-                <a href="./pages/announcements.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Announcements</a>
-                <a href="./pages/contact.html" class="block px-3 py-2 hover:bg-blue-800 rounded">Contact</a>
-                <a href="./pages/login.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300 rounded">Login</a>
-                <a href="./pages/register.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300 rounded">Register</a>
-            </div>
-        </div>
-    </nav>
+    <div id="main-nav"></div>
 
     <!-- Hero Section -->
     <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-20">
@@ -71,28 +27,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Quick Access</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Card 1: Study Materials -->
                 <a href="./pages/resources.html" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition hover:translate-y-1">
                     <div class="text-4xl mb-4">📚</div>
                     <h3 class="text-xl font-bold text-blue-900 mb-2">Study Materials</h3>
                     <p class="text-gray-600">Access notes, handouts, and revision guides</p>
                 </a>
-
-                <!-- Card 2: Quizzes -->
                 <a href="./pages/quizzes.html" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition hover:translate-y-1">
                     <div class="text-4xl mb-4">✏️</div>
                     <h3 class="text-xl font-bold text-blue-900 mb-2">Quizzes</h3>
                     <p class="text-gray-600">Practice with topic-based quizzes</p>
                 </a>
-
-                <!-- Card 3: Announcements -->
                 <a href="./pages/announcements.html" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition hover:translate-y-1">
                     <div class="text-4xl mb-4">📢</div>
                     <h3 class="text-xl font-bold text-blue-900 mb-2">Announcements</h3>
                     <p class="text-gray-600">Stay updated with latest news</p>
                 </a>
-
-                <!-- Card 4: Contact Tutor -->
                 <a href="./pages/contact.html" class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition hover:translate-y-1">
                     <div class="text-4xl mb-4">💬</div>
                     <h3 class="text-xl font-bold text-blue-900 mb-2">Contact Tutor</h3>
@@ -120,83 +69,57 @@
     </section>
 
     <!-- Latest Updates Section -->
-    <section class="py-12 bg-gray-50">
+    <section id="latest-updates-section" class="py-12 bg-gray-50 hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold mb-8 text-gray-800">Latest Updates</h2>
-            <div class="space-y-6">
-                <!-- Announcement 1 -->
-                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-yellow-400">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-xl font-bold text-blue-900 mb-2">Form 4 Final Exam Schedule Released</h3>
-                            <p class="text-gray-700 mb-2">The final examination schedule for Form 4 students has been released. Check the announcements page for detailed dates.</p>
-                            <span class="text-sm text-gray-500">Posted on February 4, 2026</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Announcement 2 -->
-                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-xl font-bold text-blue-900 mb-2">New Physics Notes Available</h3>
-                            <p class="text-gray-700 mb-2">Comprehensive notes on Electricity and Magnetism have been uploaded to the Study Resources section.</p>
-                            <span class="text-sm text-gray-500">Posted on February 2, 2026</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Announcement 3 -->
-                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-xl font-bold text-blue-900 mb-2">Tutor Office Hours Extended</h3>
-                            <p class="text-gray-700 mb-2">Starting this week, tutor office hours have been extended to help more students. Contact us for appointment details.</p>
-                            <span class="text-sm text-gray-500">Posted on February 1, 2026</span>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="./pages/announcements.html" class="inline-block mt-6 bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">View All Announcements</a>
-            </div>
+            <div id="latest-updates-list" class="space-y-6"></div>
+            <a href="./pages/announcements.html" class="inline-block mt-6 bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition">View All Announcements</a>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-blue-900 text-white py-8">
-    <script src="assets/js/pwa-register.js"></script>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Elite Hub</h3>
-                    <p class="text-gray-300">Supporting your academic journey with quality education resources(Seyll Audrey).</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
-                    <p class="text-gray-300" a href="mailto:seyllaudrey6@gmail.com">Email: seyllaudrey6@gmail.com</p>
-                    <p class="text-gray-300">WhatsApp: +254 792619341</p>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
-                    <ul class="space-y-2 text-gray-300">
-                        <li><a href="./pages/resources.html" class="hover:text-yellow-400">Resources</a></li>
-                        <li><a href="./pages/quizzes.html" class="hover:text-yellow-400">Quizzes</a></li>
-                        <li><a href="./pages/contact.html" class="hover:text-yellow-400">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="border-blue-800 my-6">
-            <div class="flex justify-between items-center">
-                <p class="text-gray-400">&copy; 2026 Elite Hub. All rights reserved.</p>
-                <div class="flex gap-3">
-                    <img src="./assets/images/logos/EMG logo.jpg" alt="EMG logo.jpg" class="h-12 w-12">
-                    <img src="./assets/images/logos/TGV logo.jpg" alt="TGV logo.jpg" class="h-12 w-12">
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="main-footer"></div>
 
+    <script src="assets/js/pwa-register.js"></script>
     <script src="assets/js/api.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script>
+        // index.html is one level above /pages — rewrite nav hrefs accordingly
+        NAV_LINKS.forEach(l => {
+            if (l.key === 'home') { l.href = './index.html'; }
+            else { l.href = './pages/' + l.href.replace('./', ''); }
+        });
+        initPage('student', 'home');
+
+        // ── Dynamic Latest Updates ────────────────────────────────────────────
+        (async function loadLatestUpdates() {
+            const BORDER_COLORS = ['border-yellow-400', 'border-green-500', 'border-blue-500'];
+            try {
+                const res = await fetch(`${API_BASE_URL}/announcements`);
+                if (!res.ok) return;
+                const data = await res.json();
+                const items = Array.isArray(data) ? data : (data.announcements || []);
+                if (!items.length) return;
+
+                const top3 = items
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    .slice(0, 3);
+
+                const list = document.getElementById('latest-updates-list');
+                list.innerHTML = top3.map((a, i) => {
+                    const summary = (a.body || a.content || '').replace(/<[^>]*>/g, '').slice(0, 100);
+                    const date = new Date(a.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    return `
+                        <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 ${BORDER_COLORS[i % 3]}">
+                            <h3 class="text-xl font-bold text-blue-900 mb-2">${a.title || 'Announcement'}</h3>
+                            <p class="text-gray-700 mb-2">${summary}${summary.length === 100 ? '…' : ''}</p>
+                            <span class="text-sm text-gray-500">Posted on ${date}</span>
+                        </div>`;
+                }).join('');
+
+                document.getElementById('latest-updates-section').classList.remove('hidden');
+            } catch (_) { /* silently hide section on failure */ }
+        })();
+    </script>
 </body>
 </html>

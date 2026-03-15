@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing & Payments - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-100">
+<div class="lg:flex lg:h-screen lg:overflow-hidden">
+    <div id="admin-sidebar"></div>
+
+    <main class="flex-1 overflow-y-auto lg:pt-0 pt-14">
+        <div class="bg-white shadow sticky top-0 z-10 px-4 lg:px-8 py-4">
+            <h2 class="text-xl lg:text-2xl font-bold text-gray-800">💳 Pricing &amp; Payments</h2>
+        </div>
+
+        <div class="p-4 lg:p-8 space-y-8">
+
+            <!-- Payment System Toggle -->
+            <div class="bg-white rounded-xl shadow p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">Payment System</h3>
+                    <p class="text-sm text-gray-500 mt-1">Enable or disable all payment processing across the platform.</p>
+                    <p class="text-sm font-semibold mt-2" id="payment-status-text">Status: <span id="payment-status-label" class="text-gray-500">Loading…</span></p>
+                </div>
+                <button id="payment-toggle"
+                        onclick="togglePayments()"
+                        class="relative inline-flex h-10 w-20 items-center rounded-full transition-colors focus:outline-none bg-gray-300 flex-shrink-0"
+                        role="switch" aria-checked="false">
+                    <span id="payment-knob" class="inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform translate-x-1 text-center leading-8 text-lg">💳</span>
+                </button>
+            </div>
+
+            <!-- Plan Cards -->
+            <div>
+                <h3 class="text-lg font-bold text-gray-800 mb-4">📦 Subscription Plans</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="plans-container">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Coupon Generator -->
+            <div class="bg-white rounded-xl shadow p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">🎟️ Coupon Code Generator</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Discount (%)</label>
+                        <input type="number" id="coupon-discount" min="1" max="100" placeholder="e.g. 20"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Max Uses (optional)</label>
+                        <input type="number" id="coupon-max-uses" min="1" placeholder="Unlimited"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Expiry Date</label>
+                        <input type="date" id="coupon-expiry"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <button onclick="generateCoupon()"
+                        class="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">
+                    Generate Code
+                </button>
+                <div id="generated-code-box" class="hidden mt-4 flex items-center gap-3 bg-green-50 border border-green-300 rounded-lg px-4 py-3">
+                    <span class="font-mono text-lg font-bold text-green-800" id="generated-code"></span>
+                    <button onclick="copyCode()" class="ml-auto text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Copy</button>
+                </div>
+            </div>
+
+            <!-- Coupons Table -->
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-800">All Coupon Codes</h3>
+                    <button onclick="loadCoupons()" class="text-xs text-blue-600 hover:underline">Refresh</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Code</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Discount</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Expiry</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Uses</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Max Uses</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coupons-tbody">
+                            <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+    initPage('admin', 'pricing');
+
+    const TOKEN = () => localStorage.getItem('adminToken');
+    const BASE  = () => (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '/api');
+
+    (function checkAuth() {
+        if (!localStorage.getItem('isAdmin') || !TOKEN()) window.location.href = 'admin-login.html';
+    })();
+
+    // ── Default plans (overwritten by API) ───────────────────────────────────
+    let plans = [
+        { _id: 'free',     name: 'Free',     monthlyPrice: 0,    annualPrice: 0,    features: ['Access to free resources', 'Basic quizzes', 'Announcements'] },
+        { _id: 'standard', name: 'Standard', monthlyPrice: 500,  annualPrice: 4800, features: ['All Free features', 'Premium resources', 'Live classes', 'Priority support'] },
+        { _id: 'premium',  name: 'Premium',  monthlyPrice: 1200, annualPrice: 11000,features: ['All Standard features', 'Tutor sessions', 'Assignments', 'Progress reports', 'Parent dashboard'] },
+    ];
+
+    const PLAN_COLORS = { free: 'border-gray-300', standard: 'border-blue-500', premium: 'border-yellow-400' };
+    const PLAN_BADGES = { free: 'bg-gray-100 text-gray-700', standard: 'bg-blue-100 text-blue-800', premium: 'bg-yellow-100 text-yellow-800' };
+
+    function renderPlans() {
+        document.getElementById('plans-container').innerHTML = plans.map(plan => `
+            <div class="bg-white rounded-xl shadow border-t-4 ${PLAN_COLORS[plan._id] || 'border-gray-300'} p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-lg font-bold text-gray-800">${plan.name}</h4>
+                    <span class="text-xs font-bold px-2 py-1 rounded-full ${PLAN_BADGES[plan._id] || 'bg-gray-100 text-gray-700'}">${plan.name}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Monthly (KES)</label>
+                        <input type="number" id="plan-monthly-${plan._id}" value="${plan.monthlyPrice}"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Annual (KES)</label>
+                        <input type="number" id="plan-annual-${plan._id}" value="${plan.annualPrice}"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-600 mb-2">Features</label>
+                    <ul id="features-${plan._id}" class="space-y-1 mb-2">
+                        ${plan.features.map((f, i) => `
+                            <li class="flex items-center gap-2 text-sm">
+                                <span class="text-green-500">✓</span>
+                                <span class="flex-1" contenteditable="true" onblur="updateFeature('${plan._id}', ${i}, this.textContent)">${f}</span>
+                                <button onclick="removeFeature('${plan._id}', ${i})" class="text-red-400 hover:text-red-600 text-xs">✕</button>
+                            </li>`).join('')}
+                    </ul>
+                    <button onclick="addFeature('${plan._id}')"
+                            class="text-xs text-blue-600 hover:underline">+ Add feature</button>
+                </div>
+                <button onclick="savePlan('${plan._id}')"
+                        class="w-full bg-blue-900 text-white py-2 rounded-lg hover:bg-blue-800 transition font-semibold text-sm">
+                    Save Plan
+                </button>
+            </div>`).join('');
+    }
+
+    function addFeature(planId) {
+        const plan = plans.find(p => p._id === planId);
+        if (!plan) return;
+        plan.features.push('New feature');
+        renderPlans();
+    }
+
+    function removeFeature(planId, index) {
+        const plan = plans.find(p => p._id === planId);
+        if (!plan) return;
+        plan.features.splice(index, 1);
+        renderPlans();
+    }
+
+    function updateFeature(planId, index, text) {
+        const plan = plans.find(p => p._id === planId);
+        if (plan) plan.features[index] = text.trim();
+    }
+
+    async function savePlan(planId) {
+        const plan = plans.find(p => p._id === planId);
+        if (!plan) return;
+        plan.monthlyPrice = Number(document.getElementById(`plan-monthly-${planId}`).value);
+        plan.annualPrice  = Number(document.getElementById(`plan-annual-${planId}`).value);
+        try {
+            const res = await fetch(`${BASE()}/admin/plans/${planId}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${TOKEN()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(plan)
+            });
+            if (!res.ok) throw new Error();
+            showToast(`${plan.name} plan saved!`, 'success');
+        } catch {
+            showToast('Failed to save plan', 'error');
+        }
+    }
+
+    // ── Payment Toggle ────────────────────────────────────────────────────────
+    let paymentsActive = false;
+
+    async function loadSettings() {
+        try {
+            const res = await fetch(`${BASE()}/admin/settings`, {
+                headers: { 'Authorization': `Bearer ${TOKEN()}` }
+            });
+            if (res.ok) {
+                const d = await res.json();
+                applyPaymentUI(d.paymentsActive ?? false);
+                if (d.plans) { plans = d.plans; renderPlans(); } else renderPlans();
+            } else renderPlans();
+        } catch { renderPlans(); }
+    }
+
+    async function togglePayments() {
+        const next = !paymentsActive;
+        try {
+            const res = await fetch(`${BASE()}/admin/settings`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${TOKEN()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paymentsActive: next })
+            });
+            if (!res.ok) throw new Error();
+            applyPaymentUI(next);
+            showToast(`Payment system ${next ? 'activated' : 'deactivated'}`, next ? 'success' : 'info');
+        } catch {
+            showToast('Failed to update payment system', 'error');
+        }
+    }
+
+    function applyPaymentUI(on) {
+        paymentsActive = on;
+        const toggle = document.getElementById('payment-toggle');
+        const knob   = document.getElementById('payment-knob');
+        const label  = document.getElementById('payment-status-label');
+        toggle.setAttribute('aria-checked', String(on));
+        toggle.classList.toggle('bg-green-500', on);
+        toggle.classList.toggle('bg-gray-300', !on);
+        knob.classList.toggle('translate-x-11', on);
+        knob.classList.toggle('translate-x-1', !on);
+        label.textContent = on ? 'Active ✅' : 'Inactive ⛔';
+        label.className = on ? 'text-green-600 font-bold' : 'text-red-500 font-bold';
+    }
+
+    // ── Coupons ───────────────────────────────────────────────────────────────
+    async function generateCoupon() {
+        const discount = document.getElementById('coupon-discount').value;
+        const maxUses  = document.getElementById('coupon-max-uses').value;
+        const expiry   = document.getElementById('coupon-expiry').value;
+        if (!discount || !expiry) { showToast('Discount % and expiry date are required', 'error'); return; }
+        try {
+            const body = { discount: Number(discount), expiry };
+            if (maxUses) body.maxUses = Number(maxUses);
+            const res = await fetch(`${BASE()}/admin/coupons`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${TOKEN()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) throw new Error();
+            const d = await res.json();
+            const code = d.code || d.coupon?.code || 'GENERATED';
+            document.getElementById('generated-code').textContent = code;
+            document.getElementById('generated-code-box').classList.remove('hidden');
+            loadCoupons();
+        } catch {
+            showToast('Failed to generate coupon', 'error');
+        }
+    }
+
+    function copyCode() {
+        const code = document.getElementById('generated-code').textContent;
+        navigator.clipboard.writeText(code).then(() => showToast('Code copied!', 'success'));
+    }
+
+    async function loadCoupons() {
+        const tbody = document.getElementById('coupons-tbody');
+        try {
+            const res = await fetch(`${BASE()}/admin/coupons`, {
+                headers: { 'Authorization': `Bearer ${TOKEN()}` }
+            });
+            if (!res.ok) throw new Error();
+            const coupons = await res.json();
+            if (!coupons.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">No coupons yet</td></tr>';
+                return;
+            }
+            tbody.innerHTML = coupons.map(c => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-3 font-mono font-bold text-blue-800">${c.code}</td>
+                    <td class="px-4 py-3">${c.discount}%</td>
+                    <td class="px-4 py-3">${c.expiry ? new Date(c.expiry).toLocaleDateString() : '—'}</td>
+                    <td class="px-4 py-3">${c.usageCount ?? 0}</td>
+                    <td class="px-4 py-3">${c.maxUses ?? '∞'}</td>
+                    <td class="px-4 py-3">
+                        <button onclick="deleteCoupon('${c._id}')" class="text-red-600 hover:text-red-800 text-sm font-semibold">Delete</button>
+                    </td>
+                </tr>`).join('');
+        } catch {
+            tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">Could not load coupons</td></tr>';
+        }
+    }
+
+    async function deleteCoupon(id) {
+        if (!confirm('Delete this coupon?')) return;
+        try {
+            await fetch(`${BASE()}/admin/coupons/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${TOKEN()}` }
+            });
+            loadCoupons();
+        } catch {
+            showToast('Failed to delete coupon', 'error');
+        }
+    }
+
+    // ── Toast ─────────────────────────────────────────────────────────────────
+    function showToast(msg, type = 'info') {
+        if (typeof showNotification === 'function') { showNotification(msg, type); return; }
+        const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-blue-600' };
+        const t = document.createElement('div');
+        t.className = `fixed bottom-6 right-6 z-50 ${colors[type]||'bg-gray-700'} text-white px-5 py-3 rounded-lg shadow-lg text-sm font-semibold`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    function adminLogout() {
+        if (!confirm('Log out?')) return;
+        localStorage.removeItem('isAdmin'); localStorage.removeItem('adminToken');
+        window.location.href = 'admin-login.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { loadSettings(); loadCoupons(); });
+</script>
+<script src="../assets/js/pwa-register.js"></script>
+</body>
+</html>

@@ -10,6 +10,9 @@
     <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gray-100">
+    <div class="lg:flex lg:h-screen lg:overflow-hidden">
+        <div id="admin-sidebar"></div>
+        <div class="flex-1 overflow-auto lg:pt-0 pt-14">
     <div class="max-w-3xl mx-auto p-8">
         <h1 class="text-3xl font-bold mb-4">Add Video Lesson</h1>
         <form id="video-form" class="bg-white p-6 rounded shadow space-y-4" onsubmit="saveVideo(event)">
@@ -34,7 +37,10 @@
             </div>
         </form>
     </div>
+    </div></div></div>
     <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>initPage('admin', 'video-lessons');</script>
     <script>
         async function saveVideo(e) {
             e.preventDefault();

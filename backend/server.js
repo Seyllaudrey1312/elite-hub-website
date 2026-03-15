@@ -56,6 +56,12 @@ app.use('/api/live-classes', require('./routes/liveClasses'));
 // Video lessons
 app.use('/api/video-lessons', require('./routes/videoLessons'));
 
+// Tutor applications & TSC verification
+app.use('/api/tutors', require('./routes/tutors'));
+
+// Partners
+app.use('/api/partners', require('./routes/partners'));
+
 // Error Handling Middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);

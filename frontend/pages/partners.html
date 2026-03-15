@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partners - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a5f">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-50">
+    <div id="main-nav"></div>
+
+    <!-- Hero -->
+    <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-bold mb-3">Our Partners</h1>
+            <p class="text-lg text-gray-200 max-w-2xl mx-auto">Working together with schools, organisations, and educators to deliver quality education across Kenya.</p>
+        </div>
+    </section>
+
+    <!-- Institutional Partners -->
+    <section class="py-14 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">🏫 Institutional Partners</h2>
+            <p class="text-gray-500 mb-8">Schools, NGOs, and organisations that support Elite Hub's mission.</p>
+            <div id="partners-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="col-span-full text-center py-12 text-gray-400">Loading partners…</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Partners / Verified Tutors -->
+    <section class="py-14 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">🎓 Content Partners</h2>
+            <p class="text-gray-500 mb-8">TSC-verified educators contributing quality content to Elite Hub.</p>
+            <div id="tutors-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="col-span-full text-center py-12 text-gray-400">Loading educators…</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Become a Partner -->
+    <section class="py-14 bg-blue-900 text-white">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold mb-2">🤝 Become a Partner</h2>
+            <p class="text-blue-200 mb-8">Join our growing network of educational partners across Kenya.</p>
+
+            <!-- Success state -->
+            <div id="apply-success" class="hidden bg-green-600 rounded-xl p-8 text-center">
+                <div class="text-5xl mb-4">✅</div>
+                <h3 class="text-xl font-bold mb-2">Application Received!</h3>
+                <p class="text-green-100">Thank you for your interest in partnering with Elite Hub. Our team will review your application and get back to you within 3–5 business days.</p>
+            </div>
+
+            <form id="partner-form" class="bg-white text-gray-800 rounded-xl p-8 space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Organisation Name *</label>
+                        <input type="text" id="org-name" required
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Contact Person *</label>
+                        <input type="text" id="contact-person" required
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Email Address *</label>
+                        <input type="email" id="apply-email" required
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Phone Number *</label>
+                        <input type="tel" id="apply-phone" required placeholder="+254..."
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">County *</label>
+                        <input type="text" id="apply-county" required
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Partnership Type</label>
+                        <select id="apply-type"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="School">School</option>
+                            <option value="NGO">NGO</option>
+                            <option value="Corporate">Corporate</option>
+                            <option value="Government">Government</option>
+                            <option value="Community">Community</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Partnership Description *</label>
+                    <textarea id="apply-description" rows="4" required
+                              placeholder="Describe how you'd like to partner with Elite Hub…"
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <button type="submit"
+                        class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition">
+                    Submit Application
+                </button>
+                <p id="apply-error" class="hidden text-red-600 text-sm text-center"></p>
+            </form>
+        </div>
+    </section>
+
+    <div id="main-footer"></div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>
+        initPage('student', 'partners');
+
+        const BASE = () => (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '/api');
+
+        const TYPE_COLORS = {
+            School: 'bg-blue-100 text-blue-800',
+            NGO: 'bg-green-100 text-green-800',
+            Corporate: 'bg-purple-100 text-purple-800',
+            Government: 'bg-yellow-100 text-yellow-800',
+            Community: 'bg-orange-100 text-orange-800',
+        };
+
+        // ── Institutional Partners ────────────────────────────────────────────
+        async function loadPartners() {
+            const grid = document.getElementById('partners-grid');
+            try {
+                const res = await fetch(`${BASE()}/partners`);
+                if (!res.ok) throw new Error();
+                const partners = await res.json();
+                const list = Array.isArray(partners) ? partners : (partners.partners || []);
+                const visible = list.filter(p => p.visible !== false);
+                if (!visible.length) {
+                    grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No partners listed yet.</div>';
+                    return;
+                }
+                grid.innerHTML = visible.map(p => {
+                    const badge = TYPE_COLORS[p.partnershipType] || 'bg-gray-100 text-gray-700';
+                    return `
+                        <div class="bg-white rounded-xl shadow hover:shadow-md transition p-6 flex flex-col gap-3">
+                            ${p.logo ? `<img src="${p.logo}" alt="${p.name}" class="h-16 w-auto object-contain mb-1">` : '<div class="h-16 w-16 bg-gray-100 rounded-lg flex items-center justify-center text-2xl">🏢</div>'}
+                            <div>
+                                <h3 class="font-bold text-gray-800 text-lg">${p.name}</h3>
+                                <span class="inline-block text-xs font-semibold px-2 py-0.5 rounded-full ${badge} mt-1">${p.partnershipType || 'Partner'}</span>
+                            </div>
+                            ${p.description ? `<p class="text-gray-600 text-sm">${p.description}</p>` : ''}
+                            ${p.county ? `<p class="text-xs text-gray-400">📍 ${p.county}</p>` : ''}
+                            ${p.website ? `<a href="${p.website}" target="_blank" rel="noopener" class="text-blue-600 text-sm hover:underline">Visit website →</a>` : ''}
+                        </div>`;
+                }).join('');
+            } catch {
+                grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">Could not load partners.</div>';
+            }
+        }
+
+        // ── Verified Tutors ───────────────────────────────────────────────────
+        async function loadTutors() {
+            const grid = document.getElementById('tutors-grid');
+            try {
+                const res = await fetch(`${BASE()}/tutors/public`);
+                if (!res.ok) throw new Error();
+                const tutors = await res.json();
+                const list = Array.isArray(tutors) ? tutors : (tutors.tutors || []);
+                if (!list.length) {
+                    grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No verified educators yet.</div>';
+                    return;
+                }
+                grid.innerHTML = list.map(t => `
+                    <div class="bg-white rounded-xl shadow hover:shadow-md transition p-5 flex flex-col gap-2">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-2xl">👨‍🏫</div>
+                        <h3 class="font-bold text-gray-800">${t.name}</h3>
+                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full w-fit">
+                            ✓ TSC Verified Educator
+                        </span>
+                        ${t.subjects?.length ? `<p class="text-xs text-gray-500">${t.subjects.join(', ')}</p>` : ''}
+                        ${t.county ? `<p class="text-xs text-gray-400">📍 ${t.county}</p>` : ''}
+                    </div>`).join('');
+            } catch {
+                grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">Could not load educators.</div>';
+            }
+        }
+
+        // ── Partner Application Form ──────────────────────────────────────────
+        document.getElementById('partner-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errEl = document.getElementById('apply-error');
+            errEl.classList.add('hidden');
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Submitting…';
+
+            const body = {
+                organisationName: document.getElementById('org-name').value.trim(),
+                contactPerson:    document.getElementById('contact-person').value.trim(),
+                email:            document.getElementById('apply-email').value.trim(),
+                phone:            document.getElementById('apply-phone').value.trim(),
+                county:           document.getElementById('apply-county').value.trim(),
+                partnershipType:  document.getElementById('apply-type').value,
+                description:      document.getElementById('apply-description').value.trim(),
+            };
+
+            try {
+                const res = await fetch(`${BASE()}/partners/apply`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (!res.ok) {
+                    const d = await res.json();
+                    throw new Error(d.error || 'Submission failed');
+                }
+                document.getElementById('partner-form').classList.add('hidden');
+                document.getElementById('apply-success').classList.remove('hidden');
+            } catch (err) {
+                errEl.textContent = err.message;
+                errEl.classList.remove('hidden');
+                btn.disabled = false;
+                btn.textContent = 'Submit Application';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPartners();
+            loadTutors();
+        });
+    </script>
+    <script src="../assets/js/pwa-register.js"></script>
+</body>
+</html>

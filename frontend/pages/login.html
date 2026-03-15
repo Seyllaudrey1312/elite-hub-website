@@ -11,34 +11,26 @@
     <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gradient-to-br from-blue-900 to-green-700">
-    <!-- Login Container -->
     <div class="min-h-screen flex items-center justify-center px-4">
         <div class="w-full max-w-md">
-            <!-- Logo -->
             <div class="text-center mb-8">
                 <h1 class="text-5xl font-bold text-yellow-400 mb-2">Elite Hub</h1>
                 <p class="text-white text-lg">Learn. Practice. Excel.</p>
             </div>
 
-            <!-- Login Card -->
             <div class="bg-white rounded-lg shadow-2xl p-8">
                 <h2 class="text-3xl font-bold text-blue-900 mb-2 text-center">Student Login</h2>
                 <p class="text-gray-600 text-center mb-8">Access your personalized dashboard</p>
 
                 <form id="loginForm">
-                    <!-- Email Input -->
                     <div class="mb-6">
                         <label for="loginEmail" class="block text-gray-700 font-bold mb-2">Email Address</label>
                         <input type="email" id="loginEmail" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="student@school.com">
                     </div>
-
-                    <!-- Password Input -->
                     <div class="mb-6">
                         <label for="loginPassword" class="block text-gray-700 font-bold mb-2">Password</label>
                         <input type="password" id="loginPassword" name="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-200" placeholder="Enter your password">
                     </div>
-
-                    <!-- Remember Me & Forgot Password -->
                     <div class="flex items-center justify-between mb-6">
                         <label class="flex items-center">
                             <input id="rememberMe" type="checkbox" class="w-4 h-4 text-blue-900">
@@ -46,24 +38,20 @@
                         </label>
                         <a href="./forgot-password.html" class="text-blue-900 hover:underline text-sm">Forgot password?</a>
                     </div>
-
-                    <!-- Login Button -->
                     <button type="submit" class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition mb-4">Login to Dashboard</button>
-
                     <div class="text-center text-sm text-gray-500 mb-3">or continue with</div>
                     <div id="googleSignInBtn" class="w-full flex justify-center"></div>
                 </form>
 
-                <!-- Sign Up Link -->
-                <p class="text-center text-gray-600">New student? <a href="./register.html" class="text-blue-900 font-bold hover:underline">Register here</a></p>
-
-                <!-- Admin Login Link -->
+                <p class="text-center text-gray-600 mt-4">New student? <a href="./register.html" class="text-blue-900 font-bold hover:underline">Register here</a></p>
                 <hr class="my-6 border-gray-300">
                 <p class="text-center text-gray-600 mb-4">Tutor or Administrator?</p>
                 <a href="./admin-login.html" class="block w-full text-center bg-gray-100 text-blue-900 font-bold py-2 rounded-lg hover:bg-gray-200 transition">Admin Login</a>
+                <p class="text-center text-sm text-gray-500 mt-4">
+                    Are you a teacher? <a href="./tutor-register.html" class="text-green-700 font-semibold hover:underline">Apply as a tutor here</a>
+                </p>
             </div>
 
-            <!-- Additional Info -->
             <div class="mt-8 text-center text-white">
                 <p class="text-sm">Having trouble logging in?</p>
                 <p class="text-sm">Contact us: <a href="mailto:seyllaudrey6@gmail.com" class="underline hover:text-yellow-400">seyllaudrey6@gmail.com</a></p>
@@ -75,7 +63,10 @@
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/pwa-register.js"></script>
+    <script src="../assets/js/components.js"></script>
     <script>
+        initPage('student', 'login');
+
         window.addEventListener('load', () => {
             if (window.google && google.accounts) {
                 google.accounts.id.initialize({

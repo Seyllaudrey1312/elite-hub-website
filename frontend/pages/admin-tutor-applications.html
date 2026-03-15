@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Applications - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-100">
+<div class="lg:flex lg:h-screen lg:overflow-hidden">
+    <div id="admin-sidebar"></div>
+
+    <main class="flex-1 overflow-y-auto lg:pt-0 pt-14">
+        <!-- Top Bar -->
+        <div class="bg-white shadow sticky top-0 z-10 px-4 lg:px-8 py-4 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl lg:text-2xl font-bold text-gray-800">🎓 Tutor Applications</h2>
+                <p class="text-xs text-gray-500 mt-0.5">Review and approve TSC-verified tutor applications</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="pending-count-badge" class="hidden bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full"></span>
+                <button onclick="loadApplications()" class="text-sm text-blue-600 hover:underline">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="bg-white border-b px-4 lg:px-8 flex gap-1">
+            <button onclick="setFilter('all')"     id="tab-all"     class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-blue-600 text-blue-600">All</button>
+            <button onclick="setFilter('pending')" id="tab-pending" class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700">Pending</button>
+            <button onclick="setFilter('verified')"id="tab-verified"class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700">Approved</button>
+            <button onclick="setFilter('rejected')"id="tab-rejected"class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700">Rejected</button>
+        </div>
+
+        <div class="p-4 lg:p-8">
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Name</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Email</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">TSC Number</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Subjects</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">County</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Applied</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Status</th>
+                                <th class="px-4 py-3 font-semibold text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applications-tbody">
+                            <tr><td colspan="8" class="px-4 py-10 text-center text-gray-400">Loading applications…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Reject Modal -->
+<div id="reject-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Reject Application</h3>
+        <p class="text-sm text-gray-600 mb-3">Optionally provide a reason — this will be included in the rejection email.</p>
+        <textarea id="reject-reason" rows="3" placeholder="Reason for rejection (optional)…"
+                  class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 mb-4"></textarea>
+        <div class="flex gap-3">
+            <button onclick="confirmReject()"
+                    class="flex-1 bg-red-600 text-white font-semibold py-2 rounded-lg hover:bg-red-700 transition">
+                Confirm Reject
+            </button>
+            <button onclick="closeRejectModal()"
+                    class="flex-1 bg-gray-200 text-gray-700 font-semibold py-2 rounded-lg hover:bg-gray-300 transition">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+    initPage('admin', 'tutors');
+
+    const TOKEN = () => localStorage.getItem('adminToken');
+    const BASE  = () => (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '/api');
+
+    (function checkAuth() {
+        if (!localStorage.getItem('isAdmin') || !TOKEN()) window.location.href = 'admin-login.html';
+    })();
+
+    let allApplications = [];
+    let currentFilter   = 'all';
+    let rejectTargetId  = null;
+
+    const STATUS_BADGES = {
+        pending:  'bg-yellow-100 text-yellow-800',
+        verified: 'bg-green-100 text-green-800',
+        rejected: 'bg-red-100 text-red-800',
+    };
+    const STATUS_LABELS = { pending: '⏳ Pending', verified: '✅ Approved', rejected: '❌ Rejected' };
+
+    async function loadApplications() {
+        const tbody = document.getElementById('applications-tbody');
+        tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-10 text-center text-gray-400">Loading…</td></tr>';
+        try {
+            const res = await fetch(`${BASE()}/tutors/applications`, {
+                headers: { 'Authorization': `Bearer ${TOKEN()}` }
+            });
+            if (!res.ok) throw new Error('Failed to load');
+            allApplications = await res.json();
+
+            const pending = allApplications.filter(a => a.status === 'pending').length;
+            const badge = document.getElementById('pending-count-badge');
+            if (pending > 0) { badge.textContent = `${pending} pending`; badge.classList.remove('hidden'); }
+            else badge.classList.add('hidden');
+
+            renderTable();
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-10 text-center text-red-500">${err.message}</td></tr>`;
+        }
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('applications-tbody');
+        const list  = currentFilter === 'all'
+            ? allApplications
+            : allApplications.filter(a => a.status === currentFilter);
+
+        if (!list.length) {
+            tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-10 text-center text-gray-400">No applications found.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = list.map(a => {
+            const badge  = STATUS_BADGES[a.status] || 'bg-gray-100 text-gray-700';
+            const label  = STATUS_LABELS[a.status] || a.status;
+            const date   = new Date(a.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const subjs  = (a.subjects || []).join(', ') || '—';
+
+            const actions = a.status === 'pending'
+                ? `<button onclick="approveApplication('${a._id}')"
+                           class="bg-green-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-green-700 font-semibold">
+                       Approve
+                   </button>
+                   <button onclick="openRejectModal('${a._id}')"
+                           class="bg-red-100 text-red-700 text-xs px-3 py-1.5 rounded-lg hover:bg-red-200 font-semibold">
+                       Reject
+                   </button>`
+                : a.status === 'verified'
+                    ? `<span class="text-xs text-green-600 font-semibold">Activation code sent ✓</span>`
+                    : `<span class="text-xs text-gray-400">${a.rejectionReason ? `Reason: ${a.rejectionReason}` : 'Rejected'}</span>`;
+
+            return `
+                <tr class="border-b hover:bg-gray-50" id="row-${a._id}">
+                    <td class="px-4 py-3 font-medium text-gray-800">${a.name}</td>
+                    <td class="px-4 py-3 text-gray-600">${a.email}</td>
+                    <td class="px-4 py-3 font-mono text-xs text-gray-700">${a.tscNumber}</td>
+                    <td class="px-4 py-3 text-gray-600 max-w-xs truncate" title="${subjs}">${subjs}</td>
+                    <td class="px-4 py-3 text-gray-600">${a.county || '—'}</td>
+                    <td class="px-4 py-3 text-gray-500 whitespace-nowrap">${date}</td>
+                    <td class="px-4 py-3">
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full ${badge}">${label}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-2 flex-wrap">${actions}</div>
+                    </td>
+                </tr>`;
+        }).join('');
+    }
+
+    async function approveApplication(id) {
+        const btn = document.querySelector(`#row-${id} button`);
+        if (btn) { btn.disabled = true; btn.textContent = 'Approving…'; }
+        try {
+            const res = await fetch(`${BASE()}/tutors/${id}/approve`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${TOKEN()}` }
+            });
+            if (!res.ok) throw new Error((await res.json()).error || 'Failed');
+            // Update local state
+            const app = allApplications.find(a => a._id === id);
+            if (app) app.status = 'verified';
+            renderTable();
+            showToast('Tutor approved — activation code sent to their email ✓', 'success');
+        } catch (err) {
+            showToast(err.message, 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Approve'; }
+        }
+    }
+
+    function openRejectModal(id) {
+        rejectTargetId = id;
+        document.getElementById('reject-reason').value = '';
+        document.getElementById('reject-modal').classList.remove('hidden');
+    }
+
+    function closeRejectModal() {
+        rejectTargetId = null;
+        document.getElementById('reject-modal').classList.add('hidden');
+    }
+
+    async function confirmReject() {
+        if (!rejectTargetId) return;
+        const reason = document.getElementById('reject-reason').value.trim();
+        try {
+            const res = await fetch(`${BASE()}/tutors/${rejectTargetId}/reject`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${TOKEN()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reason })
+            });
+            if (!res.ok) throw new Error((await res.json()).error || 'Failed');
+            const app = allApplications.find(a => a._id === rejectTargetId);
+            if (app) { app.status = 'rejected'; app.rejectionReason = reason; }
+            closeRejectModal();
+            renderTable();
+            showToast('Application rejected — rejection email sent.', 'info');
+        } catch (err) {
+            showToast(err.message, 'error');
+        }
+    }
+
+    function setFilter(filter) {
+        currentFilter = filter;
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('border-blue-600', 'text-blue-600');
+            b.classList.add('border-transparent', 'text-gray-500');
+        });
+        const active = document.getElementById(`tab-${filter}`);
+        if (active) {
+            active.classList.add('border-blue-600', 'text-blue-600');
+            active.classList.remove('border-transparent', 'text-gray-500');
+        }
+        renderTable();
+    }
+
+    function showToast(msg, type = 'info') {
+        if (typeof showNotification === 'function') { showNotification(msg, type); return; }
+        const colors = { success: 'bg-green-600', error: 'bg-red-600', info: 'bg-blue-600' };
+        const t = document.createElement('div');
+        t.className = `fixed bottom-6 right-6 z-50 ${colors[type]||'bg-gray-700'} text-white px-5 py-3 rounded-lg shadow-lg text-sm font-semibold`;
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+    }
+
+    function adminLogout() {
+        if (!confirm('Log out?')) return;
+        localStorage.removeItem('isAdmin'); localStorage.removeItem('adminToken');
+        window.location.href = 'admin-login.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', loadApplications);
+</script>
+<script src="../assets/js/pwa-register.js"></script>
+</body>
+</html>

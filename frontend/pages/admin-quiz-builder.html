@@ -11,46 +11,11 @@
     <link rel="icon" type="image/png" href="../Favicon.png">
 </head>
 <body class="bg-gray-100">
-    <!-- Sidebar Navigation -->
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <div class="w-64 bg-blue-900 text-white overflow-y-auto">
-            <div class="p-6">
-                <h1 class="text-2xl font-bold text-yellow-400">Elite Hub</h1>
-                <p class="text-xs text-gray-300 mt-1">Admin Panel</p>
-            </div>
-
-            <nav class="mt-8">
-                <a href="admin-dashboard.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📊 Dashboard
-                </a>
-                <a href="admin-resources.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📄 Manage Resources
-                </a>
-                <a href="admin-quiz-builder.html" class="block px-6 py-3 bg-blue-800 border-l-4 border-yellow-400 text-white hover:bg-blue-700 transition">
-                    ❓ Create Quizzes
-                </a>
-                <a href="admin-quiz-results.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📈 Quiz Results
-                </a>
-                <a href="admin-students.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    👥 Students
-                </a>
-                <a href="admin-announcements.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📢 Announcements
-                </a>
-                <a href="admin-subjects.html" class="block px-6 py-3 text-gray-300 hover:bg-blue-800 transition">
-                    📚 Subjects
-                </a>
-                <hr class="my-4 border-blue-700">
-                <a href="#" onclick="adminLogout()" class="block px-6 py-3 text-gray-300 hover:bg-red-600 transition">
-                    🔓 Logout
-                </a>
-            </nav>
-        </div>
+    <div class="lg:flex lg:h-screen lg:overflow-hidden">
+        <div id="admin-sidebar"></div>
 
         <!-- Main Content -->
-        <div class="flex-1 overflow-auto">
+        <div class="flex-1 overflow-auto lg:pt-0 pt-14">
             <!-- Top Navigation -->
             <div class="bg-white shadow">
                 <div class="px-8 py-4">
@@ -160,7 +125,9 @@
 
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
-    <script>
+    <script src="../assets/js/pwa-register.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>initPage('admin', 'quiz-builder');</script>
         let questionCount = 0;
 
         function checkAdminAuth() {
