@@ -127,7 +127,13 @@
     </div>
 
     <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
+        function _notify(msg, type) {
+            if (typeof showNotification === 'function') { showNotification(msg, type); return; }
+            alert(msg);
+        }
+
         let currentParent = null;
         let linkedChildren = [];
         let selectedChildId = null;
@@ -143,7 +149,7 @@
                 }
 
                 // Fetch parent data
-                const response = await fetch('/api/parents/me', {
+                const response = await fetch(`${API_BASE_URL}/parents/me`, {
                     headers: { 'Authorization': `Bearer ${parentToken}` }
                 });
 
@@ -166,7 +172,7 @@
                 }
             } catch (error) {
                 console.error('Error initializing:', error);
-                showNotification('Failed to load data', 'error');
+                _notify('Failed to load data', 'error');
             }
         }
 
@@ -204,12 +210,12 @@
             selectedChildId = childId;
 
             try {
-                const response = await fetch(`/api/parents/child/${childId}/progress`, {
+                const response = await fetch(`${API_BASE_URL}/parents/child/${childId}/progress`, {
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('parentToken')}` }
                 });
 
                 if (!response.ok) {
-                    showNotification('Failed to load child progress', 'error');
+                    _notify('Failed to load child progress', 'error');
                     return;
                 }
 
@@ -235,7 +241,7 @@
                 document.getElementById('child-details-section').classList.remove('hidden');
             } catch (error) {
                 console.error('Error selecting child:', error);
-                showNotification('Failed to load child data', 'error');
+                _notify('Failed to load child data', 'error');
             }
         }
 
@@ -267,7 +273,7 @@
 
         async function loadChildUpdates(childId) {
             try {
-                const response = await fetch(`/api/parents/child/${childId}/updates`, {
+                const response = await fetch(`${API_BASE_URL}/parents/child/${childId}/updates`, {
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('parentToken')}` }
                 });
 
@@ -343,7 +349,7 @@
         async function refreshData() {
             if (selectedChildId) {
                 await selectChild(selectedChildId);
-                showNotification('Data refreshed', 'success');
+                _notify('Data refreshed', 'success');
             }
         }
 

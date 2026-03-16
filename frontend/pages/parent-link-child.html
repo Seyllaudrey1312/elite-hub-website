@@ -112,7 +112,13 @@
     </div>
 
     <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
+        function _notify(msg, type) {
+            if (typeof showNotification === 'function') { showNotification(msg, type); return; }
+            alert(msg);
+        }
+
         let currentParent = null;
         let linkedChildren = [];
 
@@ -126,7 +132,7 @@
                 }
 
                 // Fetch parent data
-                const response = await fetch('/api/parents/me', {
+                const response = await fetch(`${API_BASE_URL}/parents/me`, {
                     headers: { 'Authorization': `Bearer ${parentToken}` }
                 });
 
@@ -181,12 +187,12 @@
             const email = document.getElementById('child-email').value.trim();
 
             if (!email) {
-                showNotification('Please enter child\'s email', 'error');
+                _notify('Please enter child\'s email', 'error');
                 return;
             }
 
             try {
-                const response = await fetch('/api/parents/link-child-request', {
+                const response = await fetch(`${API_BASE_URL}/parents/link-child-request`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -198,7 +204,7 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    showNotification(data.error || 'Failed to send link request', 'error');
+                    _notify(data.error || data.message || 'Failed to send link request', 'error');
                     return;
                 }
 
@@ -209,18 +215,41 @@
                 // Clear input
                 document.getElementById('child-email').value = '';
 
-                showNotification('Link request sent! Your child will receive a notification.', 'success');
+                _notify('Link request sent! Your child will receive a notification.', 'success');
             } catch (error) {
                 console.error('Error:', error);
-                showNotification('An error occurred', 'error');
+                _notify('An error occurred', 'error');
             }
         }
 
         function copyLinkCode() {
             const code = document.getElementById('link-code-display').textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                showNotification('Code copied to clipboard!', 'success');
-            });
+            if (!code || code === '-') return;
+
+            // Modern clipboard API with fallback for older/mobile browsers
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(code)
+                    .then(() => _notify('Code copied to clipboard!', 'success'))
+                    .catch(() => fallbackCopy(code));
+            } else {
+                fallbackCopy(code);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            el.style.position = 'fixed';
+            el.style.opacity  = '0';
+            document.body.appendChild(el);
+            el.select();
+            try {
+                document.execCommand('copy');
+                _notify('Code copied to clipboard!', 'success');
+            } catch (e) {
+                _notify('Copy the code manually: ' + text, 'info');
+            }
+            document.body.removeChild(el);
         }
 
         function parentLogout() {
