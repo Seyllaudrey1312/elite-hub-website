@@ -24,6 +24,28 @@ const studentSchema = new mongoose.Schema({
         percentage:     Number,
         completedAt:    Date
     }],
+    mockResults: [{
+        quiz:           { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' },
+        examTitle:      String,
+        subject:        String,
+        paper:          String,
+        score:          Number,
+        totalQuestions: Number,
+        percentage:     Number,
+        grade:          String,
+        sectionBreakdown: mongoose.Schema.Types.Mixed,
+        completedAt:    Date,
+        isMock:         { type: Boolean, default: true }
+    }],
+    personalExamDates: [{
+        _id:        String,
+        name:       String,
+        date:       Date,
+        subject:    String,
+        reminder:   Boolean,
+        isOfficial: { type: Boolean, default: false },
+        createdAt:  Date
+    }],
     assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }],
     profileImage: String,
     provider:     { type: String, enum: ['local', 'google'], default: 'local' },

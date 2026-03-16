@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Exams - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0ea5a4">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-50">
+    <div id="main-nav"></div>
+
+    <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold">📝 Mock Exams</h1>
+            <p class="text-lg text-gray-100 mt-2">Practice with full KCSE-style examinations</p>
+        </div>
+    </section>
+
+    <!-- Scheduled Mock Exams -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl">⏰</span>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-lg font-medium text-orange-800">Scheduled Mock Exams</h3>
+                        <p class="text-sm text-orange-700">Platform-wide mock exams that start at a specific time for all students</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="scheduledExamsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <div class="text-center py-8 text-gray-500 col-span-full">
+                    Loading scheduled mock exams...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Available Mock Exams -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold text-blue-900 mb-6">Available Mock Exams</h2>
+            
+            <!-- Filters -->
+            <div class="bg-white rounded-lg shadow p-4 mb-6">
+                <div class="flex flex-wrap gap-4">
+                    <select id="subjectFilter" class="px-4 py-2 border border-gray-300 rounded-lg">
+                        <option value="">All Subjects</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="English">English</option>
+                        <option value="Kiswahili">Kiswahili</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="History">History</option>
+                        <option value="Geography">Geography</option>
+                    </select>
+                    
+                    <select id="paperFilter" class="px-4 py-2 border border-gray-300 rounded-lg">
+                        <option value="">All Papers</option>
+                        <option value="Paper 1">Paper 1</option>
+                        <option value="Paper 2">Paper 2</option>
+                        <option value="Paper 3">Paper 3</option>
+                    </select>
+                    
+                    <select id="difficultyFilter" class="px-4 py-2 border border-gray-300 rounded-lg">
+                        <option value="">All Difficulties</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+                    </select>
+                    
+                    <button onclick="applyFilters()" class="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+
+            <div id="mockExamsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="text-center py-8 text-gray-500 col-span-full">
+                    Loading mock exams...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- My Mock Results -->
+    <section class="py-8 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold text-blue-900 mb-6">📊 My Mock Results</h2>
+            
+            <div id="mockResultsContainer" class="space-y-4">
+                <div class="text-center py-8 text-gray-500">
+                    Loading your mock exam results...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Start Exam Confirmation Modal -->
+    <div id="startExamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+            <h3 class="text-lg font-bold text-blue-900 mb-4">🎯 Start Mock Exam</h3>
+            <div id="examDetails" class="mb-4">
+                <!-- Exam details will be populated here -->
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded p-3 mb-4">
+                <p class="text-sm text-yellow-800">
+                    <strong>Important:</strong> Once you start, you cannot pause or restart the exam. 
+                    Make sure you have a stable internet connection and won't be interrupted.
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <button id="confirmStartBtn" class="flex-1 bg-blue-900 text-white py-2 rounded font-bold hover:bg-blue-800">Start Exam</button>
+                <button id="cancelStartBtn" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-footer"></div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>
+        initPage('student', 'mock-exams');
+
+        let allMockExams = [];
+        let selectedExamId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            await loadMockExams();
+            await loadScheduledExams();
+            await loadMockResults();
+            setupEventListeners();
+        });
+
+        async function loadMockExams() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/quizzes?isMock=true`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+                
+                if (!response.ok) throw new Error('Failed to load mock exams');
+                
+                const data = await response.json();
+                allMockExams = Array.isArray(data) ? data : (data.quizzes || []);
+                
+                renderMockExams(allMockExams);
+            } catch (error) {
+                document.getElementById('mockExamsContainer').innerHTML = 
+                    `<div class="text-center py-8 text-red-500 col-span-full">Failed to load mock exams: ${error.message}</div>`;
+            }
+        }
+
+        async function loadScheduledExams() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/mock-exams/scheduled`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+                
+                if (!response.ok) throw new Error('Failed to load scheduled exams');
+                
+                const scheduledExams = await response.json();
+                renderScheduledExams(scheduledExams);
+            } catch (error) {
+                document.getElementById('scheduledExamsContainer').innerHTML = 
+                    `<div class="text-center py-8 text-red-500 col-span-full">Failed to load scheduled exams: ${error.message}</div>`;
+            }
+        }
+
+        async function loadMockResults() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/students/me/mock-results`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+                
+                if (!response.ok) throw new Error('Failed to load results');
+                
+                const results = await response.json();
+                renderMockResults(results);
+            } catch (error) {
+                document.getElementById('mockResultsContainer').innerHTML = 
+                    `<div class="text-center py-8 text-red-500">Failed to load results: ${error.message}</div>`;
+            }
+        }
+
+        function renderScheduledExams(exams) {
+            const container = document.getElementById('scheduledExamsContainer');
+            
+            if (!exams.length) {
+                container.innerHTML = '<div class="text-center py-8 text-gray-500 col-span-full">No scheduled mock exams at this time</div>';
+                return;
+            }
+
+            container.innerHTML = exams.map(exam => {
+                const startTime = new Date(exam.scheduledStartTime);
+                const now = new Date();
+                const canStart = now >= startTime;
+                const timeUntilStart = startTime - now;
+                
+                let statusBadge, actionButton;
+                
+                if (canStart) {
+                    statusBadge = '<span class="badge badge-success">Available Now</span>';
+                    actionButton = `<button onclick="startExam('${exam._id}')" class="w-full bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700 transition">Start Exam</button>`;
+                } else {
+                    const hoursUntil = Math.floor(timeUntilStart / (1000 * 60 * 60));
+                    const minutesUntil = Math.floor((timeUntilStart % (1000 * 60 * 60)) / (1000 * 60));
+                    statusBadge = `<span class="badge badge-warning">Starts in ${hoursUntil}h ${minutesUntil}m</span>`;
+                    actionButton = `<button disabled class="w-full bg-gray-400 text-white py-2 rounded font-bold cursor-not-allowed">Waiting for Start Time</button>`;
+                }
+
+                return `
+                    <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-orange-500">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-lg font-bold text-blue-900">${exam.title}</h3>
+                            ${statusBadge}
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-600 mb-4">
+                            <p><strong>Subject:</strong> ${exam.subject} ${exam.paper || ''}</p>
+                            <p><strong>Duration:</strong> ${exam.duration} minutes</p>
+                            <p><strong>Questions:</strong> ${exam.questions?.length || 0}</p>
+                            <p><strong>Start Time:</strong> ${startTime.toLocaleString()}</p>
+                        </div>
+                        ${actionButton}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMockExams(exams) {
+            const container = document.getElementById('mockExamsContainer');
+            
+            if (!exams.length) {
+                container.innerHTML = '<div class="text-center py-8 text-gray-500 col-span-full">No mock exams available</div>';
+                return;
+            }
+
+            container.innerHTML = exams.map(exam => {
+                const difficultyColor = {
+                    'Easy': 'bg-green-100 text-green-800',
+                    'Medium': 'bg-yellow-100 text-yellow-800',
+                    'Hard': 'bg-red-100 text-red-800'
+                };
+
+                return `
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-lg font-bold text-blue-900">${exam.title}</h3>
+                            <span class="badge badge-primary">${exam.subject}</span>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-gray-600 mb-4">
+                            ${exam.paper ? `<p><strong>Paper:</strong> ${exam.paper}</p>` : ''}
+                            <p><strong>Duration:</strong> ${exam.duration} minutes</p>
+                            <p><strong>Questions:</strong> ${exam.questions?.length || 0}</p>
+                            ${exam.difficulty ? `<p><strong>Difficulty:</strong> <span class="px-2 py-1 rounded text-xs ${difficultyColor[exam.difficulty] || 'bg-gray-100 text-gray-800'}">${exam.difficulty}</span></p>` : ''}
+                        </div>
+                        
+                        <p class="text-sm text-gray-700 mb-4">${exam.description || 'Full mock examination following KNEC format'}</p>
+                        
+                        <button onclick="startExam('${exam._id}')" class="w-full bg-blue-900 text-white py-2 rounded font-bold hover:bg-blue-800 transition">
+                            Start Mock Exam
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMockResults(results) {
+            const container = document.getElementById('mockResultsContainer');
+            
+            if (!results.length) {
+                container.innerHTML = '<div class="text-center py-8 text-gray-500">No mock exam results yet. Take your first mock exam to see results here.</div>';
+                return;
+            }
+
+            container.innerHTML = results.map(result => {
+                const percentage = Math.round((result.score / result.totalQuestions) * 100);
+                const gradeColor = getGradeColor(result.grade);
+                const completedDate = new Date(result.completedAt).toLocaleDateString();
+
+                return `
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-blue-900">${result.examTitle}</h3>
+                                <p class="text-sm text-gray-600">${result.subject} ${result.paper || ''}</p>
+                                <p class="text-xs text-gray-500">Completed on ${completedDate}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-bold ${gradeColor}">${result.grade}</div>
+                                <div class="text-sm text-gray-600">${result.score}/${result.totalQuestions} (${percentage}%)</div>
+                            </div>
+                        </div>
+                        
+                        ${result.sectionBreakdown ? `
+                            <div class="border-t pt-4">
+                                <h4 class="font-semibold mb-2">Section Breakdown:</h4>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    ${Object.entries(result.sectionBreakdown).map(([section, data]) => `
+                                        <div class="flex justify-between">
+                                            <span>${section}:</span>
+                                            <span class="font-semibold">${data.score}/${data.total}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getGradeColor(grade) {
+            const colors = {
+                'A': 'text-green-600', 'A-': 'text-green-600',
+                'B+': 'text-blue-600', 'B': 'text-blue-600', 'B-': 'text-blue-600',
+                'C+': 'text-yellow-600', 'C': 'text-yellow-600', 'C-': 'text-yellow-600',
+                'D+': 'text-orange-600', 'D': 'text-orange-600', 'D-': 'text-orange-600',
+                'E': 'text-red-600'
+            };
+            return colors[grade] || 'text-gray-600';
+        }
+
+        function applyFilters() {
+            const subjectFilter = document.getElementById('subjectFilter').value;
+            const paperFilter = document.getElementById('paperFilter').value;
+            const difficultyFilter = document.getElementById('difficultyFilter').value;
+
+            const filtered = allMockExams.filter(exam => {
+                const subjectMatch = !subjectFilter || exam.subject === subjectFilter;
+                const paperMatch = !paperFilter || exam.paper === paperFilter;
+                const difficultyMatch = !difficultyFilter || exam.difficulty === difficultyFilter;
+                
+                return subjectMatch && paperMatch && difficultyMatch;
+            });
+
+            renderMockExams(filtered);
+        }
+
+        function startExam(examId) {
+            selectedExamId = examId;
+            const exam = allMockExams.find(e => e._id === examId);
+            
+            if (!exam) {
+                showNotification('Exam not found', 'error');
+                return;
+            }
+
+            // Show confirmation modal
+            document.getElementById('examDetails').innerHTML = `
+                <div class="space-y-2 text-sm">
+                    <p><strong>Exam:</strong> ${exam.title}</p>
+                    <p><strong>Subject:</strong> ${exam.subject} ${exam.paper || ''}</p>
+                    <p><strong>Duration:</strong> ${exam.duration} minutes</p>
+                    <p><strong>Questions:</strong> ${exam.questions?.length || 0}</p>
+                </div>
+            `;
+            
+            document.getElementById('startExamModal').classList.remove('hidden');
+            document.getElementById('startExamModal').classList.add('flex');
+        }
+
+        function setupEventListeners() {
+            document.getElementById('confirmStartBtn').onclick = () => {
+                if (selectedExamId) {
+                    window.location.href = `mock-exam.html?id=${selectedExamId}`;
+                }
+            };
+
+            document.getElementById('cancelStartBtn').onclick = () => {
+                document.getElementById('startExamModal').classList.add('hidden');
+                document.getElementById('startExamModal').classList.remove('flex');
+                selectedExamId = null;
+            };
+
+            // Setup filter event listeners
+            ['subjectFilter', 'paperFilter', 'difficultyFilter'].forEach(id => {
+                document.getElementById(id).addEventListener('change', applyFilters);
+            });
+        }
+    </script>
+</body>
+</html>

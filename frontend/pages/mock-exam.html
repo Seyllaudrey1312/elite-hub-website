@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Exam - Elite Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+    <style>
+        body { overflow: hidden; }
+        .exam-interface { height: 100vh; }
+        .question-navigator { max-height: 60vh; overflow-y: auto; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Full Screen Exam Interface -->
+    <div class="exam-interface flex flex-col">
+        <!-- Header with Timer -->
+        <div class="bg-blue-900 text-white px-6 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold" id="examTitle">KCSE Mock Examination</h1>
+                <p class="text-sm text-blue-200" id="examSubject">Mathematics Paper 1</p>
+            </div>
+            <div class="text-right">
+                <div class="text-2xl font-bold" id="countdown">02:30:00</div>
+                <div class="text-xs text-blue-200">Time Remaining</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex">
+            <!-- Question Area -->
+            <div class="flex-1 p-6 overflow-y-auto">
+                <div id="questionContainer">
+                    <div class="mb-4">
+                        <span class="text-sm text-gray-500">Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">40</span></span>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                        <h2 class="text-lg font-semibold mb-4" id="questionText">Loading question...</h2>
+                        <div id="optionsContainer" class="space-y-3">
+                            <!-- Options will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between">
+                        <button id="prevBtn" class="px-6 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition" disabled>Previous</button>
+                        <div class="flex gap-3">
+                            <button id="flagBtn" class="px-6 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">Flag for Review</button>
+                            <button id="nextBtn" class="px-6 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Navigator Panel -->
+            <div class="w-80 bg-white border-l border-gray-200 p-4">
+                <h3 class="font-bold text-gray-800 mb-4">Question Navigator</h3>
+                
+                <!-- Legend -->
+                <div class="mb-4 text-xs">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-4 h-4 bg-green-500 rounded"></div>
+                        <span>Answered</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-4 h-4 bg-yellow-500 rounded"></div>
+                        <span>Flagged</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-4 h-4 bg-blue-500 rounded"></div>
+                        <span>Current</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 bg-gray-300 rounded"></div>
+                        <span>Not Visited</span>
+                    </div>
+                </div>
+
+                <!-- Question Grid -->
+                <div class="question-navigator">
+                    <div id="questionGrid" class="grid grid-cols-5 gap-2">
+                        <!-- Question numbers will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-6">
+                    <button id="submitExamBtn" class="w-full bg-red-600 text-white py-3 rounded font-bold hover:bg-red-700 transition">
+                        Submit Exam
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Make sure to review all questions before submitting</p>
+                </div>
+
+                <!-- Exam Stats -->
+                <div class="mt-4 text-sm text-gray-600">
+                    <div class="flex justify-between">
+                        <span>Answered:</span>
+                        <span id="answeredCount">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Flagged:</span>
+                        <span id="flaggedCount">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Remaining:</span>
+                        <span id="remainingCount">40</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto-submit Warning Modal -->
+    <div id="autoSubmitModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+            <h3 class="text-lg font-bold text-red-600 mb-4">⏰ Time Almost Up!</h3>
+            <p class="text-gray-700 mb-4">Your exam will be automatically submitted in <span id="autoSubmitCountdown">60</span> seconds.</p>
+            <div class="flex gap-3">
+                <button id="submitNowBtn" class="flex-1 bg-red-600 text-white py-2 rounded font-bold hover:bg-red-700">Submit Now</button>
+                <button id="continueBtn" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="resultsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-2xl mx-4 max-h-96 overflow-y-auto">
+            <h3 class="text-2xl font-bold text-blue-900 mb-4">📊 Mock Exam Results</h3>
+            
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-green-600" id="finalScore">0</div>
+                    <div class="text-sm text-gray-600">Score</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-blue-600" id="finalGrade">F</div>
+                    <div class="text-sm text-gray-600">KNEC Grade</div>
+                </div>
+            </div>
+
+            <div id="sectionBreakdown" class="mb-6">
+                <h4 class="font-bold mb-3">Section Breakdown:</h4>
+                <!-- Section results will be populated here -->
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="window.location.href='mock-exams.html'" class="flex-1 bg-blue-900 text-white py-2 rounded font-bold hover:bg-blue-800">Back to Mock Exams</button>
+                <button onclick="window.location.href='dashboard.html'" class="flex-1 bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400">Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script>
+        let examData = null;
+        let currentQuestion = 0;
+        let answers = {};
+        let flaggedQuestions = new Set();
+        let timeRemaining = 0;
+        let timerInterval = null;
+        let examId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            examId = urlParams.get('id');
+            
+            if (!examId) {
+                showNotification('No exam ID provided', 'error');
+                window.location.href = 'mock-exams.html';
+                return;
+            }
+
+            await loadExam();
+            setupEventListeners();
+        });
+
+        async function loadExam() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/quizzes/${examId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+                
+                if (!response.ok) throw new Error('Failed to load exam');
+                
+                examData = await response.json();
+                
+                if (!examData.isMock) {
+                    showNotification('This is not a mock exam', 'error');
+                    window.location.href = 'quizzes.html';
+                    return;
+                }
+
+                // Check if exam has started (for scheduled exams)
+                if (examData.scheduledStartTime) {
+                    const startTime = new Date(examData.scheduledStartTime);
+                    const now = new Date();
+                    
+                    if (now < startTime) {
+                        showNotification('Exam has not started yet', 'warning');
+                        window.location.href = 'mock-exams.html';
+                        return;
+                    }
+                }
+
+                initializeExam();
+            } catch (error) {
+                showNotification('Failed to load exam: ' + error.message, 'error');
+                window.location.href = 'mock-exams.html';
+            }
+        }
+
+        function initializeExam() {
+            document.getElementById('examTitle').textContent = examData.title;
+            document.getElementById('examSubject').textContent = `${examData.subject} ${examData.paper || ''}`;
+            document.getElementById('totalQuestions').textContent = examData.questions.length;
+            
+            timeRemaining = (examData.duration || 150) * 60; // Convert minutes to seconds
+            
+            generateQuestionGrid();
+            loadQuestion(0);
+            startTimer();
+            updateStats();
+        }
+
+        function generateQuestionGrid() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < examData.questions.length; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i + 1;
+                btn.className = 'w-8 h-8 rounded text-sm font-semibold bg-gray-300 text-gray-700 hover:bg-gray-400 transition';
+                btn.onclick = () => loadQuestion(i);
+                btn.id = `q-btn-${i}`;
+                grid.appendChild(btn);
+            }
+        }
+
+        function loadQuestion(index) {
+            if (index < 0 || index >= examData.questions.length) return;
+            
+            currentQuestion = index;
+            const question = examData.questions[index];
+            
+            document.getElementById('currentQuestionNum').textContent = index + 1;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, i) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3';
+                
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'answer';
+                input.value = i;
+                input.id = `option-${i}`;
+                input.className = 'w-4 h-4 text-blue-600';
+                input.checked = answers[index] === i;
+                input.onchange = () => saveAnswer(index, i);
+                
+                const label = document.createElement('label');
+                label.htmlFor = `option-${i}`;
+                label.textContent = option;
+                label.className = 'flex-1 cursor-pointer';
+                
+                div.appendChild(input);
+                div.appendChild(label);
+                optionsContainer.appendChild(div);
+            });
+            
+            updateNavigationButtons();
+            updateQuestionStatus();
+            updateFlagButton();
+        }
+
+        function saveAnswer(questionIndex, answerIndex) {
+            answers[questionIndex] = answerIndex;
+            updateQuestionStatus();
+            updateStats();
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = 
+                currentQuestion === examData.questions.length - 1 ? 'Finish' : 'Next';
+        }
+
+        function updateQuestionStatus() {
+            // Update question grid colors
+            for (let i = 0; i < examData.questions.length; i++) {
+                const btn = document.getElementById(`q-btn-${i}`);
+                if (i === currentQuestion) {
+                    btn.className = 'w-8 h-8 rounded text-sm font-semibold bg-blue-500 text-white';
+                } else if (flaggedQuestions.has(i)) {
+                    btn.className = 'w-8 h-8 rounded text-sm font-semibold bg-yellow-500 text-white';
+                } else if (answers.hasOwnProperty(i)) {
+                    btn.className = 'w-8 h-8 rounded text-sm font-semibold bg-green-500 text-white';
+                } else {
+                    btn.className = 'w-8 h-8 rounded text-sm font-semibold bg-gray-300 text-gray-700 hover:bg-gray-400 transition';
+                }
+            }
+        }
+
+        function updateFlagButton() {
+            const flagBtn = document.getElementById('flagBtn');
+            if (flaggedQuestions.has(currentQuestion)) {
+                flagBtn.textContent = 'Remove Flag';
+                flagBtn.className = 'px-6 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition';
+            } else {
+                flagBtn.textContent = 'Flag for Review';
+                flagBtn.className = 'px-6 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition';
+            }
+        }
+
+        function updateStats() {
+            const answered = Object.keys(answers).length;
+            const flagged = flaggedQuestions.size;
+            const remaining = examData.questions.length - answered;
+            
+            document.getElementById('answeredCount').textContent = answered;
+            document.getElementById('flaggedCount').textContent = flagged;
+            document.getElementById('remainingCount').textContent = remaining;
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                // Show warning at 1 minute
+                if (timeRemaining === 60) {
+                    showAutoSubmitWarning();
+                }
+                
+                // Auto-submit at 0
+                if (timeRemaining <= 0) {
+                    autoSubmitExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeRemaining / 3600);
+            const minutes = Math.floor((timeRemaining % 3600) / 60);
+            const seconds = timeRemaining % 60;
+            
+            const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('countdown').textContent = display;
+            
+            // Change color when time is running out
+            const countdownEl = document.getElementById('countdown');
+            if (timeRemaining < 300) { // Less than 5 minutes
+                countdownEl.className = 'text-2xl font-bold text-red-400';
+            } else if (timeRemaining < 900) { // Less than 15 minutes
+                countdownEl.className = 'text-2xl font-bold text-yellow-400';
+            }
+        }
+
+        function showAutoSubmitWarning() {
+            const modal = document.getElementById('autoSubmitModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            let countdown = 60;
+            const countdownEl = document.getElementById('autoSubmitCountdown');
+            
+            const warningInterval = setInterval(() => {
+                countdown--;
+                countdownEl.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(warningInterval);
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            }, 1000);
+        }
+
+        function setupEventListeners() {
+            document.getElementById('prevBtn').onclick = () => {
+                if (currentQuestion > 0) loadQuestion(currentQuestion - 1);
+            };
+            
+            document.getElementById('nextBtn').onclick = () => {
+                if (currentQuestion < examData.questions.length - 1) {
+                    loadQuestion(currentQuestion + 1);
+                } else {
+                    submitExam();
+                }
+            };
+            
+            document.getElementById('flagBtn').onclick = () => {
+                if (flaggedQuestions.has(currentQuestion)) {
+                    flaggedQuestions.delete(currentQuestion);
+                } else {
+                    flaggedQuestions.add(currentQuestion);
+                }
+                updateQuestionStatus();
+                updateFlagButton();
+                updateStats();
+            };
+            
+            document.getElementById('submitExamBtn').onclick = submitExam;
+            document.getElementById('submitNowBtn').onclick = submitExam;
+            document.getElementById('continueBtn').onclick = () => {
+                document.getElementById('autoSubmitModal').classList.add('hidden');
+            };
+            
+            // Prevent page refresh/close during exam
+            window.addEventListener('beforeunload', (e) => {
+                e.preventDefault();
+                e.returnValue = 'Are you sure you want to leave the exam?';
+            });
+        }
+
+        async function submitExam() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/quizzes/${examId}/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ answers })
+                });
+                
+                if (!response.ok) throw new Error('Failed to submit exam');
+                
+                const result = await response.json();
+                showResults(result);
+                
+            } catch (error) {
+                showNotification('Failed to submit exam: ' + error.message, 'error');
+            }
+        }
+
+        function autoSubmitExam() {
+            showNotification('Time up! Exam submitted automatically.', 'warning');
+            submitExam();
+        }
+
+        function showResults(result) {
+            document.getElementById('finalScore').textContent = `${result.score}/${result.totalQuestions}`;
+            document.getElementById('finalGrade').textContent = result.grade;
+            
+            // Show section breakdown if available
+            const breakdownEl = document.getElementById('sectionBreakdown');
+            if (result.sectionBreakdown) {
+                let html = '';
+                for (const [section, data] of Object.entries(result.sectionBreakdown)) {
+                    html += `
+                        <div class="flex justify-between py-2 border-b">
+                            <span>${section}</span>
+                            <span class="font-semibold">${data.score}/${data.total} (${Math.round(data.percentage)}%)</span>
+                        </div>
+                    `;
+                }
+                breakdownEl.innerHTML = '<h4 class="font-bold mb-3">Section Breakdown:</h4>' + html;
+            }
+            
+            document.getElementById('resultsModal').classList.remove('hidden');
+            document.getElementById('resultsModal').classList.add('flex');
+        }
+
+        // KNEC Grading function
+        function getKNECGrade(percentage) {
+            if (percentage >= 80) return 'A';
+            if (percentage >= 75) return 'A-';
+            if (percentage >= 70) return 'B+';
+            if (percentage >= 65) return 'B';
+            if (percentage >= 60) return 'B-';
+            if (percentage >= 55) return 'C+';
+            if (percentage >= 50) return 'C';
+            if (percentage >= 45) return 'C-';
+            if (percentage >= 40) return 'D+';
+            if (percentage >= 35) return 'D';
+            if (percentage >= 30) return 'D-';
+            return 'E';
+        }
+    </script>
+</body>
+</html>

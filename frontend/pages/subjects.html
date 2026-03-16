@@ -275,6 +275,19 @@
     <script src="../assets/js/pwa-register.js"></script>
     <script src="../assets/js/components.js"></script>
     <script>
+        function toggleSubject(card) {
+            const list = card.querySelector('.form-list');
+            const prompt = card.querySelector('.form-prompt');
+            if (list.classList.contains('hidden')) {
+                list.classList.remove('hidden');
+                prompt.textContent = 'Click to collapse';
+            } else {
+                list.classList.add('hidden');
+                prompt.textContent = 'Click to expand';
+            }
+        }
+</script>
+    <script>
         initPage('student', 'subjects');
 
         function openDoc(href, title) {

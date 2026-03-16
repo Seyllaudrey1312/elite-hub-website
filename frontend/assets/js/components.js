@@ -7,6 +7,7 @@ const NAV_LINKS = [
     { key: 'subjects',      label: 'Subjects',        href: './subjects.html' },
     { key: 'resources',     label: 'Study Resources', href: './resources.html' },
     { key: 'quizzes',       label: 'Quizzes',         href: './quizzes.html' },
+    { key: 'mock-exams',    label: 'Mock Exams',      href: './mock-exams.html' },
     { key: 'past-papers',   label: 'Past Papers',     href: './past-papers.html' },
     { key: 'pricing',       label: 'Pricing',         href: './pricing.html' },
     { key: 'forums',        label: 'Forums',          href: './forums.html' },

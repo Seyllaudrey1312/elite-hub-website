@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Exams Management - Elite Hub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a5f">
+    <link rel="icon" type="image/png" href="../Favicon.png">
+</head>
+<body class="bg-gray-100">
+    <div class="lg:flex lg:h-screen lg:overflow-hidden">
+        <div id="admin-sidebar"></div>
+
+        <main class="flex-1 overflow-y-auto lg:pt-0 pt-14">
+            <div class="bg-white shadow sticky top-0 z-10">
+                <div class="px-4 lg:px-8 py-4">
+                    <h2 class="text-xl lg:text-2xl font-bold text-gray-800">📝 Mock Exams Management</h2>
+                    <p class="text-sm text-gray-500">Manage mock exams and official exam dates</p>
+                </div>
+            </div>
+
+            <div class="p-4 lg:p-8">
+                <!-- Tabs -->
+                <div class="mb-6">
+                    <div class="border-b border-gray-200">
+                        <nav class="-mb-px flex space-x-8">
+                            <button onclick="showTab('mock-exams')" id="tab-mock-exams" 
+                                    class="tab-button border-b-2 border-blue-500 text-blue-600 py-2 px-1 text-sm font-medium">
+                                Mock Exams
+                            </button>
+                            <button onclick="showTab('exam-dates')" id="tab-exam-dates"
+                                    class="tab-button border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                                Official Exam Dates
+                            </button>
+                            <button onclick="showTab('scheduled-mocks')" id="tab-scheduled-mocks"
+                                    class="tab-button border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-2 px-1 text-sm font-medium">
+                                Scheduled Mocks
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Mock Exams Tab -->
+                <div id="content-mock-exams" class="tab-content">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold">Mock Examinations</h3>
+                        <button onclick="openCreateMockModal()" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                            + Create Mock Exam
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paper</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Questions</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mock-exams-table" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">Loading mock exams...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Official Exam Dates Tab -->
+                <div id="content-exam-dates" class="tab-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold">Official Exam Dates</h3>
+                        <button onclick="openCreateExamDateModal()" 
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                            + Add Exam Date
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="exam-dates-grid">
+                        <div class="text-center py-8 text-gray-500 col-span-full">Loading exam dates...</div>
+                    </div>
+                </div>
+
+                <!-- Scheduled Mocks Tab -->
+                <div id="content-scheduled-mocks" class="tab-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold">Platform-wide Scheduled Mock Exams</h3>
+                        <button onclick="openScheduleMockModal()" 
+                                class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                            + Schedule Mock Exam
+                        </button>
+                    </div>
+
+                    <div class="space-y-4" id="scheduled-mocks-list">
+                        <div class="text-center py-8 text-gray-500">Loading scheduled mocks...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Mock Exam Modal -->
+    <div id="createMockModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-2xl mx-4 w-full max-h-96 overflow-y-auto">
+            <h3 class="text-lg font-bold text-blue-900 mb-4">Create Mock Exam</h3>
+            
+            <form id="createMockForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Title *</label>
+                        <input type="text" name="title" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                               placeholder="e.g., Mathematics Mock Exam 2026">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Subject *</label>
+                        <select name="subject" required 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="">Select Subject</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="English">English</option>
+                            <option value="Kiswahili">Kiswahili</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Biology">Biology</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Paper</label>
+                        <select name="paper" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="">Select Paper</option>
+                            <option value="Paper 1">Paper 1</option>
+                            <option value="Paper 2">Paper 2</option>
+                            <option value="Paper 3">Paper 3</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Duration (minutes) *</label>
+                        <input type="number" name="duration" required min="30" max="300" value="150"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Difficulty</label>
+                        <select name="difficulty" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="">Select Difficulty</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Target Forms</label>
+                        <select name="targetForms" multiple 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="Form 4">Form 4</option>
+                            <option value="Grade 12">Grade 12</option>
+                            <option value="Form 3">Form 3</option>
+                            <option value="Grade 11">Grade 11</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Description</label>
+                    <textarea name="description" rows="3" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                              placeholder="Brief description of the mock exam"></textarea>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700 transition">
+                        Create Mock Exam
+                    </button>
+                    <button type="button" onclick="closeCreateMockModal()" 
+                            class="flex-1 bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400 transition">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Exam Date Modal -->
+    <div id="createExamDateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4 w-full">
+            <h3 class="text-lg font-bold text-green-700 mb-4">Add Official Exam Date</h3>
+            
+            <form id="createExamDateForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Exam Name *</label>
+                    <input type="text" name="name" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
+                           placeholder="e.g., KCSE 2026">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Date & Time *</label>
+                    <input type="datetime-local" name="date" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Target Forms</label>
+                    <select name="targetForms" multiple 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500">
+                        <option value="Form 4">Form 4</option>
+                        <option value="Grade 12">Grade 12</option>
+                        <option value="Form 3">Form 3</option>
+                        <option value="Grade 11">Grade 11</option>
+                        <option value="Form 2">Form 2</option>
+                        <option value="Grade 10">Grade 10</option>
+                        <option value="Form 1">Form 1</option>
+                        <option value="Grade 9">Grade 9</option>
+                    </select>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2">Description</label>
+                    <textarea name="description" rows="3" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500"
+                              placeholder="Additional details about the exam"></textarea>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 bg-green-600 text-white py-2 rounded font-bold hover:bg-green-700 transition">
+                        Add Exam Date
+                    </button>
+                    <button type="button" onclick="closeCreateExamDateModal()" 
+                            class="flex-1 bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400 transition">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>
+        initPage('admin', 'mock-exams');
+
+        const TOKEN = () => localStorage.getItem('adminToken');
+        const BASE = () => (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '/api');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('isAdmin') || !TOKEN()) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            loadMockExams();
+            loadExamDates();
+            loadScheduledMocks();
+            setupEventListeners();
+        });
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active state from all tabs
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('border-blue-500', 'text-blue-600');
+                button.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            // Show selected tab content
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            
+            // Add active state to selected tab
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.add('border-blue-500', 'text-blue-600');
+            activeTab.classList.remove('border-transparent', 'text-gray-500');
+        }
+
+        async function loadMockExams() {
+            try {
+                const response = await fetch(`${BASE()}/quizzes?isMock=true`, {
+                    headers: { 'Authorization': `Bearer ${TOKEN()}` }
+                });
+                
+                if (!response.ok) throw new Error('Failed to load mock exams');
+                
+                const mockExams = await response.json();
+                renderMockExamsTable(mockExams);
+            } catch (error) {
+                document.getElementById('mock-exams-table').innerHTML = 
+                    `<tr><td colspan="7" class="px-6 py-4 text-center text-red-500">Failed to load mock exams</td></tr>`;
+            }
+        }
+
+        function renderMockExamsTable(exams) {
+            const tbody = document.getElementById('mock-exams-table');
+            
+            if (!exams.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">No mock exams created yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = exams.map(exam => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${exam.title}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${exam.subject}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${exam.paper || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${exam.duration} min</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${exam.questions?.length || 0}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${exam.published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                            ${exam.published ? 'Published' : 'Draft'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="editMockExam('${exam._id}')" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                        <button onclick="deleteMockExam('${exam._id}')" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadExamDates() {
+            try {
+                const response = await fetch(`${BASE()}/exam-dates`, {
+                    headers: { 'Authorization': `Bearer ${TOKEN()}` }
+                });
+                
+                if (!response.ok) throw new Error('Failed to load exam dates');
+                
+                const examDates = await response.json();
+                renderExamDatesGrid(examDates);
+            } catch (error) {
+                document.getElementById('exam-dates-grid').innerHTML = 
+                    '<div class="text-center py-8 text-red-500 col-span-full">Failed to load exam dates</div>';
+            }
+        }
+
+        function renderExamDatesGrid(examDates) {
+            const grid = document.getElementById('exam-dates-grid');
+            
+            if (!examDates.length) {
+                grid.innerHTML = '<div class="text-center py-8 text-gray-500 col-span-full">No official exam dates added yet</div>';
+                return;
+            }
+
+            grid.innerHTML = examDates.map(exam => {
+                const examDate = new Date(exam.date);
+                const now = new Date();
+                const isPast = examDate < now;
+                
+                return `
+                    <div class="bg-white rounded-lg shadow p-6 ${isPast ? 'opacity-60' : ''}">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="text-lg font-bold text-gray-900">${exam.name}</h4>
+                            <button onclick="deleteExamDate('${exam._id}')" class="text-red-500 hover:text-red-700">×</button>
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-600">
+                            <p><strong>Date:</strong> ${examDate.toLocaleDateString()}</p>
+                            <p><strong>Time:</strong> ${examDate.toLocaleTimeString()}</p>
+                            ${exam.targetForms?.length ? `<p><strong>Forms:</strong> ${exam.targetForms.join(', ')}</p>` : ''}
+                            ${exam.description ? `<p><strong>Description:</strong> ${exam.description}</p>` : ''}
+                        </div>
+                        ${isPast ? '<div class="mt-3 text-xs text-gray-500">This exam has passed</div>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadScheduledMocks() {
+            // Implementation for scheduled mocks
+            document.getElementById('scheduled-mocks-list').innerHTML = 
+                '<div class="text-center py-8 text-gray-500">Scheduled mocks feature coming soon</div>';
+        }
+
+        function setupEventListeners() {
+            document.getElementById('createMockForm').addEventListener('submit', handleCreateMock);
+            document.getElementById('createExamDateForm').addEventListener('submit', handleCreateExamDate);
+        }
+
+        async function handleCreateMock(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const mockData = {
+                title: formData.get('title'),
+                subject: formData.get('subject'),
+                paper: formData.get('paper') || null,
+                duration: parseInt(formData.get('duration')),
+                difficulty: formData.get('difficulty') || null,
+                targetForms: formData.getAll('targetForms'),
+                description: formData.get('description') || '',
+                isMock: true,
+                published: false
+            };
+
+            try {
+                const response = await fetch(`${BASE()}/quizzes`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${TOKEN()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(mockData)
+                });
+
+                if (!response.ok) throw new Error('Failed to create mock exam');
+
+                showNotification('Mock exam created successfully!', 'success');
+                closeCreateMockModal();
+                loadMockExams();
+            } catch (error) {
+                showNotification('Failed to create mock exam: ' + error.message, 'error');
+            }
+        }
+
+        async function handleCreateExamDate(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const examDateData = {
+                name: formData.get('name'),
+                date: formData.get('date'),
+                targetForms: formData.getAll('targetForms'),
+                description: formData.get('description') || '',
+                isOfficial: true
+            };
+
+            try {
+                const response = await fetch(`${BASE()}/exam-dates`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${TOKEN()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(examDateData)
+                });
+
+                if (!response.ok) throw new Error('Failed to create exam date');
+
+                showNotification('Exam date added successfully!', 'success');
+                closeCreateExamDateModal();
+                loadExamDates();
+            } catch (error) {
+                showNotification('Failed to add exam date: ' + error.message, 'error');
+            }
+        }
+
+        function openCreateMockModal() {
+            document.getElementById('createMockModal').classList.remove('hidden');
+            document.getElementById('createMockModal').classList.add('flex');
+        }
+
+        function closeCreateMockModal() {
+            document.getElementById('createMockModal').classList.add('hidden');
+            document.getElementById('createMockModal').classList.remove('flex');
+            document.getElementById('createMockForm').reset();
+        }
+
+        function openCreateExamDateModal() {
+            document.getElementById('createExamDateModal').classList.remove('hidden');
+            document.getElementById('createExamDateModal').classList.add('flex');
+            
+            // Set minimum date to today
+            const now = new Date();
+            const minDate = now.toISOString().slice(0, 16);
+            document.querySelector('input[name="date"]').min = minDate;
+        }
+
+        function closeCreateExamDateModal() {
+            document.getElementById('createExamDateModal').classList.add('hidden');
+            document.getElementById('createExamDateModal').classList.remove('flex');
+            document.getElementById('createExamDateForm').reset();
+        }
+
+        async function deleteMockExam(id) {
+            if (!confirm('Are you sure you want to delete this mock exam?')) return;
+            
+            try {
+                const response = await fetch(`${BASE()}/quizzes/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${TOKEN()}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete mock exam');
+
+                showNotification('Mock exam deleted successfully!', 'success');
+                loadMockExams();
+            } catch (error) {
+                showNotification('Failed to delete mock exam: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteExamDate(id) {
+            if (!confirm('Are you sure you want to delete this exam date?')) return;
+            
+            try {
+                const response = await fetch(`${BASE()}/exam-dates/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${TOKEN()}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete exam date');
+
+                showNotification('Exam date deleted successfully!', 'success');
+                loadExamDates();
+            } catch (error) {
+                showNotification('Failed to delete exam date: ' + error.message, 'error');
+            }
+        }
+
+        function editMockExam(id) {
+            // Redirect to quiz builder with mock exam ID
+            window.location.href = `admin-quiz-builder.html?id=${id}&mock=true`;
+        }
+    </script>
+</body>
+</html>
