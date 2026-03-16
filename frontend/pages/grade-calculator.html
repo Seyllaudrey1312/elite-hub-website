@@ -7,104 +7,333 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#1e3a5f">
+    <meta name="theme-color" content="#1e3a8a">
     <link rel="icon" type="image/png" href="../Favicon.png">
     <style>
         @media print {
             #main-nav, #main-footer, .no-print { display: none !important; }
-            body { background: white; }
-            #print-area { display: block !important; }
+            body { background: white; font-size: 12px; }
+            .print-only { display: block !important; }
+            .bg-white { box-shadow: none !important; }
         }
+        .print-only { display: none; }
+
+        /* Tab active state */
+        .calc-tab.active {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        /* Grade badge animation */
+        #mean-grade-badge {
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Cluster result */
+        #cluster-result-display {
+            transition: color 0.3s;
+        }
+
+        /* Subject row hover */
+        .subject-row:hover { background: #f8fafc; }
+
+        /* Cluster preset buttons */
+        .preset-btn.active {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { opacity: 1; }
     </style>
 </head>
 <body class="bg-gray-50">
     <div id="main-nav"></div>
 
+    <!-- Page Header -->
     <section class="bg-gradient-to-r from-blue-900 to-green-700 text-white py-12">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-4xl font-bold">🎓 KCSE Grade Calculator</h1>
-            <p class="text-lg text-gray-100 mt-2">Calculate your mean grade and cluster points instantly</p>
+            <p class="text-lg text-gray-100 mt-2">Calculate your mean grade and KUCCPS cluster points instantly</p>
+            <p class="text-sm text-blue-200 mt-1">Based on the 2025 KNEC grading system • 100% client-side • No data is sent anywhere</p>
         </div>
     </section>
 
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        <!-- Calculator Card -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-            <h2 class="text-lg font-bold text-gray-800 mb-1">Enter Your Marks</h2>
-            <p class="text-sm text-gray-500 mb-5">Fill in marks (0–100) for each subject. Grades update in real time.</p>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="border-b border-gray-200">
-                            <th class="text-left py-2 pr-4 font-semibold text-gray-600 w-8">#</th>
-                            <th class="text-left py-2 pr-4 font-semibold text-gray-600">Subject</th>
-                            <th class="text-left py-2 pr-4 font-semibold text-gray-600 w-28">Marks (0–100)</th>
-                            <th class="text-left py-2 font-semibold text-gray-600 w-20">Grade</th>
-                            <th class="text-left py-2 font-semibold text-gray-600 w-16">Points</th>
-                        </tr>
-                    </thead>
-                    <tbody id="subjects-table"></tbody>
-                </table>
-            </div>
-
-            <button onclick="addSubjectRow()"
-                    class="no-print mt-4 text-sm text-blue-700 hover:underline font-semibold">+ Add subject row</button>
+        <!-- Tab Navigation -->
+        <div class="flex gap-2 mb-6 no-print">
+            <button onclick="switchTab('mean')" id="tab-mean"
+                    class="calc-tab active flex-1 py-3 rounded-xl border-2 font-bold text-sm transition">
+                📊 Section 1 — Mean Grade
+            </button>
+            <button onclick="switchTab('cluster')" id="tab-cluster"
+                    class="calc-tab flex-1 py-3 rounded-xl border-2 border-gray-300 text-gray-600 font-bold text-sm transition hover:border-blue-900 hover:text-blue-900">
+                🎯 Section 2 — Cluster Points
+            </button>
         </div>
 
-        <!-- Results Card -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6" id="results-card">
-            <h2 class="text-lg font-bold text-gray-800 mb-4">📊 Results Summary</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
-                <div class="bg-blue-50 rounded-xl p-4 text-center">
-                    <p class="text-xs text-gray-500 font-semibold mb-1">MEAN GRADE</p>
-                    <p id="mean-grade" class="text-4xl font-bold text-blue-900">—</p>
-                </div>
-                <div class="bg-green-50 rounded-xl p-4 text-center">
-                    <p class="text-xs text-gray-500 font-semibold mb-1">MEAN POINTS</p>
-                    <p id="mean-points" class="text-4xl font-bold text-green-700">—</p>
-                </div>
-                <div class="bg-yellow-50 rounded-xl p-4 text-center col-span-2 sm:col-span-1">
-                    <p class="text-xs text-gray-500 font-semibold mb-1">CLUSTER POINTS</p>
-                    <p id="cluster-points" class="text-4xl font-bold text-yellow-700">—</p>
+        <!-- ═══════════════════════════════════════════════════
+             SECTION 1 — MEAN GRADE CALCULATOR
+        ════════════════════════════════════════════════════ -->
+        <div id="section-mean">
+
+            <!-- Optional student name for print -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 mb-5">
+                <label class="block text-sm font-semibold text-gray-600 mb-1">Student Name <span class="text-gray-400 font-normal">(optional — shown on printout)</span></label>
+                <input type="text" id="student-name" placeholder="e.g. Audrey Ochieng'"
+                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            </div>
+
+            <!-- Subject Entry Table -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-5">
+                <h2 class="text-base font-bold text-gray-800 mb-1">Enter Your Marks</h2>
+                <p class="text-sm text-gray-500 mb-4">Marks must be between 0 and 100. Grades and points update in real time.</p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b-2 border-gray-100">
+                                <th class="text-left pb-2 pr-2 text-xs font-semibold text-gray-500 w-8">#</th>
+                                <th class="text-left pb-2 pr-3 text-xs font-semibold text-gray-500">Subject</th>
+                                <th class="text-left pb-2 pr-3 text-xs font-semibold text-gray-500 w-32">Marks (0–100)</th>
+                                <th class="text-left pb-2 pr-3 text-xs font-semibold text-gray-500 w-16">Grade</th>
+                                <th class="text-left pb-2 text-xs font-semibold text-gray-500 w-14">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjects-table"></tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800 mb-4">
-                <strong>ℹ️ About Cluster Points:</strong> Cluster points are calculated from your best 4 subjects in a specific cluster relevant to your desired university course. They are used by KUCCPS (Kenya Universities and Colleges Central Placement Service) for university placement. The maximum cluster points is 84 (4 subjects × 12 points each × 1.75 weighting).
+            <!-- Results Summary -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-5" id="results-card">
+                <h2 class="text-base font-bold text-gray-800 mb-4">📊 Results Summary</h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+                    <!-- Mean Grade Badge -->
+                    <div class="sm:col-span-1 flex flex-col items-center justify-center bg-gray-50 rounded-xl p-5 border-2 border-gray-200" id="mean-grade-badge">
+                        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">Mean Grade</p>
+                        <p id="mean-grade" class="text-5xl font-black text-gray-300">—</p>
+                    </div>
+
+                    <div class="sm:col-span-2 grid grid-cols-2 gap-4">
+                        <div class="bg-blue-50 rounded-xl p-4 text-center">
+                            <p class="text-xs text-gray-500 font-semibold mb-1">AGGREGATE POINTS</p>
+                            <p id="aggregate-points" class="text-3xl font-bold text-blue-900">—</p>
+                            <p class="text-xs text-gray-400 mt-1">out of 84</p>
+                        </div>
+                        <div class="bg-green-50 rounded-xl p-4 text-center">
+                            <p class="text-xs text-gray-500 font-semibold mb-1">MEAN POINTS</p>
+                            <p id="mean-points" class="text-3xl font-bold text-green-700">—</p>
+                            <p class="text-xs text-gray-400 mt-1">out of 12</p>
+                        </div>
+                        <div class="bg-purple-50 rounded-xl p-4 text-center">
+                            <p class="text-xs text-gray-500 font-semibold mb-1">SUBJECTS ENTERED</p>
+                            <p id="subjects-count" class="text-3xl font-bold text-purple-700">0</p>
+                            <p class="text-xs text-gray-400 mt-1">of 7 required</p>
+                        </div>
+                        <div class="bg-yellow-50 rounded-xl p-4 text-center">
+                            <p class="text-xs text-gray-500 font-semibold mb-1">UNIVERSITY ENTRY</p>
+                            <p id="uni-entry" class="text-sm font-bold text-gray-400 mt-2">—</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- University Entry Note -->
+                <div id="entry-note" class="hidden rounded-lg p-3 text-sm mb-4"></div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3 no-print">
+                    <button onclick="switchTab('cluster')"
+                            class="flex-1 bg-blue-900 text-white py-2.5 rounded-lg hover:bg-blue-800 transition font-semibold text-sm">
+                        🎯 Calculate Cluster Points →
+                    </button>
+                    <button onclick="printResult()"
+                            class="flex-1 bg-gray-700 text-white py-2.5 rounded-lg hover:bg-gray-600 transition font-semibold text-sm">
+                        🖨️ Print / Save PDF
+                    </button>
+                    <button onclick="resetAll()"
+                            class="px-5 bg-gray-200 text-gray-700 py-2.5 rounded-lg hover:bg-gray-300 transition font-semibold text-sm">
+                        🔄 Reset
+                    </button>
+                </div>
             </div>
 
-            <div class="flex gap-3 no-print">
-                <button onclick="window.print()"
-                        class="flex-1 bg-blue-900 text-white py-2 rounded-lg hover:bg-blue-800 transition font-semibold text-sm">
-                    🖨️ Print / Save as PDF
-                </button>
-                <button onclick="resetAll()"
-                        class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-semibold text-sm">
-                    🔄 Reset
-                </button>
+            <!-- KNEC Grading Scale Reference -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 no-print">
+                <h2 class="text-base font-bold text-gray-800 mb-3">📋 2025 KNEC Grading Scale</h2>
+                <p class="text-xs text-gray-500 mb-3">As confirmed by the Kenya National Examinations Council</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                    <div class="flex justify-between bg-green-100 rounded-lg px-3 py-2"><span class="font-bold text-green-800">A</span><span class="text-gray-500">80–100</span><span class="text-green-700 font-semibold">12 pts</span></div>
+                    <div class="flex justify-between bg-green-50 rounded-lg px-3 py-2"><span class="font-bold text-green-700">A-</span><span class="text-gray-500">75–79</span><span class="text-green-600 font-semibold">11 pts</span></div>
+                    <div class="flex justify-between bg-blue-50 rounded-lg px-3 py-2"><span class="font-bold text-blue-700">B+</span><span class="text-gray-500">70–74</span><span class="text-blue-600 font-semibold">10 pts</span></div>
+                    <div class="flex justify-between bg-blue-50 rounded-lg px-3 py-2"><span class="font-bold text-blue-700">B</span><span class="text-gray-500">65–69</span><span class="text-blue-600 font-semibold">9 pts</span></div>
+                    <div class="flex justify-between bg-blue-50 rounded-lg px-3 py-2"><span class="font-bold text-blue-600">B-</span><span class="text-gray-500">60–64</span><span class="text-blue-500 font-semibold">8 pts</span></div>
+                    <div class="flex justify-between bg-yellow-50 rounded-lg px-3 py-2"><span class="font-bold text-yellow-700">C+</span><span class="text-gray-500">55–59</span><span class="text-yellow-600 font-semibold">7 pts</span></div>
+                    <div class="flex justify-between bg-yellow-50 rounded-lg px-3 py-2"><span class="font-bold text-yellow-700">C</span><span class="text-gray-500">50–54</span><span class="text-yellow-600 font-semibold">6 pts</span></div>
+                    <div class="flex justify-between bg-yellow-50 rounded-lg px-3 py-2"><span class="font-bold text-yellow-600">C-</span><span class="text-gray-500">45–49</span><span class="text-yellow-500 font-semibold">5 pts</span></div>
+                    <div class="flex justify-between bg-orange-50 rounded-lg px-3 py-2"><span class="font-bold text-orange-700">D+</span><span class="text-gray-500">40–44</span><span class="text-orange-600 font-semibold">4 pts</span></div>
+                    <div class="flex justify-between bg-orange-50 rounded-lg px-3 py-2"><span class="font-bold text-orange-700">D</span><span class="text-gray-500">35–39</span><span class="text-orange-600 font-semibold">3 pts</span></div>
+                    <div class="flex justify-between bg-orange-50 rounded-lg px-3 py-2"><span class="font-bold text-orange-600">D-</span><span class="text-gray-500">30–34</span><span class="text-orange-500 font-semibold">2 pts</span></div>
+                    <div class="flex justify-between bg-red-50 rounded-lg px-3 py-2"><span class="font-bold text-red-700">E</span><span class="text-gray-500">0–29</span><span class="text-red-600 font-semibold">1 pt</span></div>
+                </div>
             </div>
         </div>
 
-        <!-- Grading Scale Reference -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 no-print">
-            <h2 class="text-lg font-bold text-gray-800 mb-3">📋 KNEC Grading Scale</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-                <div class="flex justify-between bg-green-100 rounded px-3 py-1.5"><span class="font-bold text-green-800">A</span><span class="text-gray-600">80–100</span><span class="text-green-700 font-semibold">12 pts</span></div>
-                <div class="flex justify-between bg-green-50 rounded px-3 py-1.5"><span class="font-bold text-green-700">A-</span><span class="text-gray-600">75–79</span><span class="text-green-600 font-semibold">11 pts</span></div>
-                <div class="flex justify-between bg-blue-50 rounded px-3 py-1.5"><span class="font-bold text-blue-700">B+</span><span class="text-gray-600">70–74</span><span class="text-blue-600 font-semibold">10 pts</span></div>
-                <div class="flex justify-between bg-blue-50 rounded px-3 py-1.5"><span class="font-bold text-blue-700">B</span><span class="text-gray-600">65–69</span><span class="text-blue-600 font-semibold">9 pts</span></div>
-                <div class="flex justify-between bg-blue-50 rounded px-3 py-1.5"><span class="font-bold text-blue-600">B-</span><span class="text-gray-600">60–64</span><span class="text-blue-500 font-semibold">8 pts</span></div>
-                <div class="flex justify-between bg-yellow-50 rounded px-3 py-1.5"><span class="font-bold text-yellow-700">C+</span><span class="text-gray-600">55–59</span><span class="text-yellow-600 font-semibold">7 pts</span></div>
-                <div class="flex justify-between bg-yellow-50 rounded px-3 py-1.5"><span class="font-bold text-yellow-700">C</span><span class="text-gray-600">50–54</span><span class="text-yellow-600 font-semibold">6 pts</span></div>
-                <div class="flex justify-between bg-yellow-50 rounded px-3 py-1.5"><span class="font-bold text-yellow-600">C-</span><span class="text-gray-600">45–49</span><span class="text-yellow-500 font-semibold">5 pts</span></div>
-                <div class="flex justify-between bg-orange-50 rounded px-3 py-1.5"><span class="font-bold text-orange-700">D+</span><span class="text-gray-600">40–44</span><span class="text-orange-600 font-semibold">4 pts</span></div>
-                <div class="flex justify-between bg-orange-50 rounded px-3 py-1.5"><span class="font-bold text-orange-700">D</span><span class="text-gray-600">35–39</span><span class="text-orange-600 font-semibold">3 pts</span></div>
-                <div class="flex justify-between bg-orange-50 rounded px-3 py-1.5"><span class="font-bold text-orange-600">D-</span><span class="text-gray-600">30–34</span><span class="text-orange-500 font-semibold">2 pts</span></div>
-                <div class="flex justify-between bg-red-50 rounded px-3 py-1.5"><span class="font-bold text-red-700">E</span><span class="text-gray-600">0–29</span><span class="text-red-600 font-semibold">1 pt</span></div>
+        <!-- ═══════════════════════════════════════════════════
+             SECTION 2 — KUCCPS CLUSTER POINTS CALCULATOR
+        ════════════════════════════════════════════════════ -->
+        <div id="section-cluster" class="hidden">
+
+            <!-- Aggregate Carry-Over Notice -->
+            <div id="aggregate-notice" class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-5 text-sm text-blue-800">
+                <strong>ℹ️</strong> Your total aggregate from Section 1 will be used automatically in the cluster formula.
+                <span id="aggregate-carry" class="font-bold ml-1"></span>
+            </div>
+
+            <!-- Formula Explainer -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-5">
+                <h2 class="text-base font-bold text-gray-800 mb-2">📐 The Official KUCCPS Formula</h2>
+                <div class="bg-gray-50 rounded-xl p-4 text-center my-3">
+                    <p class="text-lg font-bold text-blue-900 font-mono">C = √( (r ÷ 48) × (t ÷ 84) ) × 48</p>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-xs text-gray-600 mt-3">
+                    <div class="bg-blue-50 rounded-lg p-3 text-center">
+                        <p class="font-bold text-blue-900 text-sm">r</p>
+                        <p>Sum of your 4 cluster subject points (max 48)</p>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-3 text-center">
+                        <p class="font-bold text-green-800 text-sm">t</p>
+                        <p>Your total aggregate from all 7 subjects (max 84)</p>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-3 text-center">
+                        <p class="font-bold text-yellow-800 text-sm">C</p>
+                        <p>Weighted cluster points (max 48.000)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cluster Preset Buttons -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-5">
+                <h2 class="text-base font-bold text-gray-800 mb-3">🎓 Quick Course Cluster Presets</h2>
+                <p class="text-xs text-gray-500 mb-3">Click a preset to auto-fill the cluster subjects below, then adjust as needed.</p>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="applyPreset('engineering')" id="preset-engineering"
+                            class="preset-btn px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-600 text-sm font-semibold hover:border-blue-900 hover:text-blue-900 transition">
+                        ⚙️ Engineering
+                    </button>
+                    <button onclick="applyPreset('medicine')" id="preset-medicine"
+                            class="preset-btn px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-600 text-sm font-semibold hover:border-blue-900 hover:text-blue-900 transition">
+                        🩺 Medicine / Health
+                    </button>
+                    <button onclick="applyPreset('business')" id="preset-business"
+                            class="preset-btn px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-600 text-sm font-semibold hover:border-blue-900 hover:text-blue-900 transition">
+                        💼 Business / Commerce
+                    </button>
+                    <button onclick="applyPreset('education')" id="preset-education"
+                            class="preset-btn px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-600 text-sm font-semibold hover:border-blue-900 hover:text-blue-900 transition">
+                        📚 Education
+                    </button>
+                    <button onclick="applyPreset('arts')" id="preset-arts"
+                            class="preset-btn px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-600 text-sm font-semibold hover:border-blue-900 hover:text-blue-900 transition">
+                        🎨 Arts / Humanities
+                    </button>
+                    <button onclick="applyPreset('ict')" id="preset-ict"
+                            class="preset-btn px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-600 text-sm font-semibold hover:border-blue-900 hover:text-blue-900 transition">
+                        💻 ICT / Computing
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4 Cluster Subject Selectors -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-5">
+                <h2 class="text-base font-bold text-gray-800 mb-1">Select Your 4 Cluster Subjects</h2>
+                <p class="text-xs text-gray-500 mb-4">Marks carry over from Section 1 if you already entered them. You can also enter them manually here.</p>
+
+                <div class="space-y-4" id="cluster-rows"></div>
+            </div>
+
+            <!-- Cluster Result -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-5">
+                <h2 class="text-base font-bold text-gray-800 mb-4">🎯 Your Cluster Points</h2>
+
+                <div class="text-center py-6 rounded-xl border-2 mb-4" id="cluster-result-box">
+                    <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-2">Weighted Cluster Points</p>
+                    <p id="cluster-result-display" class="text-6xl font-black text-gray-300">—</p>
+                    <p class="text-xs text-gray-400 mt-1">Maximum possible: 48.000</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-4 text-xs text-center">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-gray-500 mb-1">Sum (r)</p>
+                        <p id="r-value" class="text-lg font-bold text-gray-700">—</p>
+                        <p class="text-gray-400">of 48</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-gray-500 mb-1">Aggregate (t)</p>
+                        <p id="t-value" class="text-lg font-bold text-gray-700">—</p>
+                        <p class="text-gray-400">of 84</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-gray-500 mb-1">Formula Check</p>
+                        <p id="formula-check" class="text-xs font-mono text-gray-500 mt-1 leading-relaxed">√(r/48 × t/84) × 48</p>
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="bg-yellow-50 border border-yellow-300 rounded-xl p-4 text-sm text-yellow-800 mb-4">
+                    <p><strong>⚠️ This is an estimate only.</strong> KUCCPS calculates official cluster points using performance indices (PI) from KNEC that are not publicly available to individual students. Use this tool for guidance only and verify your actual points on the official KUCCPS portal at
+                        <a href="https://kuccps.ac.ke" target="_blank" rel="noopener" class="underline font-semibold">kuccps.ac.ke</a>.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3 no-print">
+                    <button onclick="printResult()"
+                            class="flex-1 bg-blue-900 text-white py-2.5 rounded-lg hover:bg-blue-800 transition font-semibold text-sm">
+                        🖨️ Print / Save as PDF
+                    </button>
+                    <button onclick="resetAll()"
+                            class="px-5 bg-gray-200 text-gray-700 py-2.5 rounded-lg hover:bg-gray-300 transition font-semibold text-sm">
+                        🔄 Reset All
+                    </button>
+                </div>
+            </div>
+
+            <!-- KUCCPS Link -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 text-sm text-gray-700 no-print">
+                <p class="font-bold text-gray-800 mb-1">📎 Official KUCCPS Resources</p>
+                <p class="text-xs text-gray-500 mb-2">For the full list of courses and their minimum cluster points requirements:</p>
+                <a href="https://kuccps.ac.ke" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-1 text-blue-700 hover:text-blue-900 font-semibold underline text-sm">
+                    Visit kuccps.ac.ke →
+                </a>
             </div>
         </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             PRINT AREA (hidden on screen, visible when printing)
+        ════════════════════════════════════════════════════ -->
+        <div id="print-area" class="print-only bg-white p-8 mt-8">
+            <div class="flex items-center justify-between mb-6 border-b-2 border-blue-900 pb-4">
+                <div>
+                    <h1 class="text-2xl font-black text-blue-900">Elite Hub</h1>
+                    <p class="text-xs text-gray-500">elitehub.onrender.com</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-lg font-bold text-gray-800">KCSE Grade Calculator</p>
+                    <p class="text-xs text-gray-500" id="print-date"></p>
+                </div>
+            </div>
+            <div id="print-content"></div>
+            <p class="text-xs text-gray-400 mt-8 border-t pt-3">
+                Cluster points are estimates only. Official points are calculated by KUCCPS using KNEC performance indices. Verify at kuccps.ac.ke.
+            </p>
+        </div>
+
     </div>
 
     <div id="main-footer"></div>
@@ -112,132 +341,509 @@
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/components.js"></script>
     <script>
-        initPage('student', 'grade-calculator');
+    (function () {
+        'use strict';
 
-        const SUBJECTS = [
-            'Mathematics', 'English', 'Kiswahili', 'Biology', 'Physics',
-            'Chemistry', 'History & Government', 'Geography', 'CRE', 'IRE',
+        // ── CONSTANTS ─────────────────────────────────────────────────────────
+        var SUBJECTS = [
+            'Mathematics', 'English', 'Kiswahili', 'Kenyan Sign Language',
+            'Biology', 'Physics', 'Chemistry',
+            'History & Government', 'Geography', 'CRE', 'IRE',
             'Business Studies', 'Agriculture', 'Computer Studies',
             'Home Science', 'Art & Design', 'Music', 'French', 'German',
-            'Arabic', 'Aviation Technology', 'Drawing & Design'
+            'Arabic', 'Aviation Technology', 'Drawing & Design',
+            'Woodwork', 'Metalwork', 'Building Construction',
+            'Power Mechanics', 'Electricity', 'Ceramics'
         ];
 
-        // Official KNEC grading scale
-        function getGrade(marks) {
-            if (marks === '' || marks === null || isNaN(marks)) return { grade: '—', points: 0, color: 'text-gray-400' };
-            const m = Number(marks);
-            if (m >= 80) return { grade: 'A',  points: 12, color: 'text-green-700 font-bold' };
-            if (m >= 75) return { grade: 'A-', points: 11, color: 'text-green-600 font-bold' };
-            if (m >= 70) return { grade: 'B+', points: 10, color: 'text-blue-700 font-bold' };
-            if (m >= 65) return { grade: 'B',  points: 9,  color: 'text-blue-600 font-bold' };
-            if (m >= 60) return { grade: 'B-', points: 8,  color: 'text-blue-500 font-bold' };
-            if (m >= 55) return { grade: 'C+', points: 7,  color: 'text-yellow-700 font-bold' };
-            if (m >= 50) return { grade: 'C',  points: 6,  color: 'text-yellow-600 font-bold' };
-            if (m >= 45) return { grade: 'C-', points: 5,  color: 'text-yellow-500 font-bold' };
-            if (m >= 40) return { grade: 'D+', points: 4,  color: 'text-orange-600 font-bold' };
-            if (m >= 35) return { grade: 'D',  points: 3,  color: 'text-orange-500 font-bold' };
-            if (m >= 30) return { grade: 'D-', points: 2,  color: 'text-orange-400 font-bold' };
-            return             { grade: 'E',  points: 1,  color: 'text-red-600 font-bold' };
+        var LANGUAGE_SUBJECTS = ['English', 'Kiswahili', 'Kenyan Sign Language'];
+
+        var CLUSTER_PRESETS = {
+            engineering: ['Mathematics', 'Physics', 'Chemistry', 'Biology'],
+            medicine:    ['Biology', 'Chemistry', 'Physics', 'English'],
+            business:    ['Mathematics', 'English', 'Business Studies', 'Geography'],
+            education:   ['English', 'Mathematics', 'History & Government', 'Geography'],
+            arts:        ['English', 'History & Government', 'Geography', 'CRE'],
+            ict:         ['Mathematics', 'Physics', 'Computer Studies', 'Chemistry']
+        };
+
+        // ── GRADING ───────────────────────────────────────────────────────────
+        function getGradeFromMarks(m) {
+            if (m === '' || m === null || isNaN(m)) return null;
+            m = Number(m);
+            if (m > 100 || m < 0) return null;
+            if (m >= 80) return { grade: 'A',  points: 12 };
+            if (m >= 75) return { grade: 'A-', points: 11 };
+            if (m >= 70) return { grade: 'B+', points: 10 };
+            if (m >= 65) return { grade: 'B',  points: 9  };
+            if (m >= 60) return { grade: 'B-', points: 8  };
+            if (m >= 55) return { grade: 'C+', points: 7  };
+            if (m >= 50) return { grade: 'C',  points: 6  };
+            if (m >= 45) return { grade: 'C-', points: 5  };
+            if (m >= 40) return { grade: 'D+', points: 4  };
+            if (m >= 35) return { grade: 'D',  points: 3  };
+            if (m >= 30) return { grade: 'D-', points: 2  };
+            return             { grade: 'E',  points: 1  };
         }
 
-        function pointsToMeanGrade(pts) {
-            if (pts >= 11.5) return 'A';
-            if (pts >= 10.5) return 'A-';
-            if (pts >= 9.5)  return 'B+';
-            if (pts >= 8.5)  return 'B';
-            if (pts >= 7.5)  return 'B-';
-            if (pts >= 6.5)  return 'C+';
-            if (pts >= 5.5)  return 'C';
-            if (pts >= 4.5)  return 'C-';
-            if (pts >= 3.5)  return 'D+';
-            if (pts >= 2.5)  return 'D';
-            if (pts >= 1.5)  return 'D-';
-            return 'E';
+        // Aggregate to mean grade (sum of 7 best subjects)
+        function aggregateToMeanGrade(agg) {
+            if (agg >= 78) return { grade: 'A',  color: 'green'  };
+            if (agg >= 71) return { grade: 'A-', color: 'green'  };
+            if (agg >= 64) return { grade: 'B+', color: 'green'  };
+            if (agg >= 57) return { grade: 'B',  color: 'green'  };
+            if (agg >= 50) return { grade: 'B-', color: 'green'  };
+            if (agg >= 43) return { grade: 'C+', color: 'green'  };
+            if (agg >= 36) return { grade: 'C',  color: 'orange' };
+            if (agg >= 29) return { grade: 'C-', color: 'orange' };
+            if (agg >= 22) return { grade: 'D+', color: 'orange' };
+            if (agg >= 15) return { grade: 'D',  color: 'red'    };
+            if (agg >= 8)  return { grade: 'D-', color: 'red'    };
+            return              { grade: 'E',   color: 'red'    };
         }
 
-        let rowCount = 0;
+        // ── SECTION 1 SETUP ───────────────────────────────────────────────────
+        var subjectData = {}; // { rowId: { subject, marks, points } }
 
-        function addSubjectRow(subjectName = '', marksVal = '') {
-            rowCount++;
-            const idx  = rowCount;
-            const tbody = document.getElementById('subjects-table');
-            const tr   = document.createElement('tr');
-            tr.id      = `row-${idx}`;
-            tr.className = 'border-b border-gray-100';
-            tr.innerHTML = `
-                <td class="py-2 pr-4 text-gray-400 text-xs">${idx}</td>
-                <td class="py-2 pr-4">
-                    <select id="subj-${idx}" onchange="recalculate()"
-                            class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option value="">Select subject</option>
-                        ${SUBJECTS.map(s => `<option value="${s}" ${s === subjectName ? 'selected' : ''}>${s}</option>`).join('')}
-                    </select>
-                </td>
-                <td class="py-2 pr-4">
-                    <input type="number" id="marks-${idx}" min="0" max="100" value="${marksVal}"
-                           oninput="recalculate()"
-                           class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
-                           placeholder="0–100">
-                </td>
-                <td class="py-2 pr-4">
-                    <span id="grade-${idx}" class="text-lg text-gray-400">—</span>
-                </td>
-                <td class="py-2">
-                    <span id="pts-${idx}" class="text-sm text-gray-400">—</span>
-                </td>`;
-            tbody.appendChild(tr);
-            if (marksVal !== '') recalculate();
-        }
+        function buildSection1() {
+            var tbody = document.getElementById('subjects-table');
+            tbody.innerHTML = '';
+            subjectData = {};
 
-        function recalculate() {
-            const allPoints = [];
-            for (let i = 1; i <= rowCount; i++) {
-                const marksEl = document.getElementById(`marks-${i}`);
-                const gradeEl = document.getElementById(`grade-${i}`);
-                const ptsEl   = document.getElementById(`pts-${i}`);
-                if (!marksEl) continue;
-                const val = marksEl.value.trim();
-                const { grade, points, color } = getGrade(val === '' ? '' : Number(val));
-                gradeEl.textContent = grade;
-                gradeEl.className   = `text-lg ${color}`;
-                ptsEl.textContent   = points > 0 ? points : '—';
-                if (val !== '' && !isNaN(Number(val))) allPoints.push(points);
+            // Row 1: Mathematics (compulsory, locked)
+            addRow('math', 'Mathematics', true, false);
+
+            // Row 2: Best Language (auto-picks highest of English/Kiswahili/KSL)
+            addLanguageRow();
+
+            // Rows 3–7: Other subjects
+            for (var i = 3; i <= 7; i++) {
+                addRow('sub' + i, '', false, true);
             }
 
-            if (!allPoints.length) {
-                document.getElementById('mean-grade').textContent   = '—';
-                document.getElementById('mean-points').textContent  = '—';
-                document.getElementById('cluster-points').textContent = '—';
+            recalcSection1();
+        }
+
+        function addRow(id, subjectName, locked, canChooseSubject) {
+            var tbody = document.getElementById('subjects-table');
+            var tr    = document.createElement('tr');
+            tr.id        = 'row-' + id;
+            tr.className = 'subject-row border-b border-gray-50';
+
+            var rowNum = tbody.querySelectorAll('tr').length + 1;
+            var subjectCell;
+
+            if (locked) {
+                subjectCell = '<td class="py-2.5 pr-3"><span class="font-semibold text-gray-800 text-sm">' + subjectName +
+                              ' <span class="text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded font-semibold">Compulsory</span></span></td>';
+            } else if (canChooseSubject) {
+                var options = SUBJECTS
+                    .filter(function (s) { return !LANGUAGE_SUBJECTS.includes(s); })
+                    .map(function (s) {
+                        return '<option value="' + s + '">' + s + '</option>';
+                    }).join('');
+                subjectCell = '<td class="py-2 pr-3"><select id="subj-' + id + '" onchange="onSubjectChange(\'' + id + '\')" ' +
+                    'class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">' +
+                    '<option value="">— Select subject —</option>' + options + '</select></td>';
+            }
+
+            tr.innerHTML =
+                '<td class="py-2.5 pr-2 text-xs text-gray-400">' + rowNum + '</td>' +
+                (subjectCell || '') +
+                '<td class="py-2 pr-3">' +
+                    '<input type="number" id="marks-' + id + '" min="0" max="100" ' +
+                    'oninput="onMarksChange(\'' + id + '\')" placeholder="0–100" ' +
+                    'class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-center ' +
+                    'focus:outline-none focus:ring-2 focus:ring-blue-400" />' +
+                '</td>' +
+                '<td class="py-2.5 pr-3"><span id="grade-' + id + '" class="text-sm font-bold text-gray-300">—</span></td>' +
+                '<td class="py-2.5"><span id="pts-' + id + '" class="text-sm text-gray-400">—</span></td>';
+
+            tbody.appendChild(tr);
+            subjectData[id] = { subject: subjectName || '', marks: '', points: 0 };
+        }
+
+        function addLanguageRow() {
+            var tbody = document.getElementById('subjects-table');
+            var tr    = document.createElement('tr');
+            tr.id        = 'row-lang';
+            tr.className = 'subject-row border-b border-gray-50';
+            tr.innerHTML =
+                '<td class="py-2.5 pr-2 text-xs text-gray-400">2</td>' +
+                '<td class="py-2 pr-3">' +
+                    '<div class="flex flex-col gap-1">' +
+                        '<span class="text-xs font-semibold text-gray-700">Best Language <span class="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded text-xs">Auto-picks highest</span></span>' +
+                        '<div class="flex gap-2">' +
+                            '<label class="flex items-center gap-1 text-xs"><input type="number" id="lang-en" min="0" max="100" placeholder="English" oninput="onLangChange()" class="w-20 border border-gray-200 rounded px-1.5 py-1 text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-400" /> English</label>' +
+                            '<label class="flex items-center gap-1 text-xs"><input type="number" id="lang-sw" min="0" max="100" placeholder="Kisw." oninput="onLangChange()" class="w-16 border border-gray-200 rounded px-1.5 py-1 text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-400" /> Kisw.</label>' +
+                            '<label class="flex items-center gap-1 text-xs"><input type="number" id="lang-ksl" min="0" max="100" placeholder="KSL" oninput="onLangChange()" class="w-14 border border-gray-200 rounded px-1.5 py-1 text-xs text-center focus:outline-none focus:ring-1 focus:ring-blue-400" /> KSL</label>' +
+                        '</div>' +
+                    '</div>' +
+                '</td>' +
+                '<td class="py-2.5 pr-3"><span id="lang-selected" class="text-xs text-gray-500 italic">—</span></td>' +
+                '<td class="py-2.5 pr-3"><span id="grade-lang" class="text-sm font-bold text-gray-300">—</span></td>' +
+                '<td class="py-2.5"><span id="pts-lang" class="text-sm text-gray-400">—</span></td>';
+            tbody.appendChild(tr);
+            subjectData['lang'] = { subject: '', marks: '', points: 0 };
+        }
+
+        function onSubjectChange(id) {
+            var sel = document.getElementById('subj-' + id);
+            if (sel) subjectData[id].subject = sel.value;
+        }
+
+        function onMarksChange(id) {
+            var input = document.getElementById('marks-' + id);
+            var val   = input ? input.value.trim() : '';
+            var result = val !== '' ? getGradeFromMarks(Number(val)) : null;
+
+            document.getElementById('grade-' + id).textContent = result ? result.grade : '—';
+            document.getElementById('grade-' + id).className   = 'text-sm font-bold ' + (result ? gradeTextColor(result.grade) : 'text-gray-300');
+            document.getElementById('pts-' + id).textContent   = result ? result.points : '—';
+
+            subjectData[id].marks  = val;
+            subjectData[id].points = result ? result.points : 0;
+            recalcSection1();
+        }
+
+        function onLangChange() {
+            var enVal  = document.getElementById('lang-en').value.trim();
+            var swVal  = document.getElementById('lang-sw').value.trim();
+            var kslVal = document.getElementById('lang-ksl').value.trim();
+
+            var langs = [
+                { name: 'English',              val: enVal  },
+                { name: 'Kiswahili',            val: swVal  },
+                { name: 'Kenyan Sign Language', val: kslVal }
+            ].filter(function (l) { return l.val !== '' && !isNaN(Number(l.val)); })
+             .map(function (l) { return { name: l.name, val: Number(l.val), result: getGradeFromMarks(Number(l.val)) }; });
+
+            if (!langs.length) {
+                document.getElementById('lang-selected').textContent = '—';
+                document.getElementById('grade-lang').textContent    = '—';
+                document.getElementById('grade-lang').className      = 'text-sm font-bold text-gray-300';
+                document.getElementById('pts-lang').textContent      = '—';
+                subjectData['lang'] = { subject: '', marks: '', points: 0 };
+                recalcSection1();
                 return;
             }
 
-            const meanPts   = allPoints.reduce((a,b) => a+b, 0) / allPoints.length;
-            const meanGrade = pointsToMeanGrade(meanPts);
-
-            // Cluster points = top 4 subjects × 1.75 (simplified KUCCPS formula)
-            const top4      = [...allPoints].sort((a,b) => b-a).slice(0,4);
-            const clusterPts= (top4.reduce((a,b) => a+b, 0) * 1.75).toFixed(2);
-
-            document.getElementById('mean-grade').textContent    = meanGrade;
-            document.getElementById('mean-points').textContent   = meanPts.toFixed(2);
-            document.getElementById('cluster-points').textContent = clusterPts;
+            // Auto-pick highest scoring language
+            langs.sort(function (a, b) { return b.val - a.val; });
+            var best = langs[0];
+            document.getElementById('lang-selected').textContent = '✓ ' + best.name;
+            document.getElementById('grade-lang').textContent    = best.result ? best.result.grade  : '—';
+            document.getElementById('grade-lang').className      = 'text-sm font-bold ' + (best.result ? gradeTextColor(best.result.grade) : 'text-gray-300');
+            document.getElementById('pts-lang').textContent      = best.result ? best.result.points : '—';
+            subjectData['lang'] = { subject: best.name, marks: best.val, points: best.result ? best.result.points : 0 };
+            recalcSection1();
         }
 
-        function resetAll() {
-            document.getElementById('subjects-table').innerHTML = '';
-            rowCount = 0;
-            document.getElementById('mean-grade').textContent    = '—';
-            document.getElementById('mean-points').textContent   = '—';
-            document.getElementById('cluster-points').textContent = '—';
-            initRows();
+        function recalcSection1() {
+            var allPoints = Object.values(subjectData)
+                .map(function (d) { return d.points; })
+                .filter(function (p) { return p > 0; });
+
+            var count = allPoints.length;
+            document.getElementById('subjects-count').textContent = count;
+
+            if (!count) {
+                resetDisplay();
+                return;
+            }
+
+            // Use top 7 scores (KNEC uses best 7)
+            var top7   = allPoints.slice().sort(function (a, b) { return b - a; }).slice(0, 7);
+            var agg    = top7.reduce(function (s, p) { return s + p; }, 0);
+            var mean   = agg / top7.length;
+            var mg     = aggregateToMeanGrade(agg);
+
+            document.getElementById('aggregate-points').textContent = agg;
+            document.getElementById('mean-points').textContent      = mean.toFixed(2);
+
+            // Mean grade badge
+            var badge = document.getElementById('mean-grade');
+            badge.textContent = mg.grade;
+            var gradeBadge    = document.getElementById('mean-grade-badge');
+            gradeBadge.classList.remove('bg-green-50', 'bg-orange-50', 'bg-red-50', 'border-green-300', 'border-orange-300', 'border-red-300');
+            badge.classList.remove('text-green-700', 'text-orange-600', 'text-red-600', 'text-gray-300');
+
+            if (mg.color === 'green') {
+                gradeBadge.classList.add('bg-green-50', 'border-green-300');
+                badge.classList.add('text-green-700');
+            } else if (mg.color === 'orange') {
+                gradeBadge.classList.add('bg-orange-50', 'border-orange-300');
+                badge.classList.add('text-orange-600');
+            } else {
+                gradeBadge.classList.add('bg-red-50', 'border-red-300');
+                badge.classList.add('text-red-600');
+            }
+
+            // University entry note
+            var note = document.getElementById('entry-note');
+            var uni  = document.getElementById('uni-entry');
+            note.classList.remove('hidden', 'bg-green-50', 'bg-orange-50', 'bg-red-50', 'text-green-800', 'text-orange-800', 'text-red-800', 'border-green-200', 'border-orange-200', 'border-red-200', 'border');
+            var cPlus = ['A', 'A-', 'B+', 'B', 'B-', 'C+'];
+            if (cPlus.indexOf(mg.grade) > -1) {
+                note.className = 'rounded-lg p-3 text-sm mb-4 bg-green-50 border border-green-200 text-green-800';
+                note.innerHTML = '✅ <strong>' + mg.grade + '</strong> — Qualifies for direct university entry through KUCCPS. You can apply for degree programmes.';
+                uni.textContent = 'Qualifies ✅';
+                uni.className   = 'text-sm font-bold text-green-700 mt-2';
+            } else if (mg.grade === 'C' || mg.grade === 'C-') {
+                note.className = 'rounded-lg p-3 text-sm mb-4 bg-orange-50 border border-orange-200 text-orange-800';
+                note.innerHTML = '⚠️ <strong>' + mg.grade + '</strong> — May qualify for diploma programmes at TVET institutions. Does not meet the minimum C+ for most degree programmes.';
+                uni.textContent = 'Diploma Level';
+                uni.className   = 'text-sm font-bold text-orange-600 mt-2';
+            } else {
+                note.className = 'rounded-lg p-3 text-sm mb-4 bg-red-50 border border-red-200 text-red-800';
+                note.innerHTML = '❌ <strong>' + mg.grade + '</strong> — Does not qualify for university entry. Consider certificate or bridging programmes.';
+                uni.textContent = 'Below Minimum';
+                uni.className   = 'text-sm font-bold text-red-600 mt-2';
+            }
+            note.classList.remove('hidden');
+
+            // Update aggregate carry-over notice for Section 2
+            document.getElementById('aggregate-carry').textContent = 'Current aggregate: ' + agg + ' / 84';
+
+            recalcCluster(agg);
         }
 
-        function initRows() {
-            const defaults = ['Mathematics','English','Kiswahili','Biology','Physics','Chemistry','History & Government','Geography'];
-            defaults.forEach(s => addSubjectRow(s));
+        function resetDisplay() {
+            document.getElementById('mean-grade').textContent        = '—';
+            document.getElementById('mean-grade').className          = 'text-5xl font-black text-gray-300';
+            document.getElementById('aggregate-points').textContent  = '—';
+            document.getElementById('mean-points').textContent       = '—';
+            document.getElementById('uni-entry').textContent         = '—';
+            document.getElementById('uni-entry').className           = 'text-sm font-bold text-gray-400 mt-2';
+            document.getElementById('entry-note').classList.add('hidden');
+            document.getElementById('mean-grade-badge').classList.remove('bg-green-50', 'bg-orange-50', 'bg-red-50');
         }
 
-        document.addEventListener('DOMContentLoaded', initRows);
+        // ── SECTION 2 SETUP ───────────────────────────────────────────────────
+        function buildSection2() {
+            var container = document.getElementById('cluster-rows');
+            container.innerHTML = '';
+            for (var i = 1; i <= 4; i++) {
+                var div = document.createElement('div');
+                div.className = 'grid grid-cols-1 sm:grid-cols-3 gap-3 items-center p-3 bg-gray-50 rounded-xl';
+                div.innerHTML =
+                    '<div>' +
+                        '<label class="block text-xs font-semibold text-gray-600 mb-1">Subject ' + i + '</label>' +
+                        '<select id="c-subj-' + i + '" onchange="recalcCluster()" ' +
+                        'class="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">' +
+                        '<option value="">— Select subject —</option>' +
+                        SUBJECTS.map(function (s) { return '<option value="' + s + '">' + s + '</option>'; }).join('') +
+                        '</select>' +
+                    '</div>' +
+                    '<div>' +
+                        '<label class="block text-xs font-semibold text-gray-600 mb-1">Marks (0–100)</label>' +
+                        '<input type="number" id="c-marks-' + i + '" min="0" max="100" placeholder="Enter marks" ' +
+                        'oninput="recalcCluster()" ' +
+                        'class="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-400" />' +
+                    '</div>' +
+                    '<div class="flex items-end gap-3">' +
+                        '<div class="flex-1">' +
+                            '<label class="block text-xs font-semibold text-gray-600 mb-1">Grade</label>' +
+                            '<div id="c-grade-' + i + '" class="border border-gray-200 rounded-lg px-2 py-2 text-sm font-bold text-center text-gray-400 bg-white">—</div>' +
+                        '</div>' +
+                        '<div class="flex-1">' +
+                            '<label class="block text-xs font-semibold text-gray-600 mb-1">Points</label>' +
+                            '<div id="c-pts-' + i + '" class="border border-gray-200 rounded-lg px-2 py-2 text-sm font-bold text-center text-gray-400 bg-white">—</div>' +
+                        '</div>' +
+                    '</div>';
+                container.appendChild(div);
+            }
+        }
+
+        function recalcCluster(aggregateOverride) {
+            // Get t (aggregate) — either passed directly or read from Section 1 display
+            var aggEl = document.getElementById('aggregate-points');
+            var t = aggregateOverride !== undefined
+                ? aggregateOverride
+                : (aggEl && aggEl.textContent !== '—' ? Number(aggEl.textContent) : 0);
+
+            // Read the 4 cluster subjects
+            var r = 0;
+            var allFilled = true;
+            for (var i = 1; i <= 4; i++) {
+                var marksInput = document.getElementById('c-marks-' + i);
+                var gradeEl    = document.getElementById('c-grade-' + i);
+                var ptsEl      = document.getElementById('c-pts-' + i);
+                if (!marksInput) continue;
+
+                var val = marksInput.value.trim();
+                var result = val !== '' ? getGradeFromMarks(Number(val)) : null;
+
+                if (gradeEl) {
+                    gradeEl.textContent = result ? result.grade : '—';
+                    gradeEl.className   = 'border border-gray-200 rounded-lg px-2 py-2 text-sm font-bold text-center bg-white ' +
+                                          (result ? gradeTextColor(result.grade) : 'text-gray-400');
+                }
+                if (ptsEl) ptsEl.textContent = result ? result.points : '—';
+
+                if (result) { r += result.points; } else { allFilled = false; }
+            }
+
+            document.getElementById('r-value').textContent = r > 0 ? r : '—';
+            document.getElementById('t-value').textContent = t > 0 ? t : '—';
+
+            var resultEl = document.getElementById('cluster-result-display');
+            var box      = document.getElementById('cluster-result-box');
+            box.classList.remove('border-green-400', 'border-yellow-400', 'border-red-400', 'bg-green-50', 'bg-yellow-50', 'bg-red-50', 'border-gray-200');
+
+            if (!allFilled || r === 0 || t === 0) {
+                resultEl.textContent = '—';
+                resultEl.className   = 'text-6xl font-black text-gray-300';
+                box.classList.add('border-gray-200');
+                return;
+            }
+
+            // C = √( (r ÷ 48) × (t ÷ 84) ) × 48
+            var C = Math.sqrt((r / 48) * (t / 84)) * 48;
+            var Cstr = C.toFixed(3);
+
+            resultEl.textContent = Cstr;
+
+            if (C >= 40) {
+                resultEl.className = 'text-6xl font-black text-green-600';
+                box.classList.add('border-green-400', 'bg-green-50');
+            } else if (C >= 30) {
+                resultEl.className = 'text-6xl font-black text-yellow-600';
+                box.classList.add('border-yellow-400', 'bg-yellow-50');
+            } else {
+                resultEl.className = 'text-6xl font-black text-red-500';
+                box.classList.add('border-red-400', 'bg-red-50');
+            }
+
+            document.getElementById('formula-check').textContent = '√(' + r + '/48 × ' + t + '/84) × 48 = ' + Cstr;
+        }
+
+        // ── PRESETS ───────────────────────────────────────────────────────────
+        window.applyPreset = function (key) {
+            var subjects = CLUSTER_PRESETS[key];
+            if (!subjects) return;
+
+            document.querySelectorAll('.preset-btn').forEach(function (b) { b.classList.remove('active'); });
+            var btn = document.getElementById('preset-' + key);
+            if (btn) btn.classList.add('active');
+
+            for (var i = 1; i <= 4; i++) {
+                var sel = document.getElementById('c-subj-' + i);
+                if (sel && subjects[i - 1]) sel.value = subjects[i - 1];
+            }
+            recalcCluster();
+        };
+
+        // ── TAB SWITCHING ─────────────────────────────────────────────────────
+        window.switchTab = function (tab) {
+            document.getElementById('section-mean').classList.toggle('hidden', tab !== 'mean');
+            document.getElementById('section-cluster').classList.toggle('hidden', tab !== 'cluster');
+
+            var tabMean    = document.getElementById('tab-mean');
+            var tabCluster = document.getElementById('tab-cluster');
+            tabMean.classList.toggle('active', tab === 'mean');
+            tabCluster.classList.toggle('active', tab === 'cluster');
+            tabMean.classList.toggle('border-gray-300', tab !== 'mean');
+            tabMean.classList.toggle('text-gray-600', tab !== 'mean');
+            tabCluster.classList.toggle('border-gray-300', tab !== 'cluster');
+            tabCluster.classList.toggle('text-gray-600', tab !== 'cluster');
+
+            if (tab === 'cluster') {
+                var aggEl = document.getElementById('aggregate-points');
+                if (aggEl && aggEl.textContent !== '—') {
+                    recalcCluster(Number(aggEl.textContent));
+                }
+            }
+        };
+
+        // ── RESET ─────────────────────────────────────────────────────────────
+        window.resetAll = function () {
+            buildSection1();
+            buildSection2();
+            document.getElementById('student-name').value = '';
+            document.querySelectorAll('.preset-btn').forEach(function (b) { b.classList.remove('active'); });
+            switchTab('mean');
+        };
+
+        // ── PRINT ─────────────────────────────────────────────────────────────
+        window.printResult = function () {
+            var name      = document.getElementById('student-name').value.trim() || 'Student';
+            var meanGrade = document.getElementById('mean-grade').textContent;
+            var aggPts    = document.getElementById('aggregate-points').textContent;
+            var meanPts   = document.getElementById('mean-points').textContent;
+            var cluster   = document.getElementById('cluster-result-display').textContent;
+
+            var subjects = [];
+            Object.keys(subjectData).forEach(function (id) {
+                var d = subjectData[id];
+                if (d.marks !== '' && d.points > 0) {
+                    var name2 = d.subject || id;
+                    var gr    = getGradeFromMarks(Number(d.marks));
+                    subjects.push({ name: name2, marks: d.marks, grade: gr ? gr.grade : '—', points: d.points });
+                }
+            });
+
+            var clusterSubjs = [];
+            for (var i = 1; i <= 4; i++) {
+                var sel = document.getElementById('c-subj-' + i);
+                var inp = document.getElementById('c-marks-' + i);
+                if (sel && inp && sel.value && inp.value) {
+                    var gr2 = getGradeFromMarks(Number(inp.value));
+                    clusterSubjs.push({ name: sel.value, marks: inp.value, grade: gr2 ? gr2.grade : '—', points: gr2 ? gr2.points : 0 });
+                }
+            }
+
+            document.getElementById('print-date').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            document.getElementById('print-content').innerHTML =
+                '<p class="text-lg font-bold text-gray-800 mb-1">Student: ' + name + '</p>' +
+                '<hr class="my-3" />' +
+                '<div class="grid grid-cols-3 gap-4 mb-4 text-center">' +
+                    '<div><p class="text-xs text-gray-500">MEAN GRADE</p><p class="text-4xl font-black text-blue-900">' + meanGrade + '</p></div>' +
+                    '<div><p class="text-xs text-gray-500">AGGREGATE</p><p class="text-4xl font-black text-gray-800">' + aggPts + '</p></div>' +
+                    '<div><p class="text-xs text-gray-500">CLUSTER POINTS</p><p class="text-4xl font-black text-gray-800">' + cluster + '</p></div>' +
+                '</div>' +
+                '<hr class="my-3" />' +
+                '<p class="font-bold text-sm mb-2">Subject Results:</p>' +
+                '<table class="w-full text-xs mb-4 border-collapse"><thead><tr class="bg-gray-100"><th class="text-left p-1.5 border">Subject</th><th class="p-1.5 border">Marks</th><th class="p-1.5 border">Grade</th><th class="p-1.5 border">Points</th></tr></thead><tbody>' +
+                subjects.map(function (s) {
+                    return '<tr><td class="p-1.5 border">' + s.name + '</td><td class="p-1.5 border text-center">' + s.marks + '</td><td class="p-1.5 border text-center font-bold">' + s.grade + '</td><td class="p-1.5 border text-center">' + s.points + '</td></tr>';
+                }).join('') +
+                '</tbody></table>' +
+                (clusterSubjs.length ? '<p class="font-bold text-sm mb-2">Cluster Subjects:</p><table class="w-full text-xs border-collapse"><thead><tr class="bg-gray-100"><th class="text-left p-1.5 border">Subject</th><th class="p-1.5 border">Marks</th><th class="p-1.5 border">Grade</th><th class="p-1.5 border">Points</th></tr></thead><tbody>' + clusterSubjs.map(function (s) { return '<tr><td class="p-1.5 border">' + s.name + '</td><td class="p-1.5 border text-center">' + s.marks + '</td><td class="p-1.5 border text-center font-bold">' + s.grade + '</td><td class="p-1.5 border text-center">' + s.points + '</td></tr>'; }).join('') + '</tbody></table>' : '');
+
+            window.print();
+        };
+
+        // ── GRADE COLOUR HELPER ───────────────────────────────────────────────
+        function gradeTextColor(grade) {
+            var map = {
+                'A': 'text-green-700', 'A-': 'text-green-600',
+                'B+': 'text-blue-700', 'B':  'text-blue-600', 'B-': 'text-blue-500',
+                'C+': 'text-yellow-700','C': 'text-yellow-600','C-': 'text-yellow-500',
+                'D+': 'text-orange-600','D': 'text-orange-500','D-': 'text-orange-400',
+                'E':  'text-red-600'
+            };
+            return map[grade] || 'text-gray-600';
+        }
+
+        // ── BOOT ──────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof initPage === 'function') initPage('student', 'grade-calculator');
+            buildSection1();
+            buildSection2();
+        });
+
+        // Expose globals used by inline onchange handlers
+        window.onSubjectChange = function (id) {
+            var sel = document.getElementById('subj-' + id);
+            if (sel && subjectData[id]) subjectData[id].subject = sel.value;
+        };
+        window.onMarksChange  = function (id) { onMarksChange(id); };
+        window.onLangChange   = onLangChange;
+        window.recalcCluster  = recalcCluster;
+
+    }());
     </script>
     <script src="../assets/js/pwa-register.js"></script>
 </body>
