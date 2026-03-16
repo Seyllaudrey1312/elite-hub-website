@@ -17,20 +17,20 @@ const NAV_LINKS = [
 
 // ─── ADMIN SIDEBAR LINKS CONFIG ──────────────────────────────────────────────
 const ADMIN_LINKS = [
-    { key: 'dashboard',     label: '📊 Dashboard',          href: 'admin-dashboard.html' },
-    { key: 'content',       label: '📁 Content Management', href: 'admin-content.html' },
-    { key: 'pricing',       label: '💳 Pricing & Payments', href: 'admin-pricing.html' },
-    { key: 'users',         label: '👥 User Management',    href: 'admin-users.html' },
-    { key: 'tutors',        label: '🎓 Tutor Applications', href: 'admin-tutor-applications.html', badge: true },
-    { key: 'partners',      label: '🤝 Partners',           href: 'admin-partners.html' },
-    { key: 'announcements', label: '📢 Announcements',      href: 'admin-announcements.html' },
-    { key: 'resources',     label: '📚 Resources',          href: 'admin-resources.html' },
-    { key: 'quiz-builder',  label: '✏️ Quiz Builder',       href: 'admin-quiz-builder.html' },
-    { key: 'quiz-results',  label: '📈 Quiz Results',       href: 'admin-quiz-results.html' },
-    { key: 'live-classes',  label: '🎙️ Live Classes',       href: 'admin-live-classes.html' },
-    { key: 'video-lessons', label: '🎬 Video Lessons',      href: 'admin-video-lessons.html' },
-    { key: 'settings',      label: '⚙️ Site Settings',      href: 'admin-settings.html' },
-    { key: 'activity-log',  label: '🗒️ Activity Log',       href: 'admin-activity-log.html' },
+    { key: 'dashboard',     label: '📊 Dashboard',          href: './admin-dashboard.html' },
+    { key: 'content',       label: '📁 Content Management', href: './admin-content.html' },
+    { key: 'pricing',       label: '💳 Pricing & Payments', href: './admin-pricing.html' },
+    { key: 'users',         label: '👥 User Management',    href: './admin-users.html' },
+    { key: 'tutors',        label: '🎓 Tutor Applications', href: './admin-tutor-applications.html', badge: true },
+    { key: 'partners',      label: '🤝 Partners',           href: './admin-partners.html' },
+    { key: 'announcements', label: '📢 Announcements',      href: './admin-announcements.html' },
+    { key: 'resources',     label: '📚 Resources',          href: './admin-resources.html' },
+    { key: 'quiz-builder',  label: '✏️ Quiz Builder',       href: './admin-quiz-builder.html' },
+    { key: 'quiz-results',  label: '📈 Quiz Results',       href: './admin-quiz-results.html' },
+    { key: 'live-classes',  label: '🎙️ Live Classes',       href: './admin-live-classes.html' },
+    { key: 'video-lessons', label: '🎬 Video Lessons',      href: './admin-video-lessons.html' },
+    { key: 'settings',      label: '⚙️ Site Settings',      href: './admin-settings.html' },
+    { key: 'activity-log',  label: '🗒️ Activity Log',       href: './admin-activity-log.html' },
 ];
 
 // ─── CONTACT / FOOTER DETAILS ────────────────────────────────────────────────
