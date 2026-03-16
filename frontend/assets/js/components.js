@@ -3,7 +3,7 @@
 
 // ─── NAV LINKS CONFIG ────────────────────────────────────────────────────────
 const NAV_LINKS = [
-    { key: 'home',          label: 'Home',            href: '../index.html' },
+   // { key: 'home',          label: 'Home',            href: '../index.html' },
     { key: 'subjects',      label: 'Subjects',        href: './subjects.html' },
     { key: 'resources',     label: 'Study Resources', href: './resources.html' },
     { key: 'quizzes',       label: 'Quizzes',         href: './quizzes.html' },
