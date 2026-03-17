@@ -1,18 +1,27 @@
 // Elite Hub - Reusable Page Components
 // Edit once here → updates every page instantly.
 
+// ─── PATH HELPER ─────────────────────────────────────────────────────────────
+// Detects whether we're on index.html (root) or inside the /frontend/ folder,
+// and returns the correct prefix so all links resolve properly from both places.
+const BASE = (() => {
+    const path = window.location.pathname;
+    // If the current page is NOT inside /frontend/, we need to prefix with frontend/
+    return path.includes('/frontend/') ? './' : './frontend/';
+})();
+
 // ─── NAV LINKS CONFIG ────────────────────────────────────────────────────────
 const NAV_LINKS = [
    // { key: 'home',          label: 'Home',            href: '../index.html' },
-    { key: 'subjects',      label: 'Subjects',        href: './subjects.html' },
-    { key: 'resources',     label: 'Study Resources', href: './resources.html' },
-    { key: 'quizzes',       label: 'Quizzes',         href: './quizzes.html' },
-   // { key: 'mock-exams',    label: 'Mock Exams',      href: './mock-exams.html' },
-   // { key: 'past-papers',   label: 'Past Papers',     href: './past-papers.html' },
-   // { key: 'pricing',       label: 'Pricing',         href: './pricing.html' },
-    { key: 'forums',        label: 'Forums',          href: './forums.html' },
-    { key: 'announcements', label: 'Announcements',   href: './announcements.html' },
-    { key: 'contact',       label: 'Contact',         href: './contact.html' },
+    { key: 'subjects',      label: 'Subjects',        href: `${BASE}subjects.html` },
+    { key: 'resources',     label: 'Study Resources', href: `${BASE}resources.html` },
+    { key: 'quizzes',       label: 'Quizzes',         href: `${BASE}quizzes.html` },
+   // { key: 'mock-exams',    label: 'Mock Exams',      href: `${BASE}mock-exams.html` },
+   // { key: 'past-papers',   label: 'Past Papers',     href: `${BASE}past-papers.html` },
+   // { key: 'pricing',       label: 'Pricing',         href: `${BASE}pricing.html` },
+    { key: 'forums',        label: 'Forums',          href: `${BASE}forums.html` },
+    { key: 'announcements', label: 'Announcements',   href: `${BASE}announcements.html` },
+    { key: 'contact',       label: 'Contact',         href: `${BASE}contact.html` },
 ];
 
 // ─── ADMIN SIDEBAR LINKS CONFIG ──────────────────────────────────────────────
@@ -64,15 +73,15 @@ function renderNav(activePage) {
     const desktopAuth = loggedIn
         ? `<span class="text-yellow-200 text-sm">Welcome, ${student?.name?.split(' ')[0] || 'Student'}</span>
            <button onclick="logoutStudent()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400 transition text-sm">Logout</button>`
-        : `<a href="./login.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Login</a>
-           <a href="./register.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Register</a>`;
+        : `<a href="${BASE}login.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Login</a>
+           <a href="${BASE}register.html" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded hover:bg-yellow-300 transition">Register</a>`;
 
     // Auth section (mobile)
     const mobileAuth = loggedIn
         ? `<div class="px-3 py-2 text-yellow-200 text-sm">Welcome, ${student?.name?.split(' ')[0] || 'Student'}</div>
            <button onclick="logoutStudent()" class="block w-full text-left px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500">Logout</button>`
-        : `<a href="./login.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Login</a>
-           <a href="./register.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Register</a>`;
+        : `<a href="${BASE}login.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Login</a>
+           <a href="${BASE}register.html" class="block px-3 py-2 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300">Register</a>`;
 
     el.innerHTML = `
         <nav class="bg-blue-900 text-white shadow-lg">
@@ -257,22 +266,22 @@ function renderFooter() {
                     <div>
                         <h3 class="text-lg font-bold mb-4">Quick Links</h3>
                         <ul class="space-y-2 text-gray-300">
-                            <li><a href="./resources.html"     class="hover:text-yellow-400">Resources</a></li>
-                            <li><a href="./quizzes.html"       class="hover:text-yellow-400">Quizzes</a></li>
-                            <li><a href="./announcements.html" class="hover:text-yellow-400">Announcements</a></li>
-                            <li><a href="./contact.html"       class="hover:text-yellow-400">Contact</a></li>
-                            <li><a href="./partners.html"      class="hover:text-yellow-400">Partners</a></li>
-                            <li><a href="./past-papers.html"   class="hover:text-yellow-400">Past Papers</a></li>
-                            <li><a href="./grade-calculator.html" class="hover:text-yellow-400">Grade Calculator</a></li>
+                            <li><a href="${BASE}resources.html"     class="hover:text-yellow-400">Resources</a></li>
+                            <li><a href="${BASE}quizzes.html"       class="hover:text-yellow-400">Quizzes</a></li>
+                            <li><a href="${BASE}announcements.html" class="hover:text-yellow-400">Announcements</a></li>
+                            <li><a href="${BASE}contact.html"       class="hover:text-yellow-400">Contact</a></li>
+                            <li><a href="${BASE}partners.html"      class="hover:text-yellow-400">Partners</a></li>
+                            <li><a href="${BASE}past-papers.html"   class="hover:text-yellow-400">Past Papers</a></li>
+                            <li><a href="${BASE}grade-calculator.html" class="hover:text-yellow-400">Grade Calculator</a></li>
                         </ul>
                     </div>
                 </div>
                 <hr class="border-blue-800 my-6">
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <p class="text-gray-400">&copy; ${new Date().getFullYear()} Elite Hub. All rights reserved.</p>
-                    <div class="flex gap-4 items-center">
-                        <img src="../assets/images/logos/EMG logo.jpg" alt="EMG Logo" class="h-14 w-14 rounded-lg object-contain bg-white p-1 shadow-md">
-                        <img src="../assets/images/logos/TGV logo.jpg" alt="TGV Logo" class="h-14 w-14 rounded-lg object-contain bg-white p-1 shadow-md">
+                    <div class="flex gap-3">
+                        <img src="../assets/images/logos/EMG logo.jpg" alt="EMG" class="h-10 w-12 rounded">
+                        <img src="../assets/images/logos/TGV logo.jpg" alt="TGV" class="h-10 w-12 rounded">
                     </div>
                 </div>
             </div>
