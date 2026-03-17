@@ -7,9 +7,9 @@ const NAV_LINKS = [
     { key: 'subjects',      label: 'Subjects',        href: './subjects.html' },
     { key: 'resources',     label: 'Study Resources', href: './resources.html' },
     { key: 'quizzes',       label: 'Quizzes',         href: './quizzes.html' },
-    { key: 'mock-exams',    label: 'Mock Exams',      href: './mock-exams.html' },
-    { key: 'past-papers',   label: 'Past Papers',     href: './past-papers.html' },
-    { key: 'pricing',       label: 'Pricing',         href: './pricing.html' },
+   // { key: 'mock-exams',    label: 'Mock Exams',      href: './mock-exams.html' },
+   // { key: 'past-papers',   label: 'Past Papers',     href: './past-papers.html' },
+   // { key: 'pricing',       label: 'Pricing',         href: './pricing.html' },
     { key: 'forums',        label: 'Forums',          href: './forums.html' },
     { key: 'announcements', label: 'Announcements',   href: './announcements.html' },
     { key: 'contact',       label: 'Contact',         href: './contact.html' },
@@ -257,13 +257,13 @@ function renderFooter() {
                     <div>
                         <h3 class="text-lg font-bold mb-4">Quick Links</h3>
                         <ul class="space-y-2 text-gray-300">
-                            <li><a href="./pages/resources.html"     class="hover:text-yellow-400">Resources</a></li>
-                            <li><a href="./pages/quizzes.html"       class="hover:text-yellow-400">Quizzes</a></li>
-                            <li><a href="./pages/announcements.html" class="hover:text-yellow-400">Announcements</a></li>
-                            <li><a href="./pages/contact.html"       class="hover:text-yellow-400">Contact</a></li>
-                            <li><a href="./pages/partners.html"      class="hover:text-yellow-400">Partners</a></li>
-                            <li><a href="./pages/past-papers.html"   class="hover:text-yellow-400">Past Papers</a></li>
-                            <li><a href="./pages/grade-calculator.html" class="hover:text-yellow-400">Grade Calculator</a></li>
+                            <li><a href="./resources.html"     class="hover:text-yellow-400">Resources</a></li>
+                            <li><a href="./quizzes.html"       class="hover:text-yellow-400">Quizzes</a></li>
+                            <li><a href="./announcements.html" class="hover:text-yellow-400">Announcements</a></li>
+                            <li><a href="./contact.html"       class="hover:text-yellow-400">Contact</a></li>
+                            <li><a href="./partners.html"      class="hover:text-yellow-400">Partners</a></li>
+                            <li><a href="./past-papers.html"   class="hover:text-yellow-400">Past Papers</a></li>
+                            <li><a href="./grade-calculator.html" class="hover:text-yellow-400">Grade Calculator</a></li>
                         </ul>
                     </div>
                 </div>
@@ -271,8 +271,8 @@ function renderFooter() {
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <p class="text-gray-400">&copy; ${new Date().getFullYear()} Elite Hub. All rights reserved.</p>
                     <div class="flex gap-3">
-                        <img src="../assets/images/logos/EMG logo.jpg" alt="EMG logo.jpg" class="h-10 w-12 rounded">
-                        <img src="../assets/images/logos/TGV logo.jpg" alt="TGV logo.jpg" class="h-10 w-12 rounded">
+                        <img src="../assets/images/logos/EMG logo.jpg" alt="EMG" class="h-10 w-12 rounded">
+                        <img src="../assets/images/logos/TGV logo.jpg" alt="TGV" class="h-10 w-12 rounded">
                     </div>
                 </div>
             </div>
