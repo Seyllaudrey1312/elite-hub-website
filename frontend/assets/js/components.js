@@ -270,9 +270,9 @@ function renderFooter() {
                 <hr class="border-blue-800 my-6">
                 <div class="flex justify-between items-center flex-wrap gap-4">
                     <p class="text-gray-400">&copy; ${new Date().getFullYear()} Elite Hub. All rights reserved.</p>
-                    <div class="flex gap-3">
-                        <img src="../assets/images/logos/EMG logo.jpg" alt="EMG" class="h-10 w-12 rounded">
-                        <img src="../assets/images/logos/TGV logo.jpg" alt="TGV" class="h-10 w-12 rounded">
+                    <div class="flex gap-4 items-center">
+                        <img src="../assets/images/logos/EMG logo.jpg" alt="EMG Logo" class="h-14 w-14 rounded-lg object-contain bg-white p-1 shadow-md">
+                        <img src="../assets/images/logos/TGV logo.jpg" alt="TGV Logo" class="h-14 w-14 rounded-lg object-contain bg-white p-1 shadow-md">
                     </div>
                 </div>
             </div>
