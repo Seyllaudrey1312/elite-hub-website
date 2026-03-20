@@ -275,6 +275,7 @@
     var EMAILJS_PUBLIC_KEY  = 'o_Vikgzjnvpqizh52';    // Account → API Keys
     var EMAILJS_SERVICE_ID  = 'service_h68dr0z';    // Email Services tab
     var EMAILJS_TEMPLATE_ID = 'template_5p6akbk';   // Email Templates tab
+    var EMAILJS_AUTOREPLY_ID     = 'template_eqsudvw';  // For sending auto-replies to students and users
 
     emailjs.init(EMAILJS_PUBLIC_KEY);
 
@@ -395,6 +396,7 @@
                 emailjs.sendForm(
                     EMAILJS_SERVICE_ID,
                     EMAILJS_TEMPLATE_ID,
+                    EMAILJS_AUTOREPLY_ID,
                     document.getElementById('contactForm')
                 ),
 
