@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Tutor - Elite Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- EmailJS — sends form directly to elitehubltd32@gmail.com -->
+    <!-- EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0ea5a4">
@@ -23,46 +23,34 @@
         </div>
     </section>
 
-    <!-- Toast -->
-    <div id="toast"
-         class="hidden fixed top-6 right-6 z-50 max-w-sm w-full px-5 py-4 rounded-xl shadow-2xl
-                text-white font-semibold flex items-center gap-3">
-        <span id="toast-icon" class="text-xl flex-shrink-0"></span>
-        <span id="toast-msg" class="text-sm"></span>
-    </div>
-
     <!-- Contact Section -->
     <section class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                <!-- Contact Info -->
-                <div class="lg:col-span-1 space-y-6">
-                    <h2 class="text-2xl font-bold text-blue-900">Direct Contact</h2>
+                <!-- Contact Information -->
+                <div class="lg:col-span-1">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-6">Direct Contact</h2>
 
-                    <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                         <h3 class="text-lg font-bold text-blue-900 mb-2">📧 Email</h3>
-                        <p class="text-gray-600 text-sm mb-3">Send your questions and concerns via email</p>
-                        <a href="mailto:elitehubltd32@gmail.com"
-                           class="text-blue-900 font-bold hover:underline text-sm break-all">
-                           elitehubltd32@gmail.com
-                        </a>
-                        <p class="text-xs text-gray-500 mt-2">Response time: Within 24 hours</p>
+                        <p class="text-gray-700 mb-3">Send your questions and concerns via email</p>
+                        <a href="mailto:elitehubltd32@gmail.com" class="text-blue-900 font-bold hover:underline">elitehubltd32@gmail.com</a>
+                        <p class="text-sm text-gray-500 mt-2">Response time: Within 24 hours</p>
                     </div>
 
-                    <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                         <h3 class="text-lg font-bold text-blue-900 mb-2">💬 WhatsApp</h3>
-                        <p class="text-gray-600 text-sm mb-3">Chat directly for quick responses</p>
-                        <a href="https://wa.me/254792619341" target="_blank"
-                           class="text-blue-900 font-bold hover:underline">+254 792619341</a>
-                        <p class="text-xs text-gray-500 mt-2">Available: Mon–Sat, 10am–6pm</p>
+                        <p class="text-gray-700 mb-3">Chat directly for quick responses</p>
+                        <a href="https://wa.me/254792619341" target="_blank" class="text-blue-900 font-bold hover:underline">+254 792619341</a>
+                        <p class="text-sm text-gray-500 mt-2">Available: Mon-Sat, 10am-6pm</p>
                     </div>
 
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <h3 class="text-lg font-bold text-blue-900 mb-2">📞 Phone</h3>
-                        <p class="text-gray-600 text-sm mb-3">Call during office hours</p>
+                        <p class="text-gray-700 mb-3">Call during office hours</p>
                         <p class="text-blue-900 font-bold">+254 792619341</p>
-                        <p class="text-xs text-gray-500 mt-2">Available: Mon–Fri, 3:30pm–6:30pm</p>
+                        <p class="text-sm text-gray-500 mt-2">Available: Mon-Fri, 3:30pm-6:30pm</p>
                     </div>
                 </div>
 
@@ -71,53 +59,23 @@
                     <div class="bg-white rounded-lg shadow-lg p-8">
                         <h2 class="text-2xl font-bold text-blue-900 mb-6">Send a Message</h2>
 
-                        <!-- Success screen -->
-                        <div id="success-screen" class="hidden text-center py-10">
-                            <div class="text-6xl mb-4">✅</div>
-                            <h3 class="text-2xl font-bold text-blue-900 mb-2">Message Sent!</h3>
-                            <p class="text-gray-600 mb-2">
-                                Thank you! Your message has been received by Elite Hub.<br>
-                                You will hear back within 24 hours during business days.
-                            </p>
-                            <p class="text-sm text-gray-500 mb-6">
-                                You can also reach us directly at
-                                <a href="mailto:elitehubltd32@gmail.com"
-                                   class="text-blue-900 font-semibold hover:underline">elitehubltd32@gmail.com</a>
-                            </p>
-                            <button onclick="resetContactForm()"
-                                    class="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition font-bold">
-                                Send Another Message
-                            </button>
-                        </div>
-
-                        <!--
-                            id="contactForm" — required for emailjs.sendForm() to read fields.
-                            Field name attributes map to EmailJS template variables.
-                        -->
-                        <form id="contactForm" novalidate>
+                        <!-- id="contactForm" is required by emailjs.sendForm() -->
+                        <form id="contactForm">
 
                             <!-- Student Name -->
-                            <div class="mb-5">
-                                <label for="from_name" class="block text-gray-700 font-bold mb-2">
-                                    Student Name <span class="text-red-500">*</span>
-                                </label>
+                            <div class="mb-6">
+                                <label for="from_name" class="block text-gray-700 font-bold mb-2">Student Name *</label>
                                 <input type="text" id="from_name" name="from_name" required
-                                       placeholder="Enter your full name"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg
-                                              focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
-                                <p id="err-name" class="hidden text-red-500 text-xs mt-1">Please enter your name.</p>
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                       placeholder="Enter your full name">
                             </div>
 
-                            <!-- Class / Form + Subject -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                            <!-- Class/Form + Subject -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
-                                    <label for="student_form" class="block text-gray-700 font-bold mb-2">
-                                        Class / Form <span class="text-red-500">*</span>
-                                    </label>
-                                    <!-- FIX: every grade 7-11 previously had value="form1" (duplicate) -->
+                                    <label for="student_form" class="block text-gray-700 font-bold mb-2">Class / Form *</label>
                                     <select id="student_form" name="student_form" required
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg
-                                                   focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
                                         <option value="">Select your form</option>
                                         <option value="Grade 7">Grade 7</option>
                                         <option value="Grade 8">Grade 8</option>
@@ -128,16 +86,12 @@
                                         <option value="Form 3">Form 3</option>
                                         <option value="Form 4">Form 4</option>
                                     </select>
-                                    <p id="err-form" class="hidden text-red-500 text-xs mt-1">Please select your class.</p>
                                 </div>
 
                                 <div>
-                                    <label for="subject" class="block text-gray-700 font-bold mb-2">
-                                        Subject <span class="text-red-500">*</span>
-                                    </label>
+                                    <label for="subject" class="block text-gray-700 font-bold mb-2">Subject *</label>
                                     <select id="subject" name="subject" required
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg
-                                                   focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
                                         <option value="">Select subject</option>
                                         <option value="Mathematics">Mathematics</option>
                                         <option value="Physics">Physics</option>
@@ -147,322 +101,153 @@
                                         <option value="Kiswahili">Kiswahili</option>
                                         <option value="History">History</option>
                                         <option value="Geography">Geography</option>
-                                        <option value="Christian Religious Education">CRE</option>
-                                        <!-- FIX: was "Intergrated Science" -->
+                                        <option value="Christian Religious Education">Christian Religious Education</option>
                                         <option value="Integrated Science">Integrated Science</option>
                                         <option value="Community Service Learning">Community Service Learning</option>
                                         <option value="Core Mathematics">Core Mathematics</option>
                                         <option value="Other">Other</option>
                                     </select>
-                                    <p id="err-subject" class="hidden text-red-500 text-xs mt-1">Please select a subject.</p>
                                 </div>
                             </div>
 
                             <!-- Email -->
-                            <div class="mb-5">
-                                <label for="reply_to" class="block text-gray-700 font-bold mb-2">
-                                    Email Address <span class="text-red-500">*</span>
-                                </label>
-                                <!--
-                                    name="reply_to" — EmailJS sets Reply-To to this address
-                                    so you can hit Reply in Gmail to answer the student
-                                -->
+                            <div class="mb-6">
+                                <label for="reply_to" class="block text-gray-700 font-bold mb-2">Email Address *</label>
+                                <!-- name="reply_to" sets Reply-To so you can reply directly to the student -->
                                 <input type="email" id="reply_to" name="reply_to" required
-                                       placeholder="your.email@example.com"
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg
-                                              focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
-                                <p id="err-email" class="hidden text-red-500 text-xs mt-1">Please enter a valid email address.</p>
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                       placeholder="your.email@example.com">
                             </div>
 
                             <!-- Message -->
-                            <div class="mb-5">
-                                <label for="message" class="block text-gray-700 font-bold mb-2">
-                                    Message <span class="text-red-500">*</span>
-                                </label>
+                            <div class="mb-6">
+                                <label for="message" class="block text-gray-700 font-bold mb-2">Message *</label>
                                 <textarea id="message" name="message" required rows="6"
-                                          placeholder="Describe your question or concern..."
-                                          oninput="updateCharCount()"
-                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none
-                                                 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"></textarea>
-                                <div class="flex justify-between mt-1">
-                                    <p id="err-message" class="hidden text-red-500 text-xs">
-                                        Please write a message (at least 10 characters).
-                                    </p>
-                                    <p id="char-count" class="text-gray-400 text-xs ml-auto">0 / 1000</p>
-                                </div>
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                          placeholder="Describe your question or concern..."></textarea>
                             </div>
 
                             <!-- Priority -->
                             <div class="mb-6">
                                 <label for="priority" class="block text-gray-700 font-bold mb-2">Priority Level</label>
                                 <select id="priority" name="priority"
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg
-                                               focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-                                    <option value="Normal">Normal — I can wait a day or two</option>
-                                    <option value="Urgent">Urgent — I need help soon</option>
-                                    <option value="Low">Low — No rush</option>
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                    <option value="Normal">Normal</option>
+                                    <option value="Urgent">Urgent</option>
+                                    <option value="Low">Low</option>
                                 </select>
                             </div>
 
-                            <!-- Submit -->
+                            <!-- Submit Button -->
                             <button type="submit" id="submit-btn"
-                                    class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg
-                                           hover:bg-blue-800 transition flex items-center justify-center gap-2">
-                                <span id="btn-text">Send Message</span>
-                                <svg id="btn-spinner" class="hidden animate-spin h-5 w-5 text-white"
-                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                            stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                                </svg>
+                                    class="w-full bg-blue-900 text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition">
+                                Send Message
                             </button>
-                            <p class="text-gray-500 text-xs mt-3 text-center">
-                                You'll receive a response within 24 hours during business days.
-                            </p>
+
+                            <p class="text-gray-500 text-sm mt-4">You'll receive a response within 24 hours during business days.</p>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Office Hours -->
+            <!-- Office Hours Section -->
             <div class="mt-12 bg-white rounded-lg shadow-lg p-8">
                 <h2 class="text-2xl font-bold text-blue-900 mb-6">📅 Office Hours & Location</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <h3 class="text-lg font-bold text-blue-900 mb-4">Office Hours</h3>
                         <div class="space-y-2 text-gray-700">
-                            <p><strong>Monday – Friday:</strong> 3:30 PM – 6:30 PM</p>
-                            <p><strong>Saturday:</strong> 10:00 AM – 1:00 PM</p>
+                            <p><strong>Monday - Friday:</strong> 3:30 PM - 6:30 PM</p>
+                            <p><strong>Saturday:</strong> 10:00 AM - 1:00 PM</p>
                             <p><strong>Sunday:</strong> Closed</p>
                             <p><strong>Public Holidays:</strong> Closed</p>
                         </div>
-                        <p class="text-gray-500 text-sm mt-4">
-                            For appointments outside these hours, please contact us in advance.
-                        </p>
+                        <p class="text-gray-500 text-sm mt-4">For appointments outside these hours, please contact us in advance.</p>
                     </div>
+
                     <div>
                         <h3 class="text-lg font-bold text-blue-900 mb-4">Location</h3>
-                        <div class="space-y-1 text-gray-700">
-                            <p><strong>Elite Hub Education Center</strong></p>
-                            <p>Maseno-Busia Road<br>Maseno, Kenya</p>
+                        <div class="space-y-2 text-gray-700">
+                            <p><strong>School Office</strong></p>
+                            <p>Elite Hub Education Center<br>
+                            Maseno-Busia road<br>
+                            Maseno, Kenya</p>
                         </div>
                         <p class="text-gray-500 text-sm mt-4">Easily accessible by public transport.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- FAQ -->
+            <!-- FAQ Section -->
             <div class="mt-12">
                 <h2 class="text-2xl font-bold text-blue-900 mb-6">❓ Frequently Asked Questions</h2>
-                <div class="space-y-4" id="faq-list"></div>
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-blue-900 mb-2">How long does it take to get a response?</h3>
+                        <p class="text-gray-700">Email inquiries are typically answered within 24 hours on business days. WhatsApp messages are usually responded to within a few hours during office hours.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-blue-900 mb-2">Can I get one-on-one tutoring sessions?</h3>
+                        <p class="text-gray-700">Yes! Contact us to schedule private tutoring sessions. These can be conducted online or at our physical office location based on your preference.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-blue-900 mb-2">Is there a cost for using this platform?</h3>
+                        <p class="text-gray-700">The Elite Hub platform is free for all enrolled students. Premium features and tutoring sessions may have associated fees.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-blue-900 mb-2">How can I report technical issues?</h3>
+                        <p class="text-gray-700">Please email us at elitehubltd32@gmail.com or use the contact form above with subject "Technical Issue" for priority handling.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <div id="main-footer"></div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="../assets/js/api.js"></script>
+    <script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/components.js"></script>
-
     <script>
-    // ── PAGE INIT ──────────────────────────────────────────────────────────────
-    initPage('student', 'contact');
+        initPage('student', 'contact');
 
-    // ── EMAILJS CREDENTIALS ────────────────────────────────────────────────────
-    // Replace these three values with your actual EmailJS credentials.
-    // Get them at https://dashboard.emailjs.com after connecting elitehubltd32@gmail.com
-    var EMAILJS_PUBLIC_KEY  = 'o_Vikgzjnvpqizh52';    // Account → API Keys
-    var EMAILJS_SERVICE_ID  = 'service_h68dr0z';    // Email Services tab
-    var EMAILJS_TEMPLATE_ID = 'template_5p6akbk';   // Email Templates tab
-    var EMAILJS_AUTOREPLY_ID     = 'template_eqsudvw';  // For sending auto-replies to students and users
+        // ── EmailJS credentials ──────────────────────────────────
+        emailjs.init('o_Vikgzjnvpqizh52');
 
-    emailjs.init(EMAILJS_PUBLIC_KEY);
+        var SERVICE_ID   = 'service_h68dr0z';
+        var TEMPLATE_ID  = 'template_5p6akbk';   // sends to elitehubltd32@gmail.com
+        var AUTOREPLY_ID = 'template_eqsudvw';    // auto-reply to student
 
-    // ── EMAILJS TEMPLATE VARIABLES USED ───────────────────────────────────────
-    // In your EmailJS template, use these variables:
-    //   {{from_name}}     → Student's name
-    //   {{reply_to}}      → Student's email (also set as Reply-To)
-    //   {{student_form}}  → Grade / Form selected
-    //   {{subject}}       → Subject selected
-    //   {{message}}       → Message body
-    //   {{priority}}      → Priority level
+        // ── Form submit handler ───────────────────────────────────
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-    // ── FAQ ────────────────────────────────────────────────────────────────────
-    var FAQS = [
-        {
-            q: 'How long does it take to get a response?',
-            a: 'Email inquiries are typically answered within 24 hours on business days. WhatsApp messages are usually responded to within a few hours during office hours.'
-        },
-        {
-            q: 'Can I get one-on-one tutoring sessions?',
-            a: 'Yes! Contact us to schedule private tutoring sessions. These can be conducted online or at our physical office location based on your preference.'
-        },
-        {
-            q: 'Is there a cost for using this platform?',
-            a: 'The Elite Hub platform is free for all enrolled students. Premium features and tutoring sessions may have associated fees.'
-        },
-        {
-            q: 'How can I report technical issues?',
-            a: 'Please email elitehubltd32@gmail.com or use the contact form above and mention "Technical Issue" for priority handling.'
-        }
-    ];
+            var btn = document.getElementById('submit-btn');
+            btn.disabled    = true;
+            btn.textContent = 'Sending...';
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Render FAQs
-        var faqList = document.getElementById('faq-list');
-        faqList.innerHTML = FAQS.map(function (faq, i) {
-            return [
-                '<div class="bg-white rounded-lg shadow-lg overflow-hidden">',
-                    '<button onclick="toggleFAQ(' + i + ')" ',
-                            'class="w-full text-left px-6 py-5 flex justify-between items-center hover:bg-gray-50 transition">',
-                        '<h3 class="text-base font-bold text-blue-900 pr-4">' + faq.q + '</h3>',
-                        '<span id="faq-icon-' + i + '" class="text-blue-900 text-xl font-bold flex-shrink-0">+</span>',
-                    '</button>',
-                    '<div id="faq-body-' + i + '" class="hidden px-6 pb-5">',
-                        '<p class="text-gray-700">' + faq.a + '</p>',
-                    '</div>',
-                '</div>'
-            ].join('');
-        }).join('');
+            var form = document.getElementById('contactForm');
 
-        // Pre-fill if student is logged in
-        if (typeof getStoredStudent === 'function') {
-            var student = getStoredStudent();
-            if (student) {
-                if (student.name)  document.getElementById('from_name').value = student.name;
-                if (student.email) document.getElementById('reply_to').value  = student.email;
-            }
-        }
-    });
-
-    function toggleFAQ(i) {
-        var body = document.getElementById('faq-body-' + i);
-        var icon = document.getElementById('faq-icon-' + i);
-        var open = !body.classList.contains('hidden');
-        body.classList.toggle('hidden', open);
-        icon.textContent = open ? '+' : '−';
-    }
-
-    // ── CHAR COUNTER ───────────────────────────────────────────────────────────
-    function updateCharCount() {
-        var val = document.getElementById('message').value;
-        if (val.length > 1000) {
-            document.getElementById('message').value = val.slice(0, 1000);
-            val = document.getElementById('message').value;
-        }
-        document.getElementById('char-count').textContent = val.length + ' / 1000';
-    }
-
-    // ── VALIDATION ─────────────────────────────────────────────────────────────
-    function validate() {
-        var valid = true;
-
-        function chk(id, errId, fn) {
-            var el  = document.getElementById(id);
-            var err = document.getElementById(errId);
-            var ok  = fn(el.value);
-            el.classList.toggle('border-red-500', !ok);
-            err.classList.toggle('hidden', ok);
-            if (!ok) valid = false;
-        }
-
-        chk('from_name',    'err-name',    function (v) { return v.trim().length >= 2; });
-        chk('student_form', 'err-form',    function (v) { return v !== ''; });
-        chk('subject',      'err-subject', function (v) { return v !== ''; });
-        chk('reply_to',     'err-email',   function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); });
-        chk('message',      'err-message', function (v) { return v.trim().length >= 10; });
-
-        return valid;
-    }
-
-    // ── FORM SUBMIT ────────────────────────────────────────────────────────────
-    document.getElementById('contactForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (!validate()) return;
-
-        var btn     = document.getElementById('submit-btn');
-        var btnText = document.getElementById('btn-text');
-        var spinner = document.getElementById('btn-spinner');
-        btn.disabled        = true;
-        btnText.textContent = 'Sending...';
-        spinner.classList.remove('hidden');
-
-        try {
-            // Send via EmailJS (primary — delivers to elitehubltd32@gmail.com)
-            // Save to backend DB (secondary — runs in parallel, won't block email)
-            var formEl = document.getElementById('contactForm');
-
-            var results = await Promise.allSettled([
-
-                // 1. Main email → delivered to elitehubltd32@gmail.com
-                emailjs.sendForm(
-                    EMAILJS_SERVICE_ID,
-                    EMAILJS_TEMPLATE_ID,
-                    formEl
-                ),
-
-                // 2. Auto-reply → delivered to the student's email address
-                emailjs.sendForm(
-                    EMAILJS_SERVICE_ID,
-                    EMAILJS_AUTOREPLY_ID,
-                    formEl
-                ),
-
-                // 3. Save to backend database as backup
-                (typeof API_BASE_URL !== 'undefined'
-                    ? fetch(API_BASE_URL + '/contact', {
-                        method:  'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            name:     document.getElementById('from_name').value.trim(),
-                            form:     document.getElementById('student_form').value,
-                            subject:  document.getElementById('subject').value,
-                            email:    document.getElementById('reply_to').value.trim(),
-                            message:  document.getElementById('message').value.trim(),
-                            priority: document.getElementById('priority').value
-                        })
-                    })
-                    : Promise.resolve())
-
-            ]);
-
-            if (results[0].status === 'fulfilled') {
-                // Main email delivered — show success regardless of auto-reply status
-                document.getElementById('contactForm').classList.add('hidden');
-                document.getElementById('success-screen').classList.remove('hidden');
-                showToast('Message sent! We will reply within 24 hours ✅', 'success');
-                // Log if auto-reply failed (non-blocking)
-                if (results[1].status === 'rejected') {
-                    console.warn('Auto-reply failed:', results[1].reason);
-                }
-            } else {
-                console.error('EmailJS error:', results[0].reason);
-                showToast('Failed to send. Please email us directly at elitehubltd32@gmail.com', 'error');
-            }
-
-        } catch (err) {
-            console.error('Contact submit error:', err);
-            showToast('Something went wrong. Email us at elitehubltd32@gmail.com', 'error');
-        } finally {
-            btn.disabled        = false;
-            btnText.textContent = 'Send Message';
-            spinner.classList.add('hidden');
-        }
-    });
-
-    // ── RESET ──────────────────────────────────────────────────────────────────
-    function resetContactForm() {
-        document.getElementById('contactForm').reset();
-        document.getElementById('contactForm').classList.remove('hidden');
-        document.getElementById('success-screen').classList.add('hidden');
-        document.getElementById('char-count').textContent = '0 / 1000';
-    }
-
-    // ── TOAST ──────────────────────────────────────────────────────────────────
-    function showToast(msg, type) {
-        var toast = document.getElementById('toast');
-        var icon  = document.getElementById('toast-icon');
-        var msgEl = document.getElementById('toast-msg');
-        toast.className = 'fixed top-6 right-6 z-50 max-w-sm w-full px-5 py-4 rounded-xl shadow-2xl text-white font-semibold flex items-center gap-3 ' +
-                          (type === 'success' ? 'bg-gre
+            // Send main email to you, then send auto-reply to student
+            emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form)
+                .then(function () {
+                    // Main email delivered — now send auto-reply
+                    return emailjs.sendForm(SERVICE_ID, AUTOREPLY_ID, form);
+                })
+                .then(function () {
+                    showNotification('Message sent! We will reply within 24 hours.', 'success');
+                    form.reset();
+                })
+                .catch(function (error) {
+                    console.error('EmailJS error:', error);
+                    showNotification('Failed to send. Please email elitehubltd32@gmail.com directly.', 'error');
+                })
+                .finally(function () {
+                    btn.disabled    = false;
+                    btn.textContent = 'Send Message';
+                });
+        });
+    </script>
+    <script src="../assets/js/pwa-register.js"></script>
+</body>
+</html>
