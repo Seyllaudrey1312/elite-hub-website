@@ -261,7 +261,7 @@
 
     <div id="main-footer"></div>
 
-    <script src="../assets/js/api.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="../assets/js/api.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/components.js"></script>
 
@@ -391,15 +391,25 @@
         try {
             // Send via EmailJS (primary — delivers to elitehubltd32@gmail.com)
             // Save to backend DB (secondary — runs in parallel, won't block email)
+            var formEl = document.getElementById('contactForm');
+
             var results = await Promise.allSettled([
 
+                // 1. Main email → delivered to elitehubltd32@gmail.com
                 emailjs.sendForm(
                     EMAILJS_SERVICE_ID,
                     EMAILJS_TEMPLATE_ID,
-                    EMAILJS_AUTOREPLY_ID,
-                    document.getElementById('contactForm')
+                    formEl
                 ),
 
+                // 2. Auto-reply → delivered to the student's email address
+                emailjs.sendForm(
+                    EMAILJS_SERVICE_ID,
+                    EMAILJS_AUTOREPLY_ID,
+                    formEl
+                ),
+
+                // 3. Save to backend database as backup
                 (typeof API_BASE_URL !== 'undefined'
                     ? fetch(API_BASE_URL + '/contact', {
                         method:  'POST',
@@ -418,17 +428,17 @@
             ]);
 
             if (results[0].status === 'fulfilled') {
-                // Email delivered — show success screen
+                // Main email delivered — show success regardless of auto-reply status
                 document.getElementById('contactForm').classList.add('hidden');
                 document.getElementById('success-screen').classList.remove('hidden');
                 showToast('Message sent! We will reply within 24 hours ✅', 'success');
+                // Log if auto-reply failed (non-blocking)
+                if (results[1].status === 'rejected') {
+                    console.warn('Auto-reply failed:', results[1].reason);
+                }
             } else {
                 console.error('EmailJS error:', results[0].reason);
-                if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
-                    showToast('EmailJS credentials not configured yet. Add your API keys to contact.html.', 'error');
-                } else {
-                    showToast('Failed to send. Please email us directly at elitehubltd32@gmail.com', 'error');
-                }
+                showToast('Failed to send. Please email us directly at elitehubltd32@gmail.com', 'error');
             }
 
         } catch (err) {
@@ -455,14 +465,4 @@
         var icon  = document.getElementById('toast-icon');
         var msgEl = document.getElementById('toast-msg');
         toast.className = 'fixed top-6 right-6 z-50 max-w-sm w-full px-5 py-4 rounded-xl shadow-2xl text-white font-semibold flex items-center gap-3 ' +
-                          (type === 'success' ? 'bg-green-600' : 'bg-red-600');
-        icon.textContent  = type === 'success' ? '✅' : '❌';
-        msgEl.textContent = msg;
-        toast.classList.remove('hidden');
-        setTimeout(function () { toast.classList.add('hidden'); }, 5000);
-    }
-    </script>
-
-    <script src="../assets/js/pwa-register.js"></script>
-</body>
-</html>
+                          (type === 'success' ? 'bg-gre
